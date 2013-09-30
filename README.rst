@@ -16,6 +16,11 @@ YADI is a Datalog parsing project for the Advanced Databases course of the DMKM 
 
 * Free software: BSD license
 * Documentation: http://yadi.rtfd.org.
+* A description of your project
+* Links to the project's ReadTheDocs page
+* A TravisCI button showing the state of the build
+* "Quickstart" documentation (how to quickly install and use your project)
+* A list of non-Python dependencies (if any) and how to install them
 
 Features
 --------
