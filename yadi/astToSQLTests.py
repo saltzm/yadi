@@ -32,8 +32,8 @@ print 'Test 1'
 print 'Correct: False'
 try:
     print bla.check_is_it_safe()
-except Exception:
-    print 'False'
+except Exception as e:
+    print e
 
 print '-------------------'
 print ''
@@ -47,8 +47,8 @@ print 'Test 2'
 print 'Correct: True'
 try:
     print bla.check_is_it_safe()
-except Exception:
-    print 'False'
+except Exception as e:
+    print e
 print '-------------------'
 print ''
 
@@ -62,8 +62,8 @@ print 'Test 3'
 print 'Correct: False'
 try:
     print bla.check_is_it_safe()
-except Exception:
-    print 'False'
+except Exception as e:
+    print e
 print '-------------------'
 print ''
 
@@ -77,8 +77,8 @@ print 'Test 4'
 print 'Correct: True'
 try:
     print bla.check_is_it_safe()
-except Exception:
-    print 'False'
+except Exception as e:
+    print e
 print '-------------------'
 print ''
 
@@ -92,8 +92,8 @@ print 'Test 5'
 print 'Correct: True'
 try:
     print bla.check_is_it_safe()
-except Exception:
-    print 'False'
+except Exception as e:
+    print e
 print '-------------------'
 print ''
 
@@ -107,8 +107,8 @@ print 'Test 6'
 print 'Correct: False'
 try:
     print bla.check_is_it_safe()
-except Exception:
-    print 'False'
+except Exception as e:
+    print e
 print '-------------------'
 print ''
 
@@ -123,8 +123,8 @@ print 'Correct: True'
 try:
     bla.query= bla.preProcessQuery(bla.query)
     print bla.check_is_it_safe()
-except Exception:
-    print 'False'
+except Exception as e:
+    print e
 
 print '-------------------'
 print ''
@@ -140,8 +140,8 @@ print 'Correct: True'
 try:
     bla.query= bla.preProcessQuery(bla.query)
     print bla.check_is_it_safe()
-except Exception:
-    print 'False'
+except Exception as e:
+    print e
 
 print '-------------------'
 print ''
@@ -157,8 +157,8 @@ print 'Correct: False'
 try:
     bla.query= bla.preProcessQuery(bla.query)
     print bla.check_is_it_safe()
-except Exception:
-    print 'False'
+except NotSafeException as e:
+    print e
 
 print '-------------------'
 print ''
@@ -174,8 +174,8 @@ print 'Correct: True'
 try:
     bla.query= bla.preProcessQuery(bla.query)
     print bla.check_is_it_safe()
-except Exception:
-    print 'False'
+except Exception as e:
+    print e
 
 print '-------------------'
 print ''

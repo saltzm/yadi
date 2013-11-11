@@ -7,6 +7,11 @@ import copy
 
 equality_operator = '='
 
+class NotSafeException(Exception):
+    pass
+class NotInstantiatedException(Exception):
+    pass
+
 class Element:
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
@@ -138,14 +143,13 @@ class QueryToAlchemyStatement:
 
         return (self.check_head(safe_variables) and 
                self.check_negated_goals(safe_variables) and 
-               self.check_defined_predicates (safe_variables) and 
                self.check_non_equality_explicit_constraints(safe_variables))
 
     def check_head(self,safe_variables):
 
         for variable in self.query.head_variables:
             if not (variable in safe_variables):
-                raise Exception('Query not safe because '+ variable.name + ' occurs in the head and not in a positive goal')
+                raise NotSafeException('Query not safe because '+ variable.name + ' occurs in the head and not in a positive goal')
                 return False
         return True
 
@@ -157,15 +161,11 @@ class QueryToAlchemyStatement:
         # And check them:
         for variable in variables_in_negated_goals:
             if not (variable in safe_variables):
-                raise Exception('Query not safe because ' + variable.name + ' from a negated goal does not occur in a positive goal')
+                raise NotSafeException('Query not safe because ' + variable.name + ' from a negated goal does not occur in a positive goal')
                 return False
 
         return True
 
-    def check_defined_predicates(self,safe_variables):
-        # Checking variables which occur in defined predicates
-# TODO
-        return True
 
     def check_non_equality_explicit_constraints(self,safe_variables):
 
@@ -178,6 +178,7 @@ class QueryToAlchemyStatement:
 
         for variable in variables_in_constraints_with_non_equality_operators:
             if not (variable in safe_variables):
+                raise NotSafeException('Query not safe because ' + variable.name + ' from a non_equality comparison does not occur in a positive goal')
                 return False
 
         return True
@@ -247,7 +248,7 @@ class QueryToAlchemyStatement:
             variables_occur_relation = [y for x in query.relations for y in x.variables.keys() if y in variables] 
 
             if len(variables_occur_relation)==0 and len(variables)>0 :
-                raise Exception('Equivalence set of ' + str(variables[0]) + ' does not unify with a variable in a positive' )
+                raise NotInstantiatedException('Equivalence set of ' + str(variables[0]) + ' does not unify with a variable in a positive' )
             
             # Substitute every variable in the equivalence set b 
             if len(constants)>0: 
@@ -327,6 +328,7 @@ class QueryToAlchemyStatement:
  
     def preProcessQuery(self,query):
         query = self.reduce_equality_constraints(query)
+        self.var_dict = self.create_var_dict(query) 
         return query
 
     def generateAlchemyStatement(self):
