@@ -154,3 +154,130 @@ print ''
 print bla.reduce_equality_constraints(q)
 print '-------------------'
 print ''
+
+# Q(X) := S(X), X = Y
+r = RelationInQuery('S', {Variable('X'):[0]}, {},[],True)
+q = Query([r],[[Variable('X'), Variable('Y'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 6'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''
+
+# Q(X) := S(Y), X = Y
+r = RelationInQuery('S', {Variable('Y'):[0]}, {},[],True)
+q = Query([r],[[Variable('Y'), Variable('X'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 7'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''
+
+# Q(X) := S(X), P = Y
+
+r = RelationInQuery('S', {Variable('X'):[0]}, {},[],True)
+q = Query([r],[[Variable('Y'), Variable('P'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 8'
+print 'Original: '
+print q
+print ''
+try:
+    print bla.reduce_equality_constraints(q)
+except Exception:
+    print 'It works'
+print '-------------------'
+print ''
+
+
+s = RelationInQuery('S', {Variable('X'):[0],Variable('Y'):[1]}, {},[],False)
+r = RelationInQuery('R', {Variable('T'):[0],Variable('Z'):[1]}, {},[],False)
+q = Query([s,r],[[Variable('X'), Variable('T'), '='],[Variable('T'), Variable('X'), '='],[Variable('Y'), Variable('Z'), '='],[Variable('T'), Variable('Z'), '='], [Variable('Z'),Constant('2'), '='],[Variable('P'), Variable('Q'), '='],[Variable('P'), Variable('T'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 9'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''
+
+s = RelationInQuery('S', {Variable('X'):[0,1]}, {},[],False)
+r = RelationInQuery('R', {Variable('T'):[0,1]}, {},[],False)
+q = Query([s,r],[[Variable('X'), Variable('T'), '='],[Variable('T'), Variable('X'), '='],[Variable('Y'), Variable('Z'), '='],[Variable('T'), Variable('Z'), '='], [Variable('Z'),Constant('2'), '='],[Variable('P'), Variable('Q'), '='],[Variable('P'), Variable('T'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 10'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''
+
+# R(X) := S(X), 3=2, X>2
+r = RelationInQuery('S', {Variable('Y'):[0]}, {},[],True)
+q = Query([r],[[Constant('3'), Constant('2'), '='],[Variable('X'), Constant('2'), '>']],[Variable('Y')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 11'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''
+
+s = RelationInQuery('S', {Variable('X'):[0],Variable('P'):[1]}, {},[],False)
+r = RelationInQuery('R', {Variable('T'):[0],Variable('Z'):[1]}, {},[],False)
+q = Query([s,r],[[Variable('X'), Variable('T'), '='],[Variable('T'), Variable('X'), '='],[Variable('Y'), Variable('Z'), '='],[Variable('T'), Variable('Z'), '='], [Variable('Z'),Constant('2'), '='],[Variable('P'), Variable('Q'), '='],[Variable('Y'), Variable('T'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 12'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''
+
+
+s = RelationInQuery('S', {Variable('X'):[0],Variable('P'):[1]}, {},[],False)
+r = RelationInQuery('R', {Variable('T'):[0],Variable('Z'):[1]}, {},[],False)
+q = Query([s,r],[[Variable('X'), Variable('T'), '='],[Variable('T'), Variable('X'), '='],[Variable('Y'), Variable('Z'), '='],[Variable('T'), Variable('Z'), '='], [Variable('Z'),Constant('2'), '='],[Variable('P'), Variable('Q'), '='],[Variable('Q'), Constant('5'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 13'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''
+
+
+# R(X) := S(X), 3=X, X>2
+r = RelationInQuery('S', {Variable('X'):[0]}, {},[],True)
+q = Query([r],[[Constant('3'), Variable('X'), '='],[Variable('X'), Constant('2'), '>']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 14'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''
+
+# R(X) := S(X), 3=X, X>2
+r = RelationInQuery('S', {Variable('Y'):[0]}, {},[],True)
+q = Query([r],[[Variable('Y'), Variable('X'), '='],[Variable('X'), Constant('2'), '='],[Variable('Y'), Constant('4'), '=']],[Variable('Y')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 14'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''

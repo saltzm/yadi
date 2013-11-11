@@ -62,7 +62,6 @@ class QueryToAlchemyStatement:
     # It does not map occurences of variables in negated goals.
     def create_var_dict(self,query):
         variables_in_positive_goals = [y for x in query.relations for y in x.variables.keys() if not x.is_negated] 
-        
         var_dict = {}
 
         for relation in [x for x in query.relations if not x.is_negated]:
@@ -217,87 +216,117 @@ class QueryToAlchemyStatement:
             R(X) := not T(Y), X = Y, X = 2 is equivalent to:
             R(X) := not T(X), X = 2 is equivalent to:
             R(Y) := not T(Y), Y = 2 is equivalent to:
-
             
     '''  
     def reduce_equality_constraints(self,q):
         query = copy.deepcopy(q) 
-        changed = True
-        while changed:
-            changed = False
-            equality_constraints = [x for x in query.constraints if x[2] == equality_operator]
-            for constraint in equality_constraints:
-                # If it's an equality constraint of the form Const = Var, swap them unless the variable occurs in the head. Doing this simplifies the cases below:
-                if isinstance(constraint[0],Constant) and isinstance(constraint[1],Variable):
-                    changed = True
-                    const = constraint[0]
-                    var = constraint[1]
+        # Build the equivalence sets
 
-                    # Swap the variable and the constant. 
-                    temp = var
-                    constraint[1] = constraint[0]
-                    constraint[0] = var
+        equality_constraints = [x for x in query.constraints if x[2] == equality_operator]
+        eq_sets = []
+        for eq_constraint in equality_constraints:
+            el1 = eq_constraint[0]
+            el2 = eq_constraint[1]
+            
+            set1 = -1
+            set2 = -1
+                
+            for i in range(0,len(eq_sets)):
+                if el1 in eq_sets[i]:
+                    set1 = i
+                if el2 in eq_sets[i]:
+                    set2 = i
 
-                # If it's an equality constraint of the form Var1 = Var2, substitute every occurence of Var1 with Var2
-                # Occurences must be substituted in the head, in the list of variables and in the constraints
-                if isinstance(constraint[0],Variable) and isinstance(constraint[1],Variable):
-                    changed = True
-                    var1 = constraint[0]
-                    var2 = constraint[1]
-                    # Replace every occurence of var1 in the head with var2.
-                    for i in range(0,len(query.head_variables)):
-                        if query.head_variables[i] == var1:
-                            query.head_variables[i] = var2
+            if set1== -1 and set2== -1: # Neither El1 nor El2 is in a set.
+                eq_sets.append({el1,el2})
+            else: # set1 >= 0 OR set2>=0
+                if set1>= 0:
+                    if set2 == -1: # El1 is in some set and El2 is not.
+                        eq_sets[set1].add(el2)
+                    else: # El1 and El2 are both in some sets.
+                        if set1!=set2: # If they're not in the same set, merge them and delete one of them.
+                            eq_sets[set1] = eq_sets[set1] | eq_sets[set2]
+                            eq_sets.remove(eq_sets[set2])
+                else:
+                    if set2 >= 0: # El2 is in a set, El1 is not.
+                        eq_sets[set2].add(el1)
 
-                    # Replace every occurence of var1 in every relation with var2.
-                        for relation in query.relations:
-                            if relation.variables.has_key(var1):
-                                occurences_of_the_variable = relation.variables[var1]
-                                if relation.variables.has_key(var2):
-                                    relation.variables[var2] += occurences_of_the_variable
-                                else:
-                                    relation.variables[var2] = occurences_of_the_variable
-                                del relation.variables[var1]
+        new_eq_constraints = []
 
-                    # Replace every occurence of var1 in every constraint with var2
-                        for query_constraint in query.constraints:
-                            for query_constraint in query.constraints:
-                                if query_constraint[0] == var1:
-                                    query_constraint[0] = var2
+        for s in eq_sets:
+            constants = [x for x in s if isinstance(x,Constant)]
+            variables = [x for x in s if isinstance(x,Variable)]
+            variables_occur_relation = [y for x in query.relations for y in x.variables.keys() if y in variables] 
 
-                                if query_constraint[1] == var1:
-                                    query_constraint[1] = var2 
+            if len(variables_occur_relation)==0 and len(variables)>0 :
+                raise Exception('Equivalence set of ' + str(variables[0]) + ' does not unify with a variable in a positive' )
+            
+            # Substitute every variable in the equivalence set b 
+            if len(constants)>0: 
+                # Substitute every occurence of variable in every goal with the constant
+                constant = constants[0]
+                for relation in query.relations:
+                    del_list = []
+                    for variable in relation.variables:
+                        if variable in s:
+                            if relation.constants.has_key(constant):
+                                relation.constants[constant] += relation.variables[variable]
+                            else:
+                                relation.constants[constant] = relation.variables[variable]
+                            del_list.append(variable)
+                    for variable in del_list:
+                        del relation.variables[variable]
+                # Substitute every occurence of the variable in the constraints with the constant
+                for constraint in query.constraints:
+                    el0 = constraint[0]
+                    el1 = constraint[1]
+                    if (isinstance(el0,Variable)) and el0 in s:
+                        constraint[0] = constant
+                    if (isinstance(el1,Variable)) and el1 in s:
+                        constraint[1] = constant
 
-                # If it's an equality constraint of the form Var = Const, replace the variable with the constant unless the variable occurs in the head.
-                if isinstance(constraint[0],Variable) and isinstance(constraint[1],Constant):
-                    var = constraint[0]
-                    const = constraint[1] 
-                    # Check if it occurs in the head
-                    if not (var in query.head_variables):
-                        changed = True
-                        # Replace every occurence of this variable in every relation with the constant.
-                        for relation in query.relations:
+                # Make sure we can still unify head variables with constants if they are in the equivalence set.
+                for variable in variables:
+                    if variable in query.head_variables:
+                        new_eq_constraints.append([variable,constant,equality_operator])                              
+            else:
+                # Substitute every occurence of variable in the relations with one variable from variables_occur_relation
+                var = variables_occur_relation[0]
+                for relation in query.relations:
+                    del_list = []
+                    for variable in relation.variables:
+                        if variable in s and (not variable == var):
                             if relation.variables.has_key(var):
-                                occurences_of_the_variable = relation.variables[var]
-                                if relation.constants.has_key(const):
-                                    relation.constants[const] += occurences_of_the_variable
-                                else:
-                                    relation.constants[const] = occurences_of_the_variable
-                                del relation.variables[var]
+                                relation.variables[var] += relation.variables[variable]
+                            else:
+                                relation.variables[var] = relation.variables[variable]
+                            del_list.append(variable)
+                    for variable in del_list:
+                        del relation.variables[variable]
 
-                        # Replace every occurence of this variable in every constraint with the constant.
-                        for query_constraint in query.constraints:
-                            if query_constraint[0] == var:
-                                query_constraint[0] = const
+                # Substitute every occurence of variable in the constraints with one variable from variables_occur_relation
+                for i in range(0,len(query.head_variables)):
+                    if query.head_variables[i] in s:
+                        query.head_variables[i] = var
 
-                            if query_constraint[1] == var:
-                                query_constraint[1] = const 
+                # Substitute every occurence of variable in the head with one variable from variables_occur_relation
+                for constraint in query.constraints:
+                    el0 = constraint[0]
+                    el1 = constraint[1]
+                    if (isinstance(el0,Variable)) and el0 in s:
+                        constraint[0] = var
+                    if (isinstance(el1,Variable)) and el1 in s:
+                        constraint[1] = var
 
-                # Clean constraints of the form Element1 = Element1
+            # If there's more than one constant in this equivalence set, they might all be different so we need to keep these constraints.
+            if len(constants)>1:
+                for i in range(0,len(constants)):
+                    for j in range(i,len(constants)):
+                        if not constants[i] == constants[j]:
+                            new_eq_constraints.append([constants[i],constants[j],equality_operator])                                
 
-                query.constraints =  [x for x in query.constraints if not x[0] == x[1]]
-
-        return query                         
+        query.constraints = [x for x in query.constraints if x[2] != equality_operator] + new_eq_constraints
+        return query
 
     def generateAlchemyStatement(self):
 
