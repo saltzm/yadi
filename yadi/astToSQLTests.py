@@ -30,7 +30,11 @@ q = Query([r],[],[Variable('X'), Variable('Y')])
 bla = QueryToAlchemyStatement(q)
 print 'Test 1'
 print 'Correct: False'
-print bla.check_is_it_safe()
+try:
+    print bla.check_is_it_safe()
+except Exception:
+    print 'False'
+
 print '-------------------'
 print ''
 
@@ -41,7 +45,10 @@ q = Query([r],[],[Variable('X')])
 bla = QueryToAlchemyStatement(q)
 print 'Test 2'
 print 'Correct: True'
-print bla.check_is_it_safe()
+try:
+    print bla.check_is_it_safe()
+except Exception:
+    print 'False'
 print '-------------------'
 print ''
 
@@ -53,11 +60,14 @@ q = Query([s,t],[],[Variable('X')])
 bla = QueryToAlchemyStatement(q)
 print 'Test 3'
 print 'Correct: False'
-print bla.check_is_it_safe()
+try:
+    print bla.check_is_it_safe()
+except Exception:
+    print 'False'
 print '-------------------'
 print ''
 
-# Q(X):- S(X,U), !T(U) Not safe
+# Q(X):- S(X,U), !T(U) Safe
 
 s = RelationInQuery('S', {Variable('X'):[0],Variable('U'):[1]}, {},[],False)
 t = RelationInQuery('T', {Variable('U'):[0]}, {},[],True)
@@ -65,7 +75,10 @@ q = Query([s,t],[],[Variable('X')])
 bla = QueryToAlchemyStatement(q)
 print 'Test 4'
 print 'Correct: True'
-print bla.check_is_it_safe()
+try:
+    print bla.check_is_it_safe()
+except Exception:
+    print 'False'
 print '-------------------'
 print ''
 
@@ -77,22 +90,135 @@ q = Query([s,t],[[Variable('U'), Constant('2'), '==']],[Variable('X')])
 bla = QueryToAlchemyStatement(q)
 print 'Test 5'
 print 'Correct: True'
-print bla.check_is_it_safe()
+try:
+    print bla.check_is_it_safe()
+except Exception:
+    print 'False'
 print '-------------------'
 print ''
 
-# Q(X):- S(X), !T(U), U < 2 Safe
+# Q(X):- S(X), !T(U), U < 2 Not safe
 
-s = RelationInQuery('S', {Variable('X'):[0],Variable('U'):[1]}, {},[],False)
+s = RelationInQuery('S', {Variable('X'):[0]}, {},[],False)
 t = RelationInQuery('T', {Variable('U'):[0]}, {},[],True)
-q = Query([s,t],[[Variable('U'), Constant('2'), '<']],[Variable('X')]) 
+q = Query([s,t],[[Constant('2'),Variable('U'), '<']],[Variable('X')]) 
 bla = QueryToAlchemyStatement(q)
 print 'Test 6'
 print 'Correct: False'
-print bla.check_is_it_safe()
+try:
+    print bla.check_is_it_safe()
+except Exception:
+    print 'False'
 print '-------------------'
 print ''
 
+# Q(X):- S(X), !T(U), U=X Safe
+
+s = RelationInQuery('S', {Variable('X'):[0]}, {},[],False)
+t = RelationInQuery('T', {Variable('U'):[0]}, {},[],True)
+q = Query([s,t],[[Variable('U'), Variable('X'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 7'
+print 'Correct: True'
+try:
+    bla.query= bla.preProcessQuery(bla.query)
+    print bla.check_is_it_safe()
+except Exception:
+    print 'False'
+
+print '-------------------'
+print ''
+
+# Q(X):- S(X), !T(U), U=X Safe
+
+s = RelationInQuery('S', {Variable('X'):[0]}, {},[],False)
+t = RelationInQuery('T', {Variable('U'):[0]}, {},[],True)
+q = Query([s,t],[[Variable('U'), Variable('X'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 8'
+print 'Correct: True'
+try:
+    bla.query= bla.preProcessQuery(bla.query)
+    print bla.check_is_it_safe()
+except Exception:
+    print 'False'
+
+print '-------------------'
+print ''
+
+# Q(X):- S(X), Y<3 Not safe
+
+s = RelationInQuery('S', {Variable('X'):[0]}, {},[],False)
+
+q = Query([s],[[Variable('Y'), Constant('3'), '<']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 9'
+print 'Correct: False'
+try:
+    bla.query= bla.preProcessQuery(bla.query)
+    print bla.check_is_it_safe()
+except Exception:
+    print 'False'
+
+print '-------------------'
+print ''
+
+# Q(X):- S(X,Y), Y<3 Safe
+
+s = RelationInQuery('S', {Variable('X'):[0],Variable('Y'):[1]}, {},[],False)
+
+q = Query([s],[[Variable('Y'), Constant('3'), '<']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 10'
+print 'Correct: True'
+try:
+    bla.query= bla.preProcessQuery(bla.query)
+    print bla.check_is_it_safe()
+except Exception:
+    print 'False'
+
+print '-------------------'
+print ''
+
+# Q(X):- S(X), !T(Y), X=Y
+
+s = RelationInQuery('S', {Variable('X'):[0]}, {},[],False)
+t = RelationInQuery('T', {Variable('Y'):[1]}, {},[],True)
+
+q = Query([s,t],[[Variable('X'), Variable('Y'), '=']],[Variable('X')]) 
+
+bla = QueryToAlchemyStatement(q)
+print 'Test 11'
+print 'Correct: True'
+try:
+    bla.query= bla.preProcessQuery(bla.query)
+    print bla.check_is_it_safe()
+except Exception as e:
+    print e
+
+print '-------------------'
+print ''
+
+# Q(X,Z):- S(X,Y), !T(A,Z), Z = Y
+
+s = RelationInQuery('S', {Variable('X'):[0],Variable('Y'):[1]}, {},[],False)
+t = RelationInQuery('T', {Variable('A'):[0],Variable('Z'):[1]}, {},[],True)
+
+q = Query([s,t],[[Variable('Y'), Variable('Z'), '=']],[Variable('X'),Variable('Z')]) 
+
+bla = QueryToAlchemyStatement(q)
+print 'Test 12'
+print 'Correct: True'
+try:
+    bla.query= bla.preProcessQuery(bla.query)
+    print bla.check_is_it_safe()
+except Exception as e:
+    print e
+
+print '-------------------'
+print ''
+
+'''
 # EQUALITY CONSTRAINTS REDUCTION TESTS:
 
 # Q(X):- S(X), X = 2
@@ -250,6 +376,7 @@ r = RelationInQuery('R', {Variable('T'):[0],Variable('Z'):[1]}, {},[],False)
 q = Query([s,r],[[Variable('X'), Variable('T'), '='],[Variable('T'), Variable('X'), '='],[Variable('Y'), Variable('Z'), '='],[Variable('T'), Variable('Z'), '='], [Variable('Z'),Constant('2'), '='],[Variable('P'), Variable('Q'), '='],[Variable('Q'), Constant('5'), '=']],[Variable('X')]) 
 bla = QueryToAlchemyStatement(q)
 print 'Test 13'
+
 print 'Original: '
 print q
 print ''
@@ -281,3 +408,4 @@ print ''
 print bla.reduce_equality_constraints(q)
 print '-------------------'
 print ''
+'''

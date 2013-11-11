@@ -124,16 +124,13 @@ class QueryToAlchemyStatement:
         variables_bounded_to_constants = []
 
         for constraint in self.query.constraints:
-            if ((isinstance(constraint[0],Variable) and isinstance(constraint[1],Constant)) or 
-               (isinstance(constraint[0],Constant) and isinstance(constraint[1],Variable))) and constraint[2] == equality_operator: #and 
-# CHECK THIS              (isinstance(constraint[2],Equality) or isinstance(constraint[2],Is)):
-
-                if isinstance(constraint[0],Variable):
+            if (isinstance(constraint[0],Variable) and 
+                isinstance(constraint[1],Constant) and 
+                constraint[2] == equality_operator): 
                     variables_bounded_to_constants.append(constraint[0])
-                else:
-                    variables_bounded_to_constants.append(constraint[1])
 
         safe_variables = self.var_dict.keys() + variables_bounded_to_constants
+
         return safe_variables
 
     def check_is_it_safe(self):
@@ -148,7 +145,7 @@ class QueryToAlchemyStatement:
 
         for variable in self.query.head_variables:
             if not (variable in safe_variables):
-                print 'Failing because '+ variable.name + ' occurs in the head and not in a positive goal'
+                raise Exception('Query not safe because '+ variable.name + ' occurs in the head and not in a positive goal')
                 return False
         return True
 
@@ -160,7 +157,7 @@ class QueryToAlchemyStatement:
         # And check them:
         for variable in variables_in_negated_goals:
             if not (variable in safe_variables):
-                print 'Not safe because ' + variable.name + ' from a negated goal does not occur in a positive goal'
+                raise Exception('Query not safe because ' + variable.name + ' from a negated goal does not occur in a positive goal')
                 return False
 
         return True
@@ -170,24 +167,15 @@ class QueryToAlchemyStatement:
 # TODO
         return True
 
-# TODO clean this method:
     def check_non_equality_explicit_constraints(self,safe_variables):
 
         # Checking variables which occur in explicit constraints with non equality operators
 
         # Create a list of variables which occur in explicit constraints with non equality operators
-        variables_in_constraints_with_non_equality_operators = []
+        variables_in_constraints_with_non_equality_operators = [y for x in self.query.constraints \
+                                                                    for y in x[0:2] \
+                                                                        if isinstance(y,Variable) and x[2] != equality_operator]
 
-        for constraint in self.query.constraints:
-            if isinstance(constraint[0],Variable) and constraint[2] != equality_operator: #and 
-# CHECK THIS              not (isinstance(constraint[2],Equality) or isinstance(constraint[2],Is)):
-                variables_in_constraints_with_non_equality_operators.append(constraint[0])
-            if isinstance(constraint[1],Variable) and constraint[2] != equality_operator: #and 
-# CHECK THIS              not (isinstance(constraint[2],Equality) or isinstance(constraint[2],Is)
-                variables_in_constraints_with_non_equality_operators.append(constraint[1])
-        # And check them:
-        print variables_in_constraints_with_non_equality_operators
-        print safe_variables
         for variable in variables_in_constraints_with_non_equality_operators:
             if not (variable in safe_variables):
                 return False
@@ -267,15 +255,19 @@ class QueryToAlchemyStatement:
                 constant = constants[0]
                 for relation in query.relations:
                     del_list = []
+                    add_dict = {}
                     for variable in relation.variables:
                         if variable in s:
                             if relation.constants.has_key(constant):
                                 relation.constants[constant] += relation.variables[variable]
                             else:
-                                relation.constants[constant] = relation.variables[variable]
+                                add_dict[var] = relation.variables[variable]
                             del_list.append(variable)
                     for variable in del_list:
                         del relation.variables[variable]
+                    for key in add_dict.keys():
+                        relation.variables[key] = add_dict[key]
+
                 # Substitute every occurence of the variable in the constraints with the constant
                 for constraint in query.constraints:
                     el0 = constraint[0]
@@ -294,15 +286,19 @@ class QueryToAlchemyStatement:
                 var = variables_occur_relation[0]
                 for relation in query.relations:
                     del_list = []
+                    add_dict = {}
                     for variable in relation.variables:
                         if variable in s and (not variable == var):
                             if relation.variables.has_key(var):
                                 relation.variables[var] += relation.variables[variable]
                             else:
-                                relation.variables[var] = relation.variables[variable]
+                                add_dict[var] = relation.variables[variable]
                             del_list.append(variable)
                     for variable in del_list:
                         del relation.variables[variable]
+
+                    for key in add_dict.keys():
+                        relation.variables[key] = add_dict[key]
 
                 # Substitute every occurence of variable in the constraints with one variable from variables_occur_relation
                 for i in range(0,len(query.head_variables)):
@@ -328,12 +324,17 @@ class QueryToAlchemyStatement:
         query.constraints = [x for x in query.constraints if x[2] != equality_operator] + new_eq_constraints
         return query
 
+ 
+    def preProcessQuery(self,query):
+        query = self.reduce_equality_constraints(query)
+        return query
+
     def generateAlchemyStatement(self):
 
         # We modify the query object by removing unnecesary equality constraints.
-        self.query = self.reduce_equality_constraints(self.query)
+        self.query = self.preProcessQuery(self.query)
 
-        check_is_it_safe()
+        return self.check_is_it_safe()
 
         select_clause = 'SELECT ' + ','.join(getSelectedColumns())
         from_clause = 'FROM bla'
