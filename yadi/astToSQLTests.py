@@ -103,7 +103,7 @@ print 'Test 1'
 print 'Original: '
 print q
 print ''
-print bla.eliminate_equality_constraints(q)
+print bla.reduce_equality_constraints(q)
 print '-------------------'
 print ''
 
@@ -115,7 +115,7 @@ print 'Test 2'
 print 'Original: '
 print q
 print ''
-print bla.eliminate_equality_constraints(q)
+print bla.reduce_equality_constraints(q)
 print '-------------------'
 print ''
 
@@ -123,11 +123,34 @@ print ''
 r = RelationInQuery('S', {Variable('X'):[0], Variable('Y'):[1], Variable('Z'):[2]}, {},[],False)
 q = Query([r],[[Variable('Y'), Constant('2'), '='], [Variable('Z'), Variable('Y'), '=']],[Variable('X')]) 
 bla = QueryToAlchemyStatement(q)
-print 'Test 2'
+print 'Test 3'
 print 'Original: '
 print q
 print ''
-print bla.eliminate_equality_constraints(q)
+print bla.reduce_equality_constraints(q)
 print '-------------------'
 print ''
 
+#  Q(X) := not S(Y),  X = 2, X = Y,
+r = RelationInQuery('S', {Variable('Y'):[0]}, {},[],True)
+q = Query([r],[[Variable('X'), Constant('2'), '='], [Variable('X'), Variable('Y'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 4'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''
+
+#  Q(X) := not S(Y), X = Y, X = 2
+r = RelationInQuery('S', {Variable('Y'):[0]}, {},[],True)
+q = Query([r],[[Variable('X'), Variable('Y'), '='],[Variable('X'), Constant('2'), '=']],[Variable('X')]) 
+bla = QueryToAlchemyStatement(q)
+print 'Test 5'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''

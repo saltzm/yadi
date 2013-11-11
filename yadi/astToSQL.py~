@@ -195,19 +195,73 @@ class QueryToAlchemyStatement:
 
         return True
 
-    ''' We only want to keep equality constraints of the form:
+    ''' This method takes a query, makes a deep copy of it and modifies it to keep only equality constraints of the form:
         Var = const if Var occurs in the head
-        Var = Var if none of them can be unified to a constant.
+        ie, constraints of the form Var1 = Var2, const = Var, Var = Const (if Var does not occur in the head) are eliminated.
 
-        This makes several steps easier later on.
+        This makes several steps easier later on. 
+        For instance, when checking if a variable is safe.
+        
+        In the following query Y should be safe. 
+
+            R(X) := not T(Y), X = Y, X = 2
+
+        The only way to decide so is by noticing that because X=Y and X=2, Y must also be 2.
+        This can be done if the equalities are reduced according to what was said previously:
+        
+            R(X) := not T(Y), X = Y, X = 2 is equivalent to:
+            R(X) := not T(X), X = 2 is equivalent to:
+            R(Y) := not T(Y), Y = 2 is equivalent to:
     '''  
-    def eliminate_equality_constraints(self,q):
+    def reduce_equality_constraints(self,q):
         query = copy.deepcopy(q) 
         changed = True
         while changed:
             changed = False
             equality_constraints = [x for x in query.constraints if x[2] == equality_operator]
             for constraint in equality_constraints:
+                # If it's an equality constraint of the form Const = Var, swap them unless the variable occurs in the head. Doing this simplifies the cases below:
+                if isinstance(constraint[0],Constant) and isinstance(constraint[1],Variable):
+                    changed = True
+                    const = constraint[0]
+                    var = constraint[1]
+
+                    # Swap the variable and the constant. 
+                    temp = var
+                    constraint[1] = constraint[0]
+                    constraint[0] = var
+
+                # If it's an equality constraint of the form Var1 = Var2, substitute every occurence of Var1 with Var2
+                # Occurences must be substituted in the head, in the list of variables and in the constraints
+                if isinstance(constraint[0],Variable) and isinstance(constraint[1],Variable):
+                    changed = True
+                    var1 = constraint[0]
+                    var2 = constraint[1]
+                    # Replace every occurence of var1 in the head with var2.
+                    for i in range(0,len(query.head_variables)):
+                        if query.head_variables[i] == var1:
+                            query.head_variables[i] = var2
+
+                    # Replace every occurence of var1 in every relation with var2.
+                        for relation in query.relations:
+                            if relation.variables.has_key(var1):
+                                occurences_of_the_variable = relation.variables[var1]
+                                if relation.variables.has_key(var2):
+                                    relation.variables[var2] += occurences_of_the_variable
+                                else:
+                                    relation.variables[var2] = occurences_of_the_variable
+                                del relation.variables[var1]
+
+                    # Replace every occurence of var1 in every constraint with var2
+                        for query_constraint in query.constraints:
+                            for query_constraint in query.constraints:
+                                if query_constraint[0] == var1:
+                                    query_constraint[0] = var2
+
+                                if query_constraint[1] == var1:
+                                    query_constraint[1] = var2 
+
+                # If it's an equality constraint of the form Var = Const, replace the variable with the constant unless the variable occurs in the head.
                 if isinstance(constraint[0],Variable) and isinstance(constraint[1],Constant):
                     var = constraint[0]
                     const = constraint[1] 
@@ -216,35 +270,32 @@ class QueryToAlchemyStatement:
                         changed = True
                         # Replace every occurence of this variable in every relation with the constant.
                         for relation in query.relations:
-                            occurences_of_the_variable = relation.variables[var]
-                            if relation.constants.has_key(const):
-                                relation.constants[const] += occurences_of_the_variable
-                            else:
-                                relation.constants[const] = occurences_of_the_variable
-                            del relation.variables[var]
+                            if relation.variables.has_key(var):
+                                occurences_of_the_variable = relation.variables[var]
+                                if relation.constants.has_key(const):
+                                    relation.constants[const] += occurences_of_the_variable
+                                else:
+                                    relation.constants[const] = occurences_of_the_variable
+                                del relation.variables[var]
 
-                        # Replace every occurence of this variable in every other constraint with the constant.
+                        # Replace every occurence of this variable in every constraint with the constant.
                         for query_constraint in query.constraints:
                             if query_constraint[0] == var:
                                 query_constraint[0] = const
-                                # We want to maintain only equality constraints of the form Var = Const, Const = Const, Var = Var 
-                                # In other words, we don't want Const = Var eq constraints.
-                                if query_constraint[2] == equality_operator:
-                                    temp = query_constraint[1]
-                                    query_constraint[1] = query_constraint[0]
-                                    query_constraint[0] = temp
 
                             if query_constraint[1] == var:
                                 query_constraint[1] = const 
 
-                        query.constraints =  [x for x in query.constraints if not x[0] == x[1]]
+                # Clean constraints of the form Element1 = Element1
+
+                query.constraints =  [x for x in query.constraints if not x[0] == x[1]]
 
         return query                         
 
     def generateAlchemyStatement(self):
 
         # We modify the query object by removing unnecesary equality constraints.
-        self.query = self.eliminate_equality_constraints(self.query)
+        self.query = self.reduce_equality_constraints(self.query)
 
         check_is_it_safe()
 
