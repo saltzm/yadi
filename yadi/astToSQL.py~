@@ -196,7 +196,8 @@ class QueryToAlchemyStatement:
         return True
 
     ''' This method takes a query, makes a deep copy of it and modifies it to keep only equality constraints of the form:
-        Var = const if Var occurs in the head
+        Var = const if Var occurs in the head OR
+        const = const
         ie, constraints of the form Var1 = Var2, const = Var, Var = Const (if Var does not occur in the head) are eliminated.
 
         This makes several steps easier later on. 
@@ -212,6 +213,8 @@ class QueryToAlchemyStatement:
             R(X) := not T(Y), X = Y, X = 2 is equivalent to:
             R(X) := not T(X), X = 2 is equivalent to:
             R(Y) := not T(Y), Y = 2 is equivalent to:
+
+            R(X) := not T(Y), X = Y, S(Y)
     '''  
     def reduce_equality_constraints(self,q):
         query = copy.deepcopy(q) 

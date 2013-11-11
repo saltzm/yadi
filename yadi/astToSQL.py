@@ -207,12 +207,18 @@ class QueryToAlchemyStatement:
 
             R(X) := not T(Y), X = Y, X = 2
 
+        And in the following query X should be safe
+
+            R(X) := not T(Y), X = Y, S(Y)
+
         The only way to decide so is by noticing that because X=Y and X=2, Y must also be 2.
         This can be done if the equalities are reduced according to what was said previously:
         
             R(X) := not T(Y), X = Y, X = 2 is equivalent to:
             R(X) := not T(X), X = 2 is equivalent to:
             R(Y) := not T(Y), Y = 2 is equivalent to:
+
+            
     '''  
     def reduce_equality_constraints(self,q):
         query = copy.deepcopy(q) 
