@@ -114,9 +114,14 @@ class RelationInQuery:
         return negated + self.name + '('+','.join(list_of_columns)+')'
 
 class Query:
-    def __init__(self, relations = [], constraints = [], head_variables = {}, head_constants = {} ):
+    def __init__(self, conjunctive_queries = []):
+        self.conjunctive_queries = conjunctive_queries
+
+class ConjunctiveQuery:
+    def __init__(self, relations = [], constraints = [], head_variables = {}, head_constants = {}, wildcards = [] ):
         self.head_variables = head_variables # Variable -> [Position]
         self.head_constants = head_constants # Constant -> [Position]
+        self.wildcards = wildcards
         self.relations = relations# [RelationInQuery].
         self.constraints = constraints # Explicit constraints of the form Element COMP Element type.
                                        # [Constraint]
