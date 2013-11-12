@@ -16,6 +16,54 @@ class Element:
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
             and self.__dict__ == other.__dict__)
+    def is_variable(self): 
+        return isinstance(self,Variable)
+    def is_constant(self): 
+        return isinstance(self,Constant)
+
+class Variable(Element):
+    def __init__(self,name = ''):
+        self.name = name
+    def __hash__(self):
+        return hash(self.name)
+    def __repr__(self):
+        return self.name
+
+class Constant(Element):
+    def __init__(self,value = ''):
+        self.value = value
+    def __hash__(self):
+        return hash(self.value)
+    def __repr__(self):
+        return self.value
+
+class Constraint():
+    EQ_OPERATOR = '='
+    def __init__(self, left_side, right_side, operator):
+        self.left_side = left_side
+        self.right_side = right_side
+        self.operator = operator
+
+    def is_equality_constraint(self):
+        return self.operator == Constraint.EQ_OPERATOR
+
+    def get_left_side(self):
+        return self.left_side
+
+    def get_right_side(self):
+        return self.right_side
+
+    def get_operator(self):
+        return self.operator
+
+    def set_left_side(self,el):
+        self.left_side = el
+
+    def set_right_side(self,el):
+        self.right_side = el
+
+    def __repr__(self):
+        return str(self.get_left_side()) + str(self.get_operator()) + str(self.get_right_side())
 
 class Variable(Element):
     def __init__(self,name = ''):
@@ -42,11 +90,28 @@ class RelationInQuery:
         self.is_negated = is_negated # Is it negated
         self.wildcards = wildcards # [position]
     def __repr__(self):
-        return ('name: ' + self.name + '\n' + 
+        '''return ('name: ' + self.name + '\n' + 
                'variables: ' + str(self.variables) + '\n' +
                'constants: ' + str(self.constants) + '\n' + 
                'is_negated: ' + str(self.is_negated) + '\n' +
-               'wildcards: ' + str(self.wildcards) + '\n')
+               'wildcards: ' + str(self.wildcards) + '\n')'''
+
+        list_of_columns = range(0,len([y for x in self.variables.values() for y in x]) + \
+                                  len([y for x in self.constants.values() for y in x]) + \
+                                  len(self.wildcards))
+
+        for variable in self.variables.keys():
+            for position in self.variables[variable]:
+                list_of_columns[position] = str(variable)
+        for constant in self.constants.keys():
+            for position in self.constants[constant]:
+                 list_of_columns[position] = str(constant)
+        for position in self.wildcards:
+            list_of_columns[position] = '_'
+
+        negated = '!' if self.is_negated else ''
+
+        return negated + self.name + '('+','.join(list_of_columns)+')'
 
 class Query:
     def __init__(self, relations = [], constraints = [], head_variables = {}, head_constants = {} ):
@@ -54,11 +119,26 @@ class Query:
         self.head_constants = head_constants # Constant -> [Position]
         self.relations = relations# [RelationInQuery].
         self.constraints = constraints # Explicit constraints of the form Element COMP Element type.
-                                       # [[Variable, Element_2, Comparison_operator]]
-                                       # Where Element_2 can be of the type Variable or Constant
+                                       # [Constraint]
+
     def __repr__(self):
-        return ('Head vars: ' + str(self.head_variables) + str(self.head_constants) + '\n'+ 'Relations: ' + str(self.relations) + '\n' + 'Constraints: '+ str(self.constraints))# )
-        
+        '''return ('Head vars: ' + str(self.head_variables) + str(self.head_constants) + '\n'+ 'Relations: ' + str(self.relations) + '\n' + 'Constraints: '+ str(self.constraints))# )'''
+        string = 'R('
+        list_of_columns = range(0,len([y for x in self.head_variables.values() for y in x]) + \
+                                  len([y for x in self.head_constants.values() for y in x]))
+
+        for head_variable in self.head_variables.keys():
+            for position in self.head_variables[head_variable]:
+                list_of_columns[position] = str(head_variable)
+
+        for head_constant in self.head_constants.keys():
+            for position in self.head_constants[head_constant]:
+                list_of_columns[position] = str(head_constant)
+
+        return 'R('+','.join(list_of_columns)+'):-'+','.join([str(x) for x in self.relations]) + (',' if len(self.constraints)>0 else '') + ','.join([str(x) for x in self.constraints])
+            
+
+
 class QueryToAlchemyStatement:
     def __init__(self, query):
         self.query = copy.deepcopy(query)
@@ -102,17 +182,18 @@ class QueryToAlchemyStatement:
         constraints = []
         # An explicit constraint is one of the form Element COMP Element type.
         for constraint in self.query.constraints:
-            if isinstance(constraint[0],Variable):
-                left_side = self.var_dict[constraint[0]][0].name+'.'+self.var_dict[constraint[0]][1]
+            if constraint.get_left_side().is_variable(): 
+                left_side = self.var_dict[constraint.get_left_side()][0].name+'.'+self.var_dict[constraint.get_left_side()][1]
             else:
-                left_side = constraint[0].value
+                left_side = constraint.get_left_side().value
 
-            if isinstance(constraint[1],Variable):
-                right_side = self.var_dict[constraint[1]][0].name+'.'+self.var_dict[constraint[1]][1]
+            if constraint.get_right_side().is_variable():
+                right_side = self.var_dict[constraint.get_right_side()][0].name+'.'+self.var_dict[constraint.get_right_side()][1]
             else:
-                right_side = constraint[1].value
+                right_side = constraint.get_right_side().value
 
-            constraints.append(left_side + constraint[2] + right_side)
+            constraints.append(left_side + constraint.get_operator() + right_side)
+
         return constraints
 
     def getSelectedColumns(self):
@@ -124,8 +205,8 @@ class QueryToAlchemyStatement:
                 if self.var_dict.has_key(head_variable):
                     list_of_columns[position] = self.var_dict[head_variable][0][0].name + '._' + self.var_dict[head_variable][0][1] + ' as ' + head_variable.name
                 else: # There is no occurence of head_variable in a relation, so it must be in a constraint
-                    constraint = [x for x in self.query.constraints if (x[0] == head_variable and x[2] == equality_operator)][0]
-                    list_of_columns[position] = str(constraint[1]) + ' as _'+str(position)                 
+                    constraint = [x for x in self.query.constraints if (x.get_left_side() == head_variable and x.is_equality_constraint())][0]
+                    list_of_columns[position] = str(constraint.get_right_side()) + ' as _'+str(position)                 
         for head_constant in self.query.head_constants.keys():
             for position in self.query.head_constants[head_constant]:
                 list_of_columns[position] = head_constant.value + ' as _'+str(position)
@@ -145,10 +226,10 @@ class QueryToAlchemyStatement:
         variables_bounded_to_constants = []
 
         for constraint in self.query.constraints:
-            if (isinstance(constraint[0],Variable) and 
-                isinstance(constraint[1],Constant) and 
-                constraint[2] == equality_operator): 
-                    variables_bounded_to_constants.append(constraint[0])
+            if (constraint.get_left_side().is_variable() and 
+                constraint.get_right_side().is_constant() and 
+                constraint.is_equality_constraint()): 
+                    variables_bounded_to_constants.append(constraint.get_left_side())
 
         safe_variables = self.var_dict.keys() + variables_bounded_to_constants
 
@@ -189,8 +270,8 @@ class QueryToAlchemyStatement:
 
         # Create a list of variables which occur in explicit constraints with non equality operators
         variables_in_constraints_with_non_equality_operators = [y for x in self.query.constraints \
-                                                                    for y in x[0:2] \
-                                                                        if isinstance(y,Variable) and x[2] != equality_operator]
+                                                                    for y in [x.get_left_side(),x.get_right_side()] \
+                                                                        if y.is_variable() and not x.is_equality_constraint()]
 
         for variable in variables_in_constraints_with_non_equality_operators:
             if not (variable in safe_variables):
@@ -227,11 +308,11 @@ class QueryToAlchemyStatement:
         query = copy.deepcopy(q) 
         # Build the equivalence sets
 
-        equality_constraints = [x for x in query.constraints if x[2] == equality_operator]
+        equality_constraints = [x for x in query.constraints if x.is_equality_constraint()]
         eq_sets = []
         for eq_constraint in equality_constraints:
-            el1 = eq_constraint[0]
-            el2 = eq_constraint[1]
+            el1 = eq_constraint.get_left_side()
+            el2 = eq_constraint.get_right_side()
             
             set1 = -1
             set2 = -1
@@ -259,8 +340,8 @@ class QueryToAlchemyStatement:
         new_eq_constraints = []
 
         for s in eq_sets:
-            constants = [x for x in s if isinstance(x,Constant)]
-            variables = [x for x in s if isinstance(x,Variable)]
+            constants = [x for x in s if x.is_constant()]
+            variables = [x for x in s if x.is_variable()]
             variables_occur_relation = [y for x in query.relations for y in x.variables.keys() if y in variables] 
 
             if len(variables_occur_relation)==0 and len(variables)>0 :
@@ -285,17 +366,16 @@ class QueryToAlchemyStatement:
 
                 # Substitute every occurence of the variable in the constraints with the constant
                 for constraint in query.constraints:
-                    el0 = constraint[0]
-                    el1 = constraint[1]
-                    if (isinstance(el0,Variable)) and el0 in s:
-                        constraint[0] = constant
-                    if (isinstance(el1,Variable)) and el1 in s:
-                        constraint[1] = constant
-
+                    el0 = constraint.get_left_side()
+                    el1 = constraint.get_right_side()
+                    if el0.is_variable() and el0 in s:
+                        constraint.set_left_side(constant)
+                    if el1.is_variable() and el1 in s:
+                        constraint.set_right_side(constant)
                 # Make sure we can still unify head variables with constants if they are in the equivalence set.
                 for variable in variables:
                     if variable in query.head_variables.keys():
-                        new_eq_constraints.append([variable,constant,equality_operator])                              
+                        new_eq_constraints.append(Constraint(variable,constant,Constraint.EQ_OPERATOR))                              
             else:
                 # Substitute every occurence of variable in the relations with one variable from variables_occur_relation
                 var = variables_occur_relation[0]
@@ -321,7 +401,7 @@ class QueryToAlchemyStatement:
                     query.head_variables[var] = []
 
                 for head_var in variables_in_head:
-                    if head_var in s:
+                    if head_var in s and not var == head_var:
                         query.head_variables[var] += query.head_variables.pop(head_var)
 
                 '''for i in range(0,len(query.head_variables.keys())):
@@ -333,21 +413,18 @@ class QueryToAlchemyStatement:
 
                 # Substitute every occurence of variable in the constraints with one variable from variables_occur_relation
                 for constraint in query.constraints:
-                    el0 = constraint[0]
-                    el1 = constraint[1]
-                    if (isinstance(el0,Variable)) and el0 in s:
-                        constraint[0] = var
-                    if (isinstance(el1,Variable)) and el1 in s:
-                        constraint[1] = var
+                    el0 = constraint.get_left_side()
+                    el1 = constraint.get_right_side()
+                    if el0.is_variable() and el0 in s:
+                        constraint.set_left_side(var)
+                    if el1.is_variable() and el1 in s:
+                        constraint.set_right_side(var)
 
-            # If there's more than one constant in this equivalence set, they might all be different so we need to keep these constraints.
+            # If there's more than one constant in this equivalence set, they are all be different so we need to keep one of these constraints so the query returns false.
             if len(constants)>1:
-                for i in range(0,len(constants)):
-                    for j in range(i,len(constants)):
-                        if not constants[i] == constants[j]:
-                            new_eq_constraints.append([constants[i],constants[j],equality_operator])                                
+                new_eq_constraints.append(Constraint(constants[0],constants[1],Constraint.EQ_OPERATOR))                                
 
-        query.constraints = [x for x in query.constraints if x[2] != equality_operator] + new_eq_constraints
+        query.constraints = [x for x in query.constraints if not x.is_equality_constraint()] + new_eq_constraints
         return query
 
  
