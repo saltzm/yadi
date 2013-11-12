@@ -113,15 +113,25 @@ class RelationInQuery:
 
         return negated + self.name + '('+','.join(list_of_columns)+')'
 
+    def get_names(self):
+        return self.variables
+
+    def get_variables(self):
+        return self.variables
+
+    def get_constants(self):
+        return self.constants
+
+    def get_wildcards(self):
+        return self.wildcards
+
 class Query:
     def __init__(self, conjunctive_queries = []):
         self.conjunctive_queries = conjunctive_queries
 
 class ConjunctiveQuery:
-    def __init__(self, relations = [], constraints = [], head_variables = {}, head_constants = {}, wildcards = [] ):
-        self.head_variables = head_variables # Variable -> [Position]
-        self.head_constants = head_constants # Constant -> [Position]
-        self.wildcards = wildcards
+    def __init__(self, relations = [], constraints = [], head_relation = None):
+        self.head_relation = head_relation
         self.relations = relations# [RelationInQuery].
         self.constraints = constraints # Explicit constraints of the form Element COMP Element type.
                                        # [Constraint]
@@ -129,18 +139,18 @@ class ConjunctiveQuery:
     def __repr__(self):
         '''return ('Head vars: ' + str(self.head_variables) + str(self.head_constants) + '\n'+ 'Relations: ' + str(self.relations) + '\n' + 'Constraints: '+ str(self.constraints))# )'''
         string = 'R('
-        list_of_columns = range(0,len([y for x in self.head_variables.values() for y in x]) + \
-                                  len([y for x in self.head_constants.values() for y in x]))
+        list_of_columns = range(0,len([y for x in self.head_relation.get_variables().values() for y in x]) + \
+                                  len([y for x in self.head_relation.get_constants().values() for y in x]))
 
-        for head_variable in self.head_variables.keys():
-            for position in self.head_variables[head_variable]:
+        for head_variable in self.head_relation.get_variables().keys():
+            for position in self.head_relation.get_variables()[head_variable]:
                 list_of_columns[position] = str(head_variable)
 
-        for head_constant in self.head_constants.keys():
-            for position in self.head_constants[head_constant]:
+        for head_constant in self.head_relation.get_constants().keys():
+            for position in self.head_relation.get_constants()[head_constant]:
                 list_of_columns[position] = str(head_constant)
 
-        return 'R('+','.join(list_of_columns)+'):-'+','.join([str(x) for x in self.relations]) + (',' if len(self.constraints)>0 else '') + ','.join([str(x) for x in self.constraints])
+        return str(self.head_relation)+':-'+','.join([str(x) for x in self.relations]) + (',' if len(self.constraints)>0 else '') + ','.join([str(x) for x in self.constraints])
             
 
 
@@ -202,18 +212,18 @@ class QueryToAlchemyStatement:
         return constraints
 
     def getSelectedColumns(self):
-        list_of_columns = range(0,len([y for x in self.query.head_variables.values() for y in x]) + \
-                                  len([y for x in self.query.head_constants.values() for y in x]))
+        list_of_columns = range(0,len([y for x in self.query.head_relation.get_variables().values() for y in x]) + \
+                                  len([y for x in self.query.head_relation.get_constants().values() for y in x]))
 
-        for head_variable in self.query.head_variables.keys():
-            for position in self.query.head_variables[head_variable]:
+        for head_variable in self.query.head_relation.get_variables().keys():
+            for position in self.query.head_relation.get_variables()[head_variable]:
                 if self.var_dict.has_key(head_variable):
                     list_of_columns[position] = self.var_dict[head_variable][0][0].name + '._' + self.var_dict[head_variable][0][1] + ' as ' + head_variable.name
                 else: # There is no occurence of head_variable in a relation, so it must be in a constraint
                     constraint = [x for x in self.query.constraints if (x.get_left_side() == head_variable and x.is_equality_constraint())][0]
                     list_of_columns[position] = str(constraint.get_right_side()) + ' as _'+str(position)                 
-        for head_constant in self.query.head_constants.keys():
-            for position in self.query.head_constants[head_constant]:
+        for head_constant in self.query.head_relation.get_constants().keys():
+            for position in self.query.head_relation.get_constants()[head_constant]:
                 list_of_columns[position] = head_constant.value + ' as _'+str(position)
         
         return list_of_columns    
@@ -249,7 +259,7 @@ class QueryToAlchemyStatement:
 
     def check_head(self,safe_variables):
 
-        for variable in self.query.head_variables.keys():
+        for variable in self.query.head_relation.get_variables().keys():
             if not (variable in safe_variables):
                 raise NotSafeException('Query not safe because '+ variable.name + ' occurs in the head and not in a positive goal')
                 return False
@@ -379,7 +389,7 @@ class QueryToAlchemyStatement:
                         constraint.set_right_side(constant)
                 # Make sure we can still unify head variables with constants if they are in the equivalence set.
                 for variable in variables:
-                    if variable in query.head_variables.keys():
+                    if variable in query.head_relation.get_variables().keys():
                         new_eq_constraints.append(Constraint(variable,constant,Constraint.EQ_OPERATOR))                              
             else:
                 # Substitute every occurence of variable in the relations with one variable from variables_occur_relation
@@ -401,20 +411,13 @@ class QueryToAlchemyStatement:
                         relation.variables[key] = add_dict[key]
                 # Substitute every occurence of variable in the head with one variable from variables_occur_relation
 
-                variables_in_head = query.head_variables.keys()
-                if not query.head_variables.has_key(var):
-                    query.head_variables[var] = []
+                variables_in_head = query.head_relation.get_variables().keys()
+                if not query.head_relation.get_variables().has_key(var):
+                    query.head_relation.get_variables()[var] = []
 
                 for head_var in variables_in_head:
                     if head_var in s and not var == head_var:
-                        query.head_variables[var] += query.head_variables.pop(head_var)
-
-                '''for i in range(0,len(query.head_variables.keys())):
-                    
-                    if query.head_variables.keys()[i] in s:
-                        del_list = []
-                        add_dict = {} 
-                        query.head_variables[i] = var'''
+                        query.head_relation.get_variables()[var] += query.head_relation.get_variables().pop(head_var)
 
                 # Substitute every occurence of variable in the constraints with one variable from variables_occur_relation
                 for constraint in query.constraints:
