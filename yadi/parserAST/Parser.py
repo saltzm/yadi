@@ -1,41 +1,50 @@
 from pyparsing import *
 
-# TODO: 1. Rename variables to match definitions below.
-# TODO: 2. Allow underscore use in constants inside terms.
-# TODO: 3. Implement string use for constants and predicate symbols.
-# TODO: 4. Implement comment parsing.
-# TODO: 5. Implement disjunctions.
-# TODO: 6. Implement use of variables in term list.
-# TODO: 7. Implement semicolon.
+# TODO: 1. Review safety of strings on constants.
+# TODO: 2. Implement nested joins.
+# TODO: 3. Negation inside a disjunction or a division is not yet supported. i.e: r(a,X);not(q(X,b))
+# TODO: 4. Block negation from occurring in the head. Modify definition of head.
+
+# Notes:
+# - We decided not to implement compound terms for now.
 
 # Definitions:
-# Literal:          predicate symbol followed by an optional parenthesized list of comma separated terms.
-#                   Ex: parent(a,b)
-# Predicate symbol: identifier or string
-# Term:             variable or constant
-# Constant:         identifier or string
-# Variable:         sequence of Latin capital and small letters, digits, and the underscore character.
-#                   A variable must begin with a Latin capital letter.
-# Identifier:       a sequence of printing characters that does not contain any of the following characters:
-#                   ‘(’, ‘,’, ‘)’, ‘=’, ‘:’, ‘.’, ‘~’, ‘?’, ‘"’, ‘%’, space. An identifier must not begin with a Latin
-#                   capital letter. Note that the characters that start punctuation are forbidden in identifiers, but
-#                   the hyphen character is allowed. --> NEED TO IMPLEMENT THIS COMPLETELY <--
+# Number:           Signed integers (no positive sign). Float with a dot between two digits. Scientific notation
+#                   is supported as aEb where a = fractional number, b = integer which may start with + or -.
+# Constant:         A number, any sequence of alphanumerics including underscore but starting with lowercase letter,
+#                   or any sequence of characters delimited by single quotes.
+# Variable:         Starts with uppercase or underscore, made of alphanumeric characters
+# Unknown:          Null values represented with "null" for normal users or "'$NULL'(ID)" for development purposes,
+#                   where ID is an integer.
+# Term:             Noncompound: variables or constants
+#                   Compound: Form of t(t1,...,tn) where t is the functor (which follows the syntax of a noncompound
+#                   term) and tn are noncompound terms.
+# Predicate symbol: Defined as a sequence of alphanumerics characters + underscore that start with lowercase or
+#                   underscore. On a(t1,t2), "a" stands for the predicate symbol. Relation is a synonym of predicate.
+# Atom:             Has the form of a(t1, t2) for ti (0<=1<=n). If i = 0, then it is simply written as "a."
+# Condition:        Boolean expression containing conjunctions (,/2), disjunctions (;/2), comparison operators,
+#                   constants and variables.
+# Literal:
+# Relation func.:   Built-in functions of the form f(a1,...,an) where ai is a relation (predicate). Built-in
+#                   functions implemented are:
+#                   -not(a)
+#                   -lj(a1,a2,a3) is left outer join where a1 = left relation, a2 = right relation, a3 = join condition.
+#                    Same is applicable for rj(a1,a2,a3) for right outer join, and fj(a1,a2,a3) for full outer join.
+#                   Outer join functions can be nested.
+# Head:             A positive atom that is not a built-in predicate symbol.
+# Body:             Comma separated sequence of literals, which may contain built in functions, disjunctions and
+#                   division.
+# Rule:             head :- body, or just head (called a fact).
 
 class Parser:
-    def __init__(self): pass
+    def __init__(self):
+        pass
 
-    def parseSentence(self, sentence):
-        #Character sets
-        dot = Literal(".").suppress()
-        comma = Literal(",").suppress()                 # Not interested in commas, delete from tokens
+    def parsesentence(self, sentence):
+        #Special characters
         underscore = Word("_", max=1)                   # Only a single underscore can be used for anon. var
-        numbers = Word("0123456789")
-        letters = Word("abcdefghijklmnopqrstuwxyz")
-        clauseVar = Combine(Word("ABCDEFGHIJKLMNOPQRSTUVWXYZ") + Optional(Word(alphanums)))  # Node name
-        
-        #Parenthesis
-        lParen = Literal("(").suppress()                # Not interested in parenthesis, delete from tokens
-        rParen = Literal(")").suppress()                # Not interested in parenthesis, delete from tokens
+        comma = Literal(",").suppress()                 # Not interested in commas, delete from tokens
+        separator = Literal(":-")
 
         #Comparison operators
         greater = Literal(">")
@@ -43,31 +52,56 @@ class Parser:
         equal = Literal("=")
         gEqual = Literal(">=")
         lEqual = Literal("<=")
-        compOp = greater | less | equal | gEqual | lEqual 
+        compOp = gEqual | lEqual | equal | greater | less
 
-        #Operators
-        separator = Literal(":-")
-        andString = Literal("and").suppress()
-        andOps = andString | comma
-        negation = Literal("¬")
+        #Expressions
+        number = Combine(Word('-' + nums, nums) + Optional(Literal('.') + Word(nums)) +
+                         Optional(Literal('E') + Optional(Word("-+", max=1)) + Word(nums)))
 
-        #Valid variable format examples: "x, xyz, x1, x123, _"
-        variables = underscore | Combine(letters + numbers) | letters
+        constant = (number | Combine(Word(srange('[a-z]'), alphanums + "_")) |
+                    QuotedString("'", unquoteResults=False))
 
-        #Comparisons
-        comparison = (letters | Combine(letters + numbers)) + compOp + numbers
+        variable = (Combine(Optional("_") + Word(srange('[A-Z]')) + Optional(Word(alphanums))) |
+                    Combine(Literal("_") + Word(srange('[a-z]'))) |
+                    underscore)
 
-        #Head expression
-        node = Optional(negation) + clauseVar + lParen + Group(variables + ZeroOrMore(comma + variables)) + rParen
+        unknown = (Literal("null") | Combine((Literal("'$NULL'(") + Word(nums) + Literal(")"))))
 
-        #body expression
-        body = Group(node) + ZeroOrMore(andOps + Group(node)) + ZeroOrMore(andOps + Group(comparison)) + dot
+        noncompound = variable | constant
+        #compound = Combine(noncompound + Literal('(') + OneOrMore(noncompound) + Literal(')'))
 
-        #Complete expression
-        expr = OneOrMore(Group(Group(node) + separator + body) | Group(node + dot)) + StringEnd()
+        term = noncompound
+
+        predicate_symbol = Combine((Optional(Literal('_')) + Word(srange('[a-z]')) + Optional(Word(alphanums + '_'))) |
+                                   (OneOrMore(Literal('_')) + Word(alphanums, min=1) + Optional(Word(alphanums + '_'))))
+
+        atom = (predicate_symbol + Literal("(").suppress() + Group(term + Optional(OneOrMore(comma | term))) +
+                Literal(")").suppress()) | predicate_symbol
+
+        comparison = Group(noncompound + compOp + noncompound)
+        conjunction = Literal("(").suppress() + comparison + Literal(",") + comparison + Literal(")").suppress()
+        disjunction = Literal("(").suppress() + comparison + Literal(";") + comparison + Literal(")").suppress()
+        condition = conjunction | disjunction | comparison
+
+        positive = Group(atom)
+        disjunctive = Group(atom) + Literal(";") + Group(atom)
+        divided = Group(atom) + Literal("division") + Group(atom)
+        not_function = Literal("not") + Literal("(").suppress() + Group(disjunctive | divided | positive) + Literal(
+            ")").suppress()
+        literal = Group(not_function) | disjunctive | divided | positive
+
+        join_types = Literal("lj") | Literal("rj") | Literal("fj")
+        join_base = join_types + Literal('(').suppress() + Group(atom) + comma + Group(
+            atom) + comma + comparison + Literal(')').suppress()
+
+        relation_function = not_function | join_base
+
+        head = positive
+        body = literal + ZeroOrMore(Literal(',').suppress()+(condition | literal))
+        rule = ((head + separator + body) | head) + StringEnd()
 
         try:
-            test = expr.parseString(sentence)
+            test = rule.parseString(sentence)
             print(test)
         except ParseException as pe:
             print(pe)
