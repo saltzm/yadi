@@ -125,7 +125,7 @@ class RelationInQuery:
     def get_wildcards(self):
         return self.wildcards
 
-class Query:
+class DisjunctiveQuery:
     def __init__(self, conjunctive_queries = []):
         self.conjunctive_queries = conjunctive_queries
 
@@ -218,7 +218,7 @@ class QueryToAlchemyStatement:
         for head_variable in self.query.head_relation.get_variables().keys():
             for position in self.query.head_relation.get_variables()[head_variable]:
                 if self.var_dict.has_key(head_variable):
-                    list_of_columns[position] = self.var_dict[head_variable][0][0].name + '._' + self.var_dict[head_variable][0][1] + ' as ' + head_variable.name
+                    list_of_columns[position] = str(self.var_dict[head_variable][0][0].name) + '._' + str(self.var_dict[head_variable][0][1]) + ' as ' + str(head_variable.name)
                 else: # There is no occurence of head_variable in a relation, so it must be in a constraint
                     constraint = [x for x in self.query.constraints if (x.get_left_side() == head_variable and x.is_equality_constraint())][0]
                     list_of_columns[position] = str(constraint.get_right_side()) + ' as _'+str(position)                 
