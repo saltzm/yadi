@@ -41,10 +41,12 @@ class Parser:
         pass
 
     def parsesentence(self, sentence):
+
         #Special characters
         underscore = Word("_", max=1)                   # Only a single underscore can be used for anon. var
         comma = Literal(",").suppress()                 # Not interested in commas, delete from tokens
         separator = Literal(":-")
+        dot = Literal(".").suppress()
 
         #Comparison operators
         greater = Literal(">")
@@ -54,54 +56,68 @@ class Parser:
         lEqual = Literal("<=")
         compOp = gEqual | lEqual | equal | greater | less
 
-        #Expressions
+        #Number
         number = Combine(Word('-' + nums, nums) + Optional(Literal('.') + Word(nums)) +
-                         Optional(Literal('E') + Optional(Word("-+", max=1)) + Word(nums)))
+                         Optional(Literal('E') + Optional(Word("-+", max=1)) + Word(nums))).setName("number")
 
+        #Constant
         constant = (number | Combine(Word(srange('[a-z]'), alphanums + "_")) |
-                    QuotedString("'", unquoteResults=False))
+                    QuotedString("'", unquoteResults=False)).setName("constant")
 
+        #Variable
         variable = (Combine(Optional("_") + Word(srange('[A-Z]')) + Optional(Word(alphanums))) |
                     Combine(Literal("_") + Word(srange('[a-z]'))) |
-                    underscore)
+                    underscore).setName("variable")
 
-        unknown = (Literal("null") | Combine((Literal("'$NULL'(") + Word(nums) + Literal(")"))))
+        #Unknown
+        unknown = (Literal("null") | Combine((Literal("'$NULL'(") + Word(nums) + Literal(")")))).setName("unknown")
 
-        noncompound = variable | constant
-        #compound = Combine(noncompound + Literal('(') + OneOrMore(noncompound) + Literal(')'))
-
+        #Terms
+        noncompound = (variable | constant).setName("noncompound")
+            #compound = Combine(noncompound + Literal('(') + OneOrMore(noncompound) + Literal(')'))
         term = noncompound
 
+        #Atom
         predicate_symbol = Combine((Optional(Literal('_')) + Word(srange('[a-z]')) + Optional(Word(alphanums + '_'))) |
-                                   (OneOrMore(Literal('_')) + Word(alphanums, min=1) + Optional(Word(alphanums + '_'))))
+                                   (OneOrMore(Literal('_')) + Word(alphanums, min=1) + Optional(
+                                       Word(alphanums + '_')))).setName("predicate_symbol")
 
-        atom = (predicate_symbol + Literal("(").suppress() + Group(term + Optional(OneOrMore(comma | term))) +
-                Literal(")").suppress()) | predicate_symbol
+        atom = ((predicate_symbol + Literal("(").suppress() + Group(term + Optional(OneOrMore(comma | term))) +
+                 Literal(")").suppress()) | predicate_symbol).setName("atom")
 
-        comparison = Group(noncompound + compOp + noncompound)
-        conjunction = Literal("(").suppress() + comparison + Literal(",") + comparison + Literal(")").suppress()
-        disjunction = Literal("(").suppress() + comparison + Literal(";") + comparison + Literal(")").suppress()
-        condition = conjunction | disjunction | comparison
+        #Comparison and conditions
+        comparison = Group(noncompound + compOp + noncompound).setName("comparison")
+        conjunction = Group(Literal("(").suppress() + comparison + Literal(",") + comparison +
+                       Literal(")").suppress()).setName("conjunction")
+        disjunction = Group(Literal("(").suppress() + comparison + Literal(";") + comparison +
+                       Literal(")").suppress()).setName("disjunction")
+        condition = (conjunction | disjunction | comparison).setName("condition")
 
-        positive = Group(atom)
-        disjunctive = Group(atom) + Literal(";") + Group(atom)
-        divided = Group(atom) + Literal("division") + Group(atom)
-        not_function = Literal("not") + Literal("(").suppress() + Group(disjunctive | divided | positive) + Literal(
-            ")").suppress()
-        literal = Group(not_function) | disjunctive | divided | positive
+        #Literals
+        positive = Group(atom).setName("positive_atom")
+        disjunctive = (Group(atom) + Literal(";") + Group(atom)).setName("disjunctive")
+        divided = Group(Group(atom) + Literal("division") + Group(atom)).setName("divided")
+        not_function = (Literal("not") + Literal("(").suppress() + Group(disjunctive | divided | positive) + Literal(
+            ")").suppress()).setName("not_function")
+        literal = (Group(not_function) | disjunctive | divided | positive).setName("literal")
 
-        join_types = Literal("lj") | Literal("rj") | Literal("fj")
-        join_base = join_types + Literal('(').suppress() + Group(atom) + comma + Group(
-            atom) + comma + comparison + Literal(')').suppress()
+        #Joins
+        join_types = (Literal("lj") | Literal("rj") | Literal("fj")).setName("join_type")
+        join_base = (join_types + Literal('(').suppress() + Group(atom) + comma + Group(
+            atom) + comma + comparison + Literal(')').suppress()).setName("join_base")
 
-        relation_function = not_function | join_base
+        relation_function = (not_function | join_base).setName("relation_function")
 
-        head = positive
-        body = literal + ZeroOrMore(Literal(',').suppress()+(condition | literal))
-        rule = ((head + separator + body) | head) + StringEnd()
+        #Rules and facts
+        head = positive.setName("head")
+        body = (literal + ZeroOrMore(Literal(',').suppress() + (condition | literal))).setName("body")
+        rule = (OneOrMore(Group(((head + separator + body) | head) + dot)) + StringEnd()).setName("expression").setFailAction(self.syntax)
 
         try:
             test = rule.parseString(sentence)
             print(test)
         except ParseException as pe:
             print(pe)
+
+    def syntax(self, s, loc, expr, err):
+        print("Syntax error on string {0!r}, loc {1!r} of '{2!r}'".format(s, loc, expr))
