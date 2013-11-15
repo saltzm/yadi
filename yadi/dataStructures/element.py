@@ -2,9 +2,9 @@ class Element:
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
             and self.__dict__ == other.__dict__)
-    def is_variable(self): 
+    def is_variable(self):
         return isinstance(self,Variable)
-    def is_constant(self): 
+    def is_constant(self):
         return isinstance(self,Constant)
 
 class Variable(Element):

@@ -25,15 +25,18 @@ class DisjunctiveQuery(Query):
 class ConjunctiveQuery(Query):
     def __init__(self, relations = [], constraints = [], head_relation = None):
         self.head_relation = head_relation
-        self.relations = relations# [RelationInQuery].
-        self.constraints = constraints # Explicit constraints of the form Element COMP Element type.
-                                       # [Constraint]
+        self.relations = relations      # [RelationInQuery].
+        self.constraints = constraints  # Explicit constraints of the form
+                                        # Element COMP Element type.
+                                        # [Constraint]
 
-    def get_relations():
+    def get_relations(self):
         return self.relations
 
+    def get_constraints(self):
+        return self.constraints
+
     def __repr__(self):
-        '''return ('Head vars: ' + str(self.head_variables) + str(self.head_constants) + '\n'+ 'Relations: ' + str(self.relations) + '\n' + 'Constraints: '+ str(self.constraints))# )'''
         string = 'R('
         list_of_columns = range(0,len([y for x in self.head_relation.get_variables().values() for y in x]) + \
                                   len([y for x in self.head_relation.get_constants().values() for y in x]))
@@ -46,5 +49,8 @@ class ConjunctiveQuery(Query):
             for position in self.head_relation.get_constants()[head_constant]:
                 list_of_columns[position] = str(head_constant)
 
-        return str(self.head_relation)+':-'+','.join([str(x) for x in self.relations]) + (',' if len(self.constraints)>0 else '') + ','.join([str(x) for x in self.constraints])
-            
+        return str(self.head_relation) + ':-' + \
+               ','.join([str(x) for x in self.relations]) + \
+               (',' if len(self.constraints)>0 else '') + \
+               ','.join([str(x) for x in self.constraints])
+
