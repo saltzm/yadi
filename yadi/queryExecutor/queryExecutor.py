@@ -1,23 +1,14 @@
-#class QueryExecutor():
-    #def executeQuery(self, query)
-        #if isinstance(query, ConjunctiveQuery):
-            ## Preprocess
-            ## Safety check
-            ## SQL generation.
-            ## Executing.
+from safetyChecker import *
+from preprocessor import *
+from sqlFactory import *
 
-            #cq = ConjunctiveQuerySQLFactory(query)
-            #return cq.getSQLCode()
-        #if isinstance(query, DisjunctiveQuery):
-            ## Preprocess
-            ## Safety check
-            ## SQL generation.
-            ## Executing.
-
-        #if in
-            #cq = DisjunctiveQuerySQLFactory(query)
-            #return cq.getSQLCode()
-
-    #def getSQLCode(self):
-        #pass
-
+class QueryExecutor():
+    def execute_query(self, query):
+        new_query = QueryPreprocessor().preprocess(query)
+        print 'Minified query ' + str(new_query)
+        try:
+            SafetyChecker().check_for_safety(new_query)        
+        except SafetyException as e:
+            return str(e)
+        sql = SQLGenerator().get_SQL_code(new_query,query)
+        return sql

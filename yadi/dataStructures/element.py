@@ -6,6 +6,8 @@ class Element:
         return isinstance(self,Variable)
     def is_constant(self):
         return isinstance(self,Constant)
+    def is_wildcard(self):
+        return isinstance(self,Wildcard)
 
 class Variable(Element):
     def __init__(self,name = ''):
@@ -22,3 +24,10 @@ class Constant(Element):
         return hash(self.value)
     def __repr__(self):
         return self.value
+
+class Wildcard(Element):
+    def __hash__(self):
+        return hash('_')
+    def __repr__(self):
+        return '_'
+

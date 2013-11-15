@@ -1,96 +1,20 @@
-#TODO:
-
-# Check the IS EQUALITY or IS IS COMPARISON in check_is_it_safe() (there's 2 things to check).
-# Implement check variables that occur in defined predicates.
-
 import copy
+from dataStructures.query import *
+from dataStructures.constraint import *
 
-equality_operator = '='
+class QueryPreprocessor():
+    def preprocess(self,query):
+        if isinstance(query, ConjunctiveQuery):
+            pp = ConjunctiveQueryPreprocessor()
+        if isinstance(query, DisjunctiveQuery):
+            pp = DisjunctiveQueryPreprocessor()
+        return pp.preprocess(query)
 
-class NotSafeException(Exception):
-    pass
-class NotInstantiatedException(Exception):
-    pass
+class ConjunctiveQueryPreprocessor():
 
-class QueryToAlchemyStatement:
-    def __init__(self, query):
-        self.query = copy.deepcopy(query)
-        self.var_dict = self.create_var_dict(query) # Variable -> [(Relation, field)]
-
-    # var_dict is a Variable -> [(Relation, field)] which is usefuld for several purposes.
-    # It does not map occurences of variables in negated goals.
-    def create_var_dict(self,query):
-        variables_in_positive_goals = [y for x in query.relations for y in x.variables.keys() if not x.is_negated]
-        var_dict = {}
-
-        for relation in [x for x in query.relations if not x.is_negated]:
-            for var in relation.variables.keys():
-                if not var_dict.has_key(var):
-                    var_dict[var] = []
-                for position in relation.variables[var]:
-                    var_dict[var].append((relation,position))
-
-        return var_dict
-
-    def get_safe_variables(self):
-        # Create a list of safe variables: variables bounded to constants or that occur in a positive goal
-
-        variables_bounded_to_constants = []
-
-        for constraint in self.query.constraints:
-            if (constraint.get_left_side().is_variable() and
-                constraint.get_right_side().is_constant() and
-                constraint.is_equality_constraint()):
-                    variables_bounded_to_constants.append(constraint.get_left_side())
-
-        safe_variables = self.var_dict.keys() + variables_bounded_to_constants
-
-        return safe_variables
-
-    def check_is_it_safe(self):
-        safe_variables = self.get_safe_variables()
-
-        return (self.check_head(safe_variables) and
-               self.check_negated_goals(safe_variables) and
-               self.check_non_equality_explicit_constraints(safe_variables))
-
-    def check_head(self,safe_variables):
-
-        for variable in self.query.head_relation.get_variables().keys():
-            if not (variable in safe_variables):
-                raise NotSafeException('Query not safe because '+ variable.name + ' occurs in the head and not in a positive goal')
-                return False
-        return True
-
-    def check_negated_goals(self,safe_variables):
-
-        # Create a list of variables which occur in negated goals.
-        variables_in_negated_goals = [y for x in self.query.relations for y in x.variables.keys() if x.is_negated]
-
-        # And check them:
-        for variable in variables_in_negated_goals:
-            if not (variable in safe_variables):
-                raise NotSafeException('Query not safe because ' + variable.name + ' from a negated goal does not occur in a positive goal')
-                return False
-
-        return True
-
-
-    def check_non_equality_explicit_constraints(self,safe_variables):
-
-        # Checking variables which occur in explicit constraints with non equality operators
-
-        # Create a list of variables which occur in explicit constraints with non equality operators
-        variables_in_constraints_with_non_equality_operators = [y for x in self.query.constraints \
-                                                                    for y in [x.get_left_side(),x.get_right_side()] \
-                                                                        if y.is_variable() and not x.is_equality_constraint()]
-
-        for variable in variables_in_constraints_with_non_equality_operators:
-            if not (variable in safe_variables):
-                raise NotSafeException('Query not safe because ' + variable.name + ' from a non_equality comparison does not occur in a positive goal')
-                return False
-
-        return True
+    def preprocess(self,query):
+        query = self.reduce_equality_constraints(query)
+        return query
 
     ''' This method takes a query, makes a deep copy of it and modifies it to keep only equality constraints of the form:
         Var = const if Var occurs in the head OR
@@ -231,10 +155,3 @@ class QueryToAlchemyStatement:
 
         query.constraints = [x for x in query.constraints if not x.is_equality_constraint()] + new_eq_constraints
         return query
-
-
-    def preProcessQuery(self,query):
-        query = self.reduce_equality_constraints(query)
-        self.var_dict = self.create_var_dict(query)
-        return query
-

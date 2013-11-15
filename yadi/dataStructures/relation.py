@@ -7,6 +7,30 @@ class RelationInQuery:
         self.negated = negated # Is it negated
         self.wildcards = wildcards # [position]
 
+    def __init__(self, name='', elements = [],negated = False):
+        self.name = name
+        self.negated = negated # Is it negated
+
+        self.variables = {} # {Variable -> [Position]}
+        self.constants = {} # {Constant -> [Position]}
+        self.wildcards = [] # Is it negated
+
+        for element in elements:
+            if element.is_variable():
+                self.variables[element] = []
+            if element.is_constant():
+                self.constants[element] = []
+
+        # Build the variables, constants dictionaries and the wildcard list.
+        for i in range(0,len(elements)):
+            element = elements[i]
+            if element.is_variable():
+                self.variables[element].append(i)
+            if element.is_constant():
+                self.constants[element].append(i)
+            if element.is_wildcard():
+                self.wildcards.append(i)        
+
     def __repr__(self):
         list_of_columns = range(0,len([y for x in self.variables.values() for y in x]) + \
                                   len([y for x in self.constants.values() for y in x]) + \

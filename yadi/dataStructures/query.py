@@ -2,15 +2,6 @@ class Query():
     def get_relations():
         pass
 
-'''
-class NegatedQuery(Query):
-    def __init__(self, relation = None):
-        self.relation = relation
-
-    def get_relations():
-        return [self.relation]
-'''
-
 class DisjunctiveQuery(Query):
     def __init__(self, queries = []):
         self.queries = queries
@@ -30,6 +21,9 @@ class ConjunctiveQuery(Query):
                                         # Element COMP Element type.
                                         # [Constraint]
 
+    def get_head_relation(self):
+        return self.head_relation
+
     def get_relations(self):
         return self.relations
 
@@ -37,20 +31,24 @@ class ConjunctiveQuery(Query):
         return self.constraints
 
     def __repr__(self):
-        string = 'R('
-        list_of_columns = range(0,len([y for x in self.head_relation.get_variables().values() for y in x]) + \
-                                  len([y for x in self.head_relation.get_constants().values() for y in x]))
-
-        for head_variable in self.head_relation.get_variables().keys():
-            for position in self.head_relation.get_variables()[head_variable]:
-                list_of_columns[position] = str(head_variable)
-
-        for head_constant in self.head_relation.get_constants().keys():
-            for position in self.head_relation.get_constants()[head_constant]:
-                list_of_columns[position] = str(head_constant)
 
         return str(self.head_relation) + ':-' + \
                ','.join([str(x) for x in self.relations]) + \
                (',' if len(self.constraints)>0 else '') + \
                ','.join([str(x) for x in self.constraints])
+
+    # var_dict is a Variable -> [(Relation, field)] which is usefuld for several purposes.
+    # It does not map occurences of variables in negated goals.
+    def get_var_dict(self):
+        variables_in_positive_goals = [y for x in self.relations for y in x.variables.keys() if not x.is_negated()]
+        var_dict = {}
+
+        for relation in [x for x in self.relations if not x.is_negated()]:
+            for var in relation.variables.keys():
+                if not var_dict.has_key(var):
+                    var_dict[var] = []
+                for position in relation.variables[var]:
+                    var_dict[var].append((relation,position))
+
+        return var_dict
 

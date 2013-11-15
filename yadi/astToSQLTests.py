@@ -1,3 +1,9 @@
+from dataStructures.query import *
+from dataStructures.relation import *
+from dataStructures.element import *
+from dataStructures.constraint import *
+from queryExecutor.queryExecutor import *
+
 '''
 r = RelationInQuery('', {Variable():,}, {Constant():,},[],False)
 q = ConjunctiveQuery([],[],[Variable(),])
@@ -405,6 +411,18 @@ r = RelationInQuery('S', {Variable('Y'):[0]}, {},[],True)
 q = ConjunctiveQuery([r],[Constraint(Variable('Y'), Variable('X'), '='),Constraint(Variable('X'), Constant('2'), '='),Constraint(Variable('Y'), Constant('4'), '=')],RelationInQuery('S',{Variable('Y'):[0]}))
 bla = QueryToAlchemyStatement(q)
 print 'Test 15'
+print 'Original: '
+print q
+print ''
+print bla.reduce_equality_constraints(q)
+print '-------------------'
+print ''
+
+# R(X,Y,Z,_,2) := S(X), Y=X, X=2
+r = RelationInQuery('S', {Variable('Y'):[0]}, {},[],True)
+q = ConjunctiveQuery([r],[Constraint(Variable('Y'), Variable('X'), '='),Constraint(Variable('X'), Constant('2'), '='),Constraint(Variable('Y'), Constant('4'), '=')],RelationInQuery('R',{Variable('X'):[0],Variable('Y'):[1],Variable('Z'):[2]},{Constant('2'):[4]},[3]))
+bla = QueryToAlchemyStatement(q)
+print 'Test 16'
 print 'Original: '
 print q
 print ''
