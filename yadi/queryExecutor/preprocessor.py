@@ -1,6 +1,8 @@
 import copy
 from dataStructures.query import *
+from dataStructures.relation import *
 from dataStructures.constraint import *
+from queryExecutor.exceptions import * 
 
 class QueryPreprocessor():
     def preprocess(self,query):
@@ -11,9 +13,19 @@ class QueryPreprocessor():
         return pp.preprocess(query)
 
 class ConjunctiveQueryPreprocessor():
+    default_head_relation_name = 'answer'
 
-    def preprocess(self,query):
+    def preprocess(self,q):
+        query = copy.deepcopy(q)
+        var_dict = query.get_var_dict()
+        query = self.create_head_variable_if_none_exists(query,var_dict)
         query = self.reduce_equality_constraints(query)
+        return query
+
+    def create_head_variable_if_none_exists(self,query,var_dict):
+        if query.get_head_relation() is None:
+            safe_variables = self.get_safe_variables(query,var_dict)
+            query.set_head_relation(RelationInQuery(self.default_head_relation_name,safe_variables))
         return query
 
     ''' This method takes a query, makes a deep copy of it and modifies it to keep only equality constraints of the form:
@@ -40,8 +52,7 @@ class ConjunctiveQueryPreprocessor():
             R(Y) := not T(Y), Y = 2 is equivalent to:
 
     '''
-    def reduce_equality_constraints(self,q):
-        query = copy.deepcopy(q)
+    def reduce_equality_constraints(self,query):
         # Build the equivalence sets
 
         equality_constraints = [x for x in query.constraints if x.is_equality_constraint()]
@@ -78,7 +89,10 @@ class ConjunctiveQueryPreprocessor():
         for s in eq_sets:
             constants = [x for x in s if x.is_constant()]
             variables = [x for x in s if x.is_variable()]
-            variables_occur_relation = [y for x in query.relations for y in x.variables.keys() if y in variables]
+            vars_in_rels = set([y for x in query.relations for y in x.variables if y in variables])
+            # Need variables in all relations, as well as vars in equality constraints. 
+            # Unioning with get_safe_variables() includes those variables in equality constraints
+            variables_occur_relation = list(vars_in_rels | set(self.get_safe_variables(query, query.get_var_dict())))
 
             if len(variables_occur_relation)==0 and len(variables)>0 :
                 raise NotInstantiatedException('Equivalence set of ' + str(variables[0]) + ' does not unify with a variable in a positive' )
@@ -92,7 +106,7 @@ class ConjunctiveQueryPreprocessor():
 
                     for variable in relation.variables:
                         if variable in s:
-                            if relation.constants.has_key(constant):
+                            if constant in relation.constants:
                                 relation.constants[constant] += relation.variables[variable]
                             else:
                                 relation.constants[constant] = relation.variables[variable]
@@ -110,7 +124,7 @@ class ConjunctiveQueryPreprocessor():
                         constraint.set_right_side(constant)
                 # Make sure we can still unify head variables with constants if they are in the equivalence set.
                 for variable in variables:
-                    if variable in query.head_relation.get_variables().keys():
+                    if variable in query.head_relation.get_variables():
                         new_eq_constraints.append(Constraint(variable,constant,Constraint.EQ_OPERATOR))
             else:
                 # Substitute every occurence of variable in the relations with one variable from variables_occur_relation
@@ -120,7 +134,7 @@ class ConjunctiveQueryPreprocessor():
                     add_dict = {}
                     for variable in relation.variables:
                         if variable in s and (not variable == var):
-                            if relation.variables.has_key(var):
+                            if var in relation.variables:
                                 relation.variables[var] += relation.variables[variable]
                             else:
                                 add_dict[var] = relation.variables[variable]
@@ -128,17 +142,18 @@ class ConjunctiveQueryPreprocessor():
                     for variable in del_list:
                         del relation.variables[variable]
 
-                    for key in add_dict.keys():
+                    for key in add_dict:
                         relation.variables[key] = add_dict[key]
                 # Substitute every occurence of variable in the head with one variable from variables_occur_relation
 
-                variables_in_head = query.head_relation.get_variables().keys()
-                if not query.head_relation.get_variables().has_key(var):
-                    query.head_relation.get_variables()[var] = []
+                head_var_list = list(query.head_relation.get_variables())
+                variables_in_head = query.head_relation.get_variables()
+                if not var in variables_in_head:
+                    variables_in_head[var] = []
 
-                for head_var in variables_in_head:
+                for head_var in head_var_list:
                     if head_var in s and not var == head_var:
-                        query.head_relation.get_variables()[var] += query.head_relation.get_variables().pop(head_var)
+                        variables_in_head[var] += variables_in_head.pop(head_var)
 
                 # Substitute every occurence of variable in the constraints with one variable from variables_occur_relation
                 for constraint in query.constraints:
@@ -155,3 +170,18 @@ class ConjunctiveQueryPreprocessor():
 
         query.constraints = [x for x in query.constraints if not x.is_equality_constraint()] + new_eq_constraints
         return query
+
+    def get_safe_variables(self,query,var_dict):
+        # Create a list of safe variables: variables bounded to constants or that occur in a positive goal
+
+        variables_bounded_to_constants = []
+
+        for constraint in query.constraints:
+            if (constraint.get_left_side().is_variable() and
+                constraint.get_right_side().is_constant() and
+                constraint.is_equality_constraint()):
+                    variables_bounded_to_constants.append(constraint.get_left_side())
+
+        safe_variables = list(var_dict) + variables_bounded_to_constants
+
+        return safe_variables

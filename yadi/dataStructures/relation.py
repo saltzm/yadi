@@ -36,10 +36,10 @@ class RelationInQuery:
                                   len([y for x in self.constants.values() for y in x]) + \
                                   len(self.wildcards)))
 
-        for variable in self.variables.keys():
+        for variable in self.variables:
             for position in self.variables[variable]:
                 list_of_columns[position] = str(variable)
-        for constant in self.constants.keys():
+        for constant in self.constants:
             for position in self.constants[constant]:
                  list_of_columns[position] = str(constant)
         for position in self.wildcards:
@@ -69,7 +69,7 @@ class RelationInQuery:
         order_dict = {}
 
         variables = self.get_variables()
-        for var in variables.keys():
+        for var in variables:
             for pos in variables[var]:
                 order_dict[pos] = var
 
