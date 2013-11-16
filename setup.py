@@ -19,7 +19,8 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 setup(
     name='yadi',
     version='0.1.0',
-    description='YADI is a Datalog parsing project for the Advanced Databases course of the DMKM Erasmus Mundus Master''s program.',
+    description='YADI is a Datalog parsing project for the Advanced Databases course \
+                 of the DMKM Erasmus Mundus Master''s program.',
     long_description=readme + '\n\n' + history,
     author='Matthew Saltz',
     author_email='saltzm@gmail.com',
@@ -31,7 +32,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'pyparsing',
-        'SQLAlchemy'
+        'SQLAlchemy',
+        'tabulate'
     ],
     license="BSD",
     zip_safe=False,

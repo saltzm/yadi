@@ -1,8 +1,10 @@
 from pyparsing import *
 
 # TODO: 1. Implement nested joins.
-# TODO: 2. Block reserved words from occurring in predicate_symbol
-# TODO: 4. Look at LJ, RJ, FJ grouping. Get to some agreement on this.
+# TODO: 2. Look at LJ, RJ, FJ grouping. Get to some agreement on this.
+# TODO: 3. Implement Datalog function (top, etc.) checking to be the FIRST thing to be evaluated in rule expression.
+# TODO: 4. Fix conjunctive on-the-fly queries, now allowing them but grouping is not differentiated when a fact and a
+# TODO:    line are together in the same line.
 
 # Notes:
 # - We decided not to implement compound terms for now.
@@ -36,11 +38,26 @@ from pyparsing import *
 #                   division.
 # Rule:             head :- body, or just head (called a fact).
 
-class Parser:
+class parser:
     def __init__(self):
         pass
 
     def parsesentence(self, sentence):
+        #Reserved words
+        reserved_null = Literal("is_null") | Literal("is_not_null")
+        reserved_is = Literal("is")
+        reserved_arith = Literal("sqrt") | Literal("log") | Literal("sin") | Literal("cos") | Literal("tan") | Literal(
+            "atan") | Literal("abs") | Literal("float_integer_part") | Literal("float_fractional_part") | Literal(
+            "float") | Literal("sign") | Literal("truncate") | Literal("round") | Literal("floor") | Literal("ceiling")
+        reserved_not = Literal("not")
+        reserved_join = Literal("lj") | Literal("rj") | Literal("fj")
+        reserved_aggregates = Literal("count") | Literal("sum") | Literal("avg") | Literal("min") | Literal("max")
+        reserved_group = Literal("group_by")
+        reserved_duplicates = Literal("distinct")
+        reserved_top = Literal("top")
+        reserved_answer = Literal("answer")
+        reserved_word = reserved_null | reserved_is | reserved_arith | reserved_not | reserved_join | \
+                        reserved_aggregates | reserved_group | reserved_duplicates | reserved_top | reserved_answer
 
         #Special characters
         underscore = Word("_", max=1)                   # Only a single underscore can be used for anon. var
@@ -52,9 +69,9 @@ class Parser:
         greater = Literal(">")
         less = Literal("<")
         equal = Literal("=")
-        gEqual = Literal(">=")
-        lEqual = Literal("<=")
-        compOp = gEqual | lEqual | equal | greater | less
+        g_equal = Literal(">=")
+        l_equal = Literal("<=")
+        comp_op = g_equal | l_equal | equal | greater | less
 
         #Number
         number = Combine(Word('-' + nums, nums) + Optional(Literal('.') + Word(nums)) +
@@ -74,7 +91,6 @@ class Parser:
 
         #Terms
         noncompound = (variable | constant).setName("noncompound")
-            #compound = Combine(noncompound + Literal('(') + OneOrMore(noncompound) + Literal(')'))
         term = noncompound
 
         #Atom
@@ -86,7 +102,10 @@ class Parser:
                  Literal(")").suppress()) | predicate_symbol).setName("atom")
 
         #Comparison and conditions
-        comparison = Group(noncompound + compOp + noncompound).setName("comparison")
+        comparison = Group(noncompound + comp_op + noncompound).setName("comparison")
+
+        #Arithmetic
+        arithmetic = variable + Literal("is")
 
         #Literals
         conj_disj_div = Literal(",").suppress() | Literal(";") | Literal("division")
@@ -94,17 +113,19 @@ class Parser:
         literal = positive.setName("literal")
 
         #Relation functions
-        not_function = Group(Literal("not") + Literal("(").suppress() + positive + Literal(")").suppress()).setName("not_function")
+        not_function = Group(Literal("not") + Literal("(").suppress() + positive + Literal(")").suppress()).setName(
+            "not_function")
         join_types = (Literal("lj") | Literal("rj") | Literal("fj")).setName("join_type")
         join_base = (join_types + Literal('(').suppress() + Group(atom) + comma + Group(
             atom) + comma + comparison + Literal(')').suppress()).setName("join_base")
-
-        function = (not_function | join_base).setName("relation_function")
+        relation_function = (not_function | join_base).setName("relation_function")
 
         #Rules and facts
-        head = positive.setName("head")
-        body = ((function | literal) + ZeroOrMore(conj_disj_div + (function | comparison | literal))).setName("body")
-        rule = (OneOrMore(Group(((head + separator + body) | head) + dot)) + StringEnd()).setName("expression").setFailAction(self.syntax)
+        head = NotAny(reserved_word) + positive.setName("head") + ZeroOrMore(comma + NotAny(reserved_word) + positive)
+        body_part = relation_function | comparison | literal
+        body = (body_part + ZeroOrMore(conj_disj_div + body_part)).setName("body")
+        rule = (OneOrMore(Group(((head + separator + body) | head) + dot)) + StringEnd()).setName(
+            "expression").setFailAction(self.syntax)
 
         try:
             test = rule.parseString(sentence)
