@@ -1,12 +1,5 @@
 from dataStructures.query import *
-
-class SafetyException(Exception):
-    pass
-
-class NotSafeException(SafetyException):
-    pass
-class NotInstantiatedException(SafetyException):
-    pass
+from queryExecutor.exceptions import *
 
 class SafetyChecker():
     def check_for_safety(self,query):
@@ -27,7 +20,7 @@ class ConjunctiveQuerySafetyChecker():
 
     def check_head(self,safe_variables,query):
 
-        for variable in query.head_relation.get_variables().keys():
+        for variable in list(query.head_relation.get_variables()):
             if not (variable in safe_variables):
                 raise NotSafeException('Query not safe because '+ variable.name + ' occurs in the head and not in a positive goal')
                 return False
@@ -36,7 +29,7 @@ class ConjunctiveQuerySafetyChecker():
     def check_negated_goals(self,safe_variables,query):
 
         # Create a list of variables which occur in negated goals.
-        variables_in_negated_goals = [y for x in query.relations for y in x.variables.keys() if x.is_negated()]
+        variables_in_negated_goals = [y for x in query.relations for y in list(x.variables) if x.is_negated()]
 
         # And check them:
         for variable in variables_in_negated_goals:
@@ -74,7 +67,7 @@ class ConjunctiveQuerySafetyChecker():
                 constraint.is_equality_constraint()):
                     variables_bounded_to_constants.append(constraint.get_left_side())
 
-        safe_variables = var_dict.keys() + variables_bounded_to_constants
+        safe_variables = list(var_dict) + variables_bounded_to_constants
 
         return safe_variables
 

@@ -21,6 +21,9 @@ class ConjunctiveQuery(Query):
                                         # Element COMP Element type.
                                         # [Constraint]
 
+    def set_head_relation(self,hr):
+        self.head_relation = hr
+
     def get_head_relation(self):
         return self.head_relation
 
@@ -40,12 +43,12 @@ class ConjunctiveQuery(Query):
     # var_dict is a Variable -> [(Relation, field)] which is usefuld for several purposes.
     # It does not map occurences of variables in negated goals.
     def get_var_dict(self):
-        variables_in_positive_goals = [y for x in self.relations for y in x.variables.keys() if not x.is_negated()]
+        variables_in_positive_goals = [y for x in self.relations for y in x.variables if not x.is_negated()]
         var_dict = {}
 
         for relation in [x for x in self.relations if not x.is_negated()]:
-            for var in relation.variables.keys():
-                if not var_dict.has_key(var):
+            for var in relation.variables:
+                if not var in var_dict:
                     var_dict[var] = []
                 for position in relation.variables[var]:
                     var_dict[var].append((relation,position))
