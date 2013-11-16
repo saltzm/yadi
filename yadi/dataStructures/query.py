@@ -1,5 +1,5 @@
 class Query():
-    def get_relations():
+    def get_relations(self):
         pass
 
 class DisjunctiveQuery(Query):
@@ -9,7 +9,7 @@ class DisjunctiveQuery(Query):
     def get_queries(self):
         return self.queries
 
-    def get_relations():
+    def get_relations(self):
         return [x.get_relations for x in self.get_queries()]
 
 

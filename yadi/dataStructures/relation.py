@@ -32,9 +32,9 @@ class RelationInQuery:
                 self.wildcards.append(i)        
 
     def __repr__(self):
-        list_of_columns = range(0,len([y for x in self.variables.values() for y in x]) + \
+        list_of_columns = list(range(0,len([y for x in self.variables.values() for y in x]) + \
                                   len([y for x in self.constants.values() for y in x]) + \
-                                  len(self.wildcards))
+                                  len(self.wildcards)))
 
         for variable in self.variables.keys():
             for position in self.variables[variable]:
