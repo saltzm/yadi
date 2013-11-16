@@ -1,6 +1,6 @@
 from ASTBuilder.Builder import ASTBuilder
 from dataStructures.constraint import Constraint
-from dataStructures.element import Variable, Constant
+from dataStructures.element import Variable, Constant, Wildcard
 from dataStructures.query import ConjunctiveQuery
 from dataStructures.relation import RelationInQuery
 
@@ -64,7 +64,7 @@ def hardCodedTest():
     input = ([[['q', ['X']], ':-', ['s', ['X']], ['not', ['t', ['U']]], ['U', '=', '2']]])
     expected_answer = ConjunctiveQuery([RelationInQuery('s', [Variable('X')], False),
                                         RelationInQuery('t', [Variable('U')], True)],
-                                       [Constraint(Variable('U'), '=', Constant('2'))],
+                                       [Constraint(Variable('U'), Constant('2'), '=')],
                                        RelationInQuery('q', [Variable('X')]))
     output = ast_builder.buildAST(input)[0]
     input_list.append(input)
@@ -76,7 +76,7 @@ def hardCodedTest():
     input = ([[['q', ['X']], ':-', ['s', ['X']], ['not', ['t', ['U']]], ['U', '<', '2']]])
     expected_answer = ConjunctiveQuery([RelationInQuery('s', [Variable('X')], False),
                                         RelationInQuery('t', [Variable('U')], True)],
-                                       [Constraint(Variable('U'), '<', Constant('2'))],
+                                       [Constraint(Variable('U'), Constant('2'), '<')],
                                        RelationInQuery('q', [Variable('X')]))
     output = ast_builder.buildAST(input)[0]
     input_list.append(input)
@@ -88,7 +88,7 @@ def hardCodedTest():
     input = ([[['q', ['X']], ':-', ['s', ['X']], ['not', ['t', ['U']]], ['U', '=', 'X']]])
     expected_answer = ConjunctiveQuery([RelationInQuery('s', [Variable('X')], False),
                                         RelationInQuery('t', [Variable('U')], True)],
-                                       [Constraint(Variable('U'), '=', Variable('X'))],
+                                       [Constraint(Variable('U'), Variable('X'), '=')],
                                        RelationInQuery('q', [Variable('X')]))
     output = ast_builder.buildAST(input)[0]
     input_list.append(input)
@@ -99,7 +99,7 @@ def hardCodedTest():
 
     input = ([[['q', ['X', 'Y']], ':-', ['s', ['X', 'Y']], ['Y', '<', '3']]])
     expected_answer = ConjunctiveQuery([RelationInQuery('s', [Variable('X'), Variable('Y')], False)],
-                                       [Constraint(Variable('Y'), '<', Variable('3'))],
+                                       [Constraint(Variable('Y'), Variable('3'), '<')],
                                        RelationInQuery('q', [Variable('X'), Variable('Y')]))
     output = ast_builder.buildAST(input)[0]
     input_list.append(input)
@@ -111,7 +111,7 @@ def hardCodedTest():
     input = ([[['q', ['X']], ':-', ['s', ['X']], ['not', ['t', ['Y']]], ['X', '=', 'Y']]])
     expected_answer = ConjunctiveQuery([RelationInQuery('s', [Variable('X')], False),
                                         RelationInQuery('t', [Variable('Y')], True)],
-                                       [Constraint(Variable('X'), '=', Variable('Y'))],
+                                       [Constraint(Variable('X'), Variable('Y'), '=')],
                                        RelationInQuery('q', [Variable('X')]))
     output = ast_builder.buildAST(input)[0]
     input_list.append(input)
@@ -123,7 +123,7 @@ def hardCodedTest():
     input = ([[['q', ['X', 'Z']], ':-', ['s', ['X', 'Y']], ['not', ['t', ['A', 'Z']]], ['Z', '=', 'Y']]])
     expected_answer = ConjunctiveQuery([RelationInQuery('s', [Variable('X'), Variable('Y')], False),
                                         RelationInQuery('t', [Variable('A'), Variable('Z')], True)],
-                                       [Constraint(Variable('Z'), '=', Variable('Y'))],
+                                       [Constraint(Variable('Z'), Variable('Y'), '=')],
                                        RelationInQuery('q', [Variable('X'), Variable('Z')]))
     output = ast_builder.buildAST(input)[0]
     input_list.append(input)
@@ -134,8 +134,8 @@ def hardCodedTest():
 
     input = ([[['q', ['X']], ':-', ['s', ['X', 'Y', 'Z']], ['Y', '=', '2'], ['Z', '=', 'Y']]])
     expected_answer = ConjunctiveQuery([RelationInQuery('s', [Variable('X'), Variable('Y'), Variable('Z')], False)],
-                                       [Constraint(Variable('Y'), '=', Constant('2')),
-                                        Constraint(Variable('Z'), '=', Variable('Y'))],
+                                       [Constraint(Variable('Y'), Constant('2'), '='),
+                                        Constraint(Variable('Z'), Variable('Y'), '=')],
                                        RelationInQuery('q', [Variable('X')]))
     output = ast_builder.buildAST(input)[0]
     input_list.append(input)
@@ -153,14 +153,53 @@ def hardCodedTest():
     result_list.append(checkAnswer(output, expected_answer))
 
     # r(X,Y,Z,_,2) :- s(X), Y=X, X=2
+
+    input = ([[['r', ['X', 'Y', 'Z', '_', '2']], ':-', ['s', ['X']], ['Y', '=', 'X'], ['X', '=', '2']]])
+    expected_answer = ConjunctiveQuery([RelationInQuery('s', [Variable('X')], False)],
+                                       [Constraint(Variable('Y'), Variable('X'), '='),
+                                        Constraint(Variable('X'), Variable('2'), '=')],
+                                       RelationInQuery('r', [Variable('X'), Variable('Y'), Variable('Z'),
+                                                             Wildcard(), Constant('2')]))
+    output = ast_builder.buildAST(input)[0]
+    input_list.append(input)
+    expected_answer_list.append(expected_answer)
+    result_list.append(checkAnswer(output, expected_answer))
+
     # q(X,Y) :- s(_,Y), t(X,_), u(_), v(_,_)
+
+    input = ([[['q', ['X', 'Y']], ':-', ['s', ['_', 'Y']], ['t', ['X', '_']], ['u', ['_']], ['v', ['_', '_']]]])
+    expected_answer = ConjunctiveQuery([RelationInQuery('s', [Wildcard(),Variable('Y')], False),
+                                        RelationInQuery('t', [Variable('X'), Wildcard()], False),
+                                        RelationInQuery('u', [Wildcard()], False),
+                                        RelationInQuery('v', [Wildcard(),Wildcard()], False)],[],
+                                       RelationInQuery('q', [Variable('X'), Variable('Y')]))
+    output = ast_builder.buildAST(input)[0]
+    input_list.append(input)
+    expected_answer_list.append(expected_answer)
+    result_list.append(checkAnswer(output, expected_answer))
+
+    # answer(X,Y):-S(X,Z),S(Y,Z),X>Y
+
+    input = ([[['answer', ['X', 'Y']], ':-', ['s', ['X', 'Z']], ['s', ['Y', 'Z']], ['X', '>', 'Y']]])
+    expected_answer = ConjunctiveQuery([RelationInQuery('s', [Variable('X'),Variable('Z')],False),
+                                        RelationInQuery('s', [Variable('Y'),Variable('Z')],False)],
+                                       [Constraint(Variable('X'), Variable('Y'),'>')],
+                                       RelationInQuery('answer', [Variable('X'),Variable('Y')], False))
+    output = ast_builder.buildAST(input)[0]
+    input_list.append(input)
+    expected_answer_list.append(expected_answer)
+    result_list.append(checkAnswer(output, expected_answer))
+
+    # ---------------------------------------------------------------------------------------------------------------- #
+    # ---------------------------------------------------------------------------------------------------------------- #
+    # ---------------------------------------------------------------------------------------------------------------- #
 
     failed_test_list = []
 
     for i in range(0, len(result_list)):
         result = result_list[i]
         if not result:
-            failed_test_list.append(i)
+            failed_test_list.append(i+1)
 
     test_score = str(len(result_list) - len(failed_test_list)) + '/' + str(len(result_list))
 
@@ -178,11 +217,7 @@ def hardCodedTest():
 def checkAnswer(answer_1, answer_2):
     return str(answer_1) == str(answer_2)
 
-
 def main():
     hardCodedTest()
-
-    #r = RelationInQuery('r', [Variable('X'), '_'])
-    #print(str(r))
 
 main()

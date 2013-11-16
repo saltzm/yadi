@@ -107,7 +107,7 @@ class RuleHandler:
         else:
             right_side = Constant(self.handleConstant(constraint[2]))
 
-        return Constraint(left_side, constraint[1], right_side)
+        return Constraint(left_side, right_side, constraint[1])
 
     def extractHead(self, rule):
         return rule[0]
@@ -137,7 +137,7 @@ class RuleHandler:
         return term.isupper()
 
     def isConstant(self, term):
-        return term.islower() or (term[0] == "'" and term[len(term)-1] == "'")
+        return term.islower() or term.isdigit() or (term[0] == "'" and term[len(term)-1] == "'")
 
     def isWildcard(self, term):
         return term == '_'

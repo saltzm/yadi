@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3e204b20-5f8d-4126-b029-75fab0c346d2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ASTBuilder/Builder.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ASTBuilder/RuleHandler.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ASTBuilder/ASTBuilder.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASTBuilder/ASTBuilderTester.py" afterPath="$PROJECT_DIR$/ASTBuilder/ASTBuilderTester.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ASTBuilder/RuleHandler.py" afterPath="$PROJECT_DIR$/ASTBuilder/RuleHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="yadi.iws" />
@@ -29,10 +27,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Builder.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Builder.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ASTBuilder/Builder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="48" selection-start="1267" selection-end="1267" vertical-scroll-proportion="0.0" vertical-offset="216" max-vertical-offset="1230">
+            <state line="33" column="48" selection-start="1267" selection-end="1267" vertical-scroll-proportion="0.9593023" vertical-offset="0" max-vertical-offset="1230">
               <folding />
             </state>
           </provider>
@@ -41,7 +39,7 @@
       <file leaf-file-name="RuleHandler.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ASTBuilder/RuleHandler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="146" column="46" selection-start="4673" selection-end="4673" vertical-scroll-proportion="0.0" vertical-offset="1886" max-vertical-offset="2325">
+            <state line="99" column="41" selection-start="2958" selection-end="2958" vertical-scroll-proportion="0.0" vertical-offset="1241" max-vertical-offset="2325">
               <folding>
                 <element signature="e#27#75#0" expanded="true" />
               </folding>
@@ -49,10 +47,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ASTBuilderTester.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ASTBuilderTester.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ASTBuilder/ASTBuilderTester.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="154" column="36" selection-start="7629" selection-end="7629" vertical-scroll-proportion="0.6334587" vertical-offset="1973" max-vertical-offset="2895">
+            <state line="181" column="0" selection-start="9237" selection-end="9237" vertical-scroll-proportion="0.0" vertical-offset="2565" max-vertical-offset="3420">
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -60,19 +58,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="relation.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dataStructures/relation.py">
+      <file leaf-file-name="sqlGeneratorTests.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sqlGeneratorTests.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="0" selection-start="715" selection-end="715" vertical-scroll-proportion="0.0" vertical-offset="124" max-vertical-offset="1365">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ADBEntry.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/parserAST/ADBEntry.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="20" selection-start="20" selection-end="20" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="765">
+            <state line="110" column="43" selection-start="3471" selection-end="3471" vertical-scroll-proportion="-63.46154" vertical-offset="0" max-vertical-offset="1935">
               <folding />
             </state>
           </provider>
@@ -82,15 +71,6 @@
         <entry file="file://$PROJECT_DIR$/dataStructures/constraint.py">
           <provider selected="true" editor-type-id="text-editor">
             <state line="8" column="33" selection-start="276" selection-end="276" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="element.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dataStructures/element.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="585">
               <folding />
             </state>
           </provider>
@@ -121,8 +101,8 @@
         <option value="$PROJECT_DIR$/ASTBuilder/ASTBuilder.py" />
         <option value="$PROJECT_DIR$/parserAST/ADBEntry.py" />
         <option value="$PROJECT_DIR$/ASTBuilder/Builder.py" />
-        <option value="$PROJECT_DIR$/ASTBuilder/RuleHandler.py" />
         <option value="$PROJECT_DIR$/ASTBuilder/ASTBuilderTester.py" />
+        <option value="$PROJECT_DIR$/ASTBuilder/RuleHandler.py" />
       </list>
     </option>
   </component>
@@ -281,6 +261,24 @@
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
+    <configuration default="false" name="sqlGeneratorTests" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="yadi" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/sqlGeneratorTests.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
     <configuration default="true" type="tests" factoryName="py.test">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -402,16 +400,18 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Python.ASTBuilderTester" />
       <item index="1" class="java.lang.String" itemvalue="Python.TestRotine" />
       <item index="2" class="java.lang.String" itemvalue="Python.ADBEntry" />
+      <item index="3" class="java.lang.String" itemvalue="Python.sqlGeneratorTests" />
     </list>
     <recent_temporary>
-      <list size="3">
+      <list size="4">
         <item index="0" class="java.lang.String" itemvalue="Python.ASTBuilderTester" />
-        <item index="1" class="java.lang.String" itemvalue="Python.ADBEntry" />
-        <item index="2" class="java.lang.String" itemvalue="Python.TestRotine" />
+        <item index="1" class="java.lang.String" itemvalue="Python.sqlGeneratorTests" />
+        <item index="2" class="java.lang.String" itemvalue="Python.ADBEntry" />
+        <item index="3" class="java.lang.String" itemvalue="Python.TestRotine" />
       </list>
     </recent_temporary>
   </component>
@@ -443,18 +443,18 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="3" y="22" width="1277" height="748" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6049005" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19733751" sideWeight="0.8575804" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1424196" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19733751" sideWeight="0.8330781" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.45788667" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24655436" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2848392" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1669219" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -493,24 +493,10 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/ASTBuilder/ASTBuilderTester.py</url>
-          <line>152</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="40" />
+      <option name="time" value="48" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ASTBuilder/Builder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="167" column="16" selection-start="5214" selection-end="5214" vertical-scroll-proportion="0.0" vertical-offset="1245" max-vertical-offset="4005">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/astToSQLTests.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="30" column="0" selection-start="1004" selection-end="1091" vertical-scroll-proportion="0.0" vertical-offset="3388" max-vertical-offset="6285">
@@ -560,13 +546,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/astToSQLTests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="41" selection-start="2307" selection-end="2307" vertical-scroll-proportion="0.0" vertical-offset="1230" max-vertical-offset="6510">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dataStructures/element.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="585">
@@ -581,13 +560,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dataStructures/constraint.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="33" selection-start="276" selection-end="276" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dataStructures/relation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="18" column="0" selection-start="715" selection-end="715" vertical-scroll-proportion="0.0" vertical-offset="124" max-vertical-offset="1365">
@@ -595,28 +567,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASTBuilder/Builder.py">
+    <entry file="file://$PROJECT_DIR$/astToSQLTests.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="48" selection-start="1267" selection-end="1267" vertical-scroll-proportion="0.0" vertical-offset="216" max-vertical-offset="1230">
+        <state line="80" column="41" selection-start="2307" selection-end="2307" vertical-scroll-proportion="0.0" vertical-offset="1230" max-vertical-offset="6510">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dataStructures/constraint.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="33" selection-start="276" selection-end="276" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASTBuilder/ASTBuilderTester.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="181" column="0" selection-start="9237" selection-end="9237" vertical-scroll-proportion="0.0" vertical-offset="2565" max-vertical-offset="3420">
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sqlGeneratorTests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="110" column="43" selection-start="3471" selection-end="3471" vertical-scroll-proportion="-63.46154" vertical-offset="0" max-vertical-offset="1935">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ASTBuilder/RuleHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="146" column="46" selection-start="4673" selection-end="4673" vertical-scroll-proportion="0.0" vertical-offset="1886" max-vertical-offset="2325">
+        <state line="99" column="41" selection-start="2958" selection-end="2958" vertical-scroll-proportion="0.0" vertical-offset="1241" max-vertical-offset="2325">
           <folding>
             <element signature="e#27#75#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ASTBuilder/ASTBuilderTester.py">
+    <entry file="file://$PROJECT_DIR$/ASTBuilder/Builder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="154" column="36" selection-start="7629" selection-end="7629" vertical-scroll-proportion="0.6334587" vertical-offset="1973" max-vertical-offset="2895">
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
+        <state line="33" column="48" selection-start="1267" selection-end="1267" vertical-scroll-proportion="0.9593023" vertical-offset="0" max-vertical-offset="1230">
+          <folding />
         </state>
       </provider>
     </entry>
