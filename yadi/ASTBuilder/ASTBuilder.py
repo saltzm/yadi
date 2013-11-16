@@ -1,6 +1,9 @@
 __author__ = 'caioseguin'
 
-from astToSQL import *
+from dataStructures.constraint import Constraint
+from dataStructures.element import Variable, Constant, Wildcard
+from dataStructures.query import ConjunctiveQuery
+from dataStructures.relation import RelationInQuery
 
 # This class acts as the middle man between the Datalog parser and the SQL translator.
 # It transforms the parser's output into a list of conjunctiveQueries and a list of disjunctiveQueries.
@@ -19,7 +22,6 @@ forbiddenSymbol = '$'
 
 
 class ASTBuilder:
-
     # Each element of the list program_ast consists in a list. Each sub-list start with a conjunctiveQuery or a
     # disjunctiveQuery Object, followed by a number of relationInQuery Objects. A new sub-list is appended every time a
     # new line from the parsed datalog program is handled.
@@ -28,12 +30,15 @@ class ASTBuilder:
 
     # The RuleHandler is responsible of translating every rule into the ast form
 
-    ruleHandler = RuleHandler()
+    history_ast = []
+    program_ast = []
+    ruleHandler = None
 
     def __init__(self, script_input_flag):
         self.script_input_flag = script_input_flag
         history_ast = []
         program_ast = []
+        ruleHandler = RuleHandler()
 
 
     def buildAST(self, parsed_datalog_program):
@@ -44,6 +49,8 @@ class ASTBuilder:
 
         for code_line in parsed_datalog_program:
             self.program_ast.append(self.handleCodeLine(code_line))
+
+        return program_ast
 
         self.history_ast.append(program_ast)
 
@@ -86,7 +93,6 @@ class ASTBuilder:
 
 
 class RuleHandler:
-
     def __init__(self):
         pass
 
@@ -102,29 +108,13 @@ class RuleHandler:
         head = self.extractHead(rule)
         body = self.extractBody(rule)
 
-        # body_object_list = [relationInQuery_1,..., relationInQuery_n, '$', constraintObject_1,..., constraintObject_n]
+        relation_object_list, constraint_object_list = self.handleBody(body)
+        query_object = self.handleHead(head, relation_object_list, constraint_object_list)
 
-        body_object_list = self.handleBody(body)
-        head_object = self.handleHead(head, body_object_list)
+        return query_object
 
-        # Extracts the list of constraints before they are already stored in the head
-        relation_object_list = body_object_list[0:body_object_list.index(forbiddenSymbol)]
-
-        # rule_object_list = [conjunctiveQuery, relationInQuery_1,..., relationInQuery_n]
-
-        rule_object_list = [head_object]
-        rule_object_list.extend(relation_object_list)
-
-        return head_object
-
-    def handleHead(self, head, body_object_list):
-
-        # body_object_list = [relationInQuery_1,..., relationInQuery_n, '$', constraintObject_1,..., constraintObject_n]
-
-        relation_object_list = body_object_list[0:body_object_list.index(forbiddenSymbol)]
-        constraint_object_list = body_object_list[(body_object_list.index(forbiddenSymbol)+1):len(body_object_list)]
+    def handleHead(self, head, relation_object_list, constraint_object_list):
         head_relation = self.handleRelation(head)
-
         return ConjunctiveQuery(relation_object_list, constraint_object_list, head_relation)
 
     def handleBody(self, body):
@@ -132,23 +122,15 @@ class RuleHandler:
         assert isinstance(body, list)
 
         relation_list = []
-        constraints_list = []
+        constraint_list = []
 
         for body_part in body:
-
             if self.isConstraint(body_part):
-                 relation_list.extend(self.handleConstraint(body_part))
+                relation_list.extend(self.handleConstraint(body_part))
             else:
-                constraints_list.extend(self.handleRelation(body_part))
+                constraint_list.extend(self.handleRelation(body_part))
 
-        # The forbidden symbol is used to separate the lists of relations and constraints
-        # body_object_list = [relationInQuery_1,..., relationInQuery_n, '$', constraintObject_1,..., constraintObject_n]
-
-        body_object_list = relation_list
-        body_object_list.extend(forbiddenSymbol)
-        body_object_list.extend(constraints_list)
-
-        return body_object_list
+        return relation_list, constraint_list
 
     def handleRelation(self, relation):
 
@@ -156,7 +138,7 @@ class RuleHandler:
 
         if self.isNegatedRelation(relation):
             is_negated = True
-            relation = relation[1:len(relation)]
+            relation = relation[1:len(relation)][0]
         else:
             is_negated = False
 
@@ -167,72 +149,26 @@ class RuleHandler:
         else:
             term_list = relation[1]
 
-        variable_dictionary = self.extractVariablesFromTermList(term_list)
-        constant_dictionary = self.extractConstantFromTermList(term_list)
-        wildcard_position_list = self.extractWildcardFromTermList(term_list)
-
-        new_relation_in_query = RelationInQuery(relation_symbol, variable_dictionary, constant_dictionary,
-                                                wildcard_position_list, is_negated)
-
+        ast_term_list = self.handleTermList(term_list)
+        new_relation_in_query = RelationInQuery(relation_symbol, ast_term_list, is_negated)
         return new_relation_in_query
 
-    def handleConstraint(self, constraint):
+    def handleTermList(self, term_list):
 
-        
-
-    def extractVariablesFromTermList(self, term_list):
-
-        dictionary = {}
+        ast_term_list = []
 
         for term in term_list:
-
-            i = term_list.index(term)
-
             if term.isupper():
-                if term in dictionary:
-                    dictionary[Variable(term)].append(i)
-                else:
-                    dictionary[Variable(term)] = [i]
-
-            # This is necessary so term_list.index(term) doesn't always find the first occurrence of the term
-            term_list[i] = forbiddenSymbol
-
-        return dictionary
-
-    def extractConstantFromTermList(self, term_list):
-
-        dictionary = {}
-
-        for term in term_list:
-
-            i = term_list.index(term)
-
+                ast_term_list.extend(Variable(term))
             if term.islower():
-                if term in dictionary:
-                    dictionary[Constant(term)].append(i)
-                else:
-                    dictionary[Constant(term)] = [i]
-
-            # This is necessary so term_list.index(term) doesn't always find the first occurrence of the term
-            term_list[i] = forbiddenSymbol
-
-        return dictionary
-
-    def extractWildcardFromTermList(self, term_list):
-
-        list = []
-
-        for term in term_list:
-
-            i = term_list.index(term)
-
+                ast_term_list.extend(Constant(term))
             if term == '_':
-                list.append(i)
+                ast_term_list.extend(Wildcard())
 
-            # This is necessary so term_list.index(term) doesn't always find the first occurrence of the term
-            term_list[i] = forbiddenSymbol
+        return ast_term_list
 
-        return list
+    def handleConstraint(self, constraint):
+        return Constraint(constraint[0], constraint[1], constraint[2])
 
     def extractHead(self, rule):
         return rule[0]
@@ -242,7 +178,7 @@ class RuleHandler:
             raise Exception("list with three or more elements expected for a body")
         return rule[2:len(rule)]
 
-    def isRule(self,statement):
+    def isRule(self, statement):
         return ruleOperator in statement[0]
 
     def isDisjunctiveRule(self, statement):
