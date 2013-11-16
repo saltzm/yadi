@@ -104,7 +104,7 @@ s = RelationInQuery('S', [Variable('X'),Variable('Z')])
 t = RelationInQuery('S', [Variable('Y'),Variable('Z')])
 head = RelationInQuery('answer',[Variable('X'),Variable('Y')])
 
-queries.append(ConjunctiveQuery([s,t],[Constraint(Variable('X'),Constant('Y'),'>')],head))
+queries.append(ConjunctiveQuery([s,t],[Constraint(Variable('X'),Variable('Y'),'>')],head))
 
 # R(X) :- X = 2, 3<X
 
@@ -114,10 +114,16 @@ queries.append(ConjunctiveQuery([],[Constraint(Variable('X'),Constant('2'),'='),
 
 # r(_,2), X = 2
 
-r = RelationInQuery('answer',[Wildcard(),Constant('2')])
+r = RelationInQuery('R',[Wildcard(),Constant('2')])
 queries.append(ConjunctiveQuery([r],[Constraint(Variable('X'), Constant('2'), '=')]))
 
-
+# R(X,Y) :- S(X), S(Y,T), T(X), U(Y), X>Y
+s = RelationInQuery('S', [Variable('X')])
+t = RelationInQuery('S', [Variable('Y')])
+u = RelationInQuery('T', [Variable('X')])
+v = RelationInQuery('V', [Variable('Y')])
+head = RelationInQuery('answer',[Variable('X'),Variable('Y')])
+queries.append(ConjunctiveQuery([s,t,u,v],[Constraint(Variable('X'),Variable('Y'),'>')],head))
 test(queries)
 
 
