@@ -5,7 +5,8 @@ from pyparsing import *
 # TODO: 3. Implement Datalog function (top, etc.) checking to be the FIRST thing to be evaluated in rule expression.
 
 # Notes:
-# - We decided not to implement compound terms for now.
+# - We decided not to implement compound terms (arithmetic expressions) for now. The definition for compound term can
+# be found below under the definition of "Term".
 
 # Definitions:
 # Number:           Signed integers (no positive sign). Float with a dot between two digits. Scientific notation
@@ -17,7 +18,7 @@ from pyparsing import *
 #                   where ID is an integer.
 # Term:             Noncompound: variables or constants
 #                   Compound: Form of t(t1,...,tn) where t is the functor (which follows the syntax of a noncompound
-#                   term) and tn are noncompound terms.
+#                   term) and tn are noncompound terms. In the context of YADI, it refers to arithmetic expressions.
 # Predicate symbol: Defined as a sequence of alphanumerics characters + underscore that start with lowercase or
 #                   underscore. On a(t1,t2), "a" stands for the predicate symbol. Relation is a synonym of predicate.
 # Atom:             Has the form of a(t1, t2) for ti (0<=1<=n). If i = 0, then it is simply written as "a."
