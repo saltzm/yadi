@@ -36,6 +36,9 @@ from pyparsing import *
 #                   division.
 # Rule:             head :- body, or just head (called a fact).
 
+class SyntaxException(Exception):
+    pass
+
 class parser:
     def __init__(self):
         pass
@@ -102,9 +105,6 @@ class parser:
         #Comparison and conditions
         comparison = Group(noncompound + comp_op + noncompound).setName("comparison")
 
-        #Arithmetic
-        arithmetic = variable + Literal("is")
-
         #Literals
         conj_disj_div = Literal(",").suppress() | Literal(";") | Literal("division")
         positive = Group(atom).setName("positive_atom")
@@ -126,12 +126,9 @@ class parser:
         rule = (OneOrMore(Group(((head + separator + body) | temporary_view | head) + dot)) + StringEnd()).setName(
             "expression").setFailAction(self.syntax)
 
-        try:
-            test = rule.parseString(sentence)
-            return test
-        except ParseException as pe:
-            print(pe)
+        test = rule.parseString(sentence)
+        return test
 
     def syntax(self, s, loc, expr, err):
-        print("Syntax error on string {0!r}, loc {1!r} of '{2!r}'".format(s, loc, expr))
-        raise Exception
+        x = "Syntax error on string {0!r}, loc {1!r} of '{2!r}'. Details: {3!r}".format(s, loc, expr, err)
+        raise SyntaxException(x)
