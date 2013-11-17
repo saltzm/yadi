@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/home/nishara/PycharmProjects/yadi/yadi/')
+
 from translateDatalogToSQL import translateDatalogToSql
 
 from evaluate_query import *
@@ -6,8 +9,6 @@ __author__ = 'caioseguin'
 
 def main():
 
-    datalog_statement = "q(X,Y)."
-    print(translateDatalogToSql(datalog_statement))
     #datalog_statement = "q(X,Y):- s(X,Y). a(X,Y):- b(X,Y)."
     datalog_statement = "m(X,Y):- tuser(X,Y)."
 
