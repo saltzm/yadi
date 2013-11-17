@@ -1,5 +1,3 @@
-import sys
-sys.path.append('/home/nishara/PycharmProjects/yadi/yadi/')
 
 from translateDatalogToSQL import translateDatalogToSql
 
