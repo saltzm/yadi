@@ -23,7 +23,7 @@ class ReformatQuery():
                 else:
                     q.append(w)
         q = " ".join(str(x) for x in q)
-        print "Processed Query\n" + q+"\n"
+        print ("Processed Query\n" + q+"\n")
         return q
 
 
