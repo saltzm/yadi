@@ -33,7 +33,8 @@ setup(
     install_requires=[
         'pyparsing',
         'SQLAlchemy',
-        'tabulate'
+        'tabulate',
+        'psycopg2'
     ],
     license="BSD",
     zip_safe=False,

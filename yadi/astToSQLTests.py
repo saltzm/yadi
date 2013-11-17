@@ -1,8 +1,8 @@
-from dataStructures.query import *
-from dataStructures.relation import *
-from dataStructures.element import *
-from dataStructures.constraint import *
-from queryExecutor.queryExecutor import *
+from .dataStructures.query import *
+from .dataStructures.relation import *
+from .dataStructures.element import *
+from .dataStructures.constraint import *
+from .queryExecutor.queryExecutor import *
 
 '''
 r = RelationInQuery('', {Variable():,}, {Constant():,},[],False)
