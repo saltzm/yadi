@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3e204b20-5f8d-4126-b029-75fab0c346d2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TranslationWrapper/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TranslationWrapper/translateDatalogToSQL.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TranslationWrapper/translationTests.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ASTBuilder/ASTBuilderTester.py" afterPath="$PROJECT_DIR$/ASTFactory/ASTBuilderTester.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ASTBuilder/Builder.py" afterPath="$PROJECT_DIR$/ASTFactory/ASTBuilder.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ASTBuilder/RuleHandler.py" afterPath="$PROJECT_DIR$/ASTFactory/RuleHandler.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/ASTBuilder/__init__.py" afterPath="$PROJECT_DIR$/ASTFactory/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TranslationWrapper/translateDatalogToSQL.py" afterPath="$PROJECT_DIR$/TranslationWrapper/translateDatalogToSQL.py" />
     </list>
     <ignored path="yadi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,28 +25,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ASTBuilder.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ASTBuilder.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ASTFactory/ASTBuilder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="0" selection-start="1135" selection-end="1135" vertical-scroll-proportion="0.33110368" vertical-offset="336" max-vertical-offset="1230">
+            <state line="31" column="0" selection-start="1192" selection-end="1192" vertical-scroll-proportion="0.0" vertical-offset="357" max-vertical-offset="1230">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RuleHandler.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ASTFactory/RuleHandler.py">
+      <file leaf-file-name="Parser.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/parserAST/Parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="33" selection-start="850" selection-end="850" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2280">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="1731" max-vertical-offset="2145">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="translateDatalogToSQL.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="translateDatalogToSQL.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TranslationWrapper/translateDatalogToSQL.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="0" selection-start="209" selection-end="209" vertical-scroll-proportion="0.0" vertical-offset="1" max-vertical-offset="390">
+            <state line="24" column="24" selection-start="724" selection-end="724" vertical-scroll-proportion="0.8021108" vertical-offset="56" max-vertical-offset="450">
               <folding>
                 <element signature="e#0#44#0" expanded="true" />
               </folding>
@@ -64,16 +57,7 @@
       <file leaf-file-name="translationTests.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TranslationWrapper/translationTests.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="0" selection-start="102" selection-end="102" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ASTBuilderTester.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ASTFactory/ASTBuilderTester.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="51" selection-start="665" selection-end="665" vertical-scroll-proportion="0.0" vertical-offset="143" max-vertical-offset="3360">
+            <state line="9" column="0" selection-start="212" selection-end="212" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
               <folding />
             </state>
           </provider>
@@ -147,7 +131,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -210,17 +193,18 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="recentsLimit" value="5" />
     <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Documents/pyparsing-2.0.1" />
+    <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/pyparsing-2.0.1" />
     <property name="FullScreen" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -488,22 +472,22 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="3" y="22" width="1277" height="748" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6049005" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23492561" sideWeight="0.5007657" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.50995404" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23492561" sideWeight="0.6232772" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.45788667" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36906585" sideWeight="0.50039154" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4992343" sideWeight="0.49960846" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3767228" sideWeight="0.49960846" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6049005" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -523,9 +507,9 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19733751" sideWeight="0.78101075" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32312405" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -538,18 +522,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="49" />
+      <option name="time" value="53" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd_breakpoints.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="97" column="0" selection-start="2942" selection-end="2942" vertical-scroll-proportion="0.33333334" vertical-offset="1313" max-vertical-offset="2955" />
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_execfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="1164" selection-end="1164" vertical-scroll-proportion="0.0" vertical-offset="28" max-vertical-offset="630" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dataStructures/query.py">
@@ -569,23 +548,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dataStructures/constraint.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="33" selection-start="276" selection-end="276" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
-          <folding />
-        </state>
+        <state line="8" column="33" selection-start="276" selection-end="276" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sqlGeneratorTests.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="110" column="43" selection-start="3471" selection-end="3471" vertical-scroll-proportion="0.0" vertical-offset="1650" max-vertical-offset="1935">
-          <folding />
-        </state>
+        <state line="110" column="43" selection-start="3471" selection-end="3471" vertical-scroll-proportion="0.0" vertical-offset="1650" max-vertical-offset="1935" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/queryExecutor/todo">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="625">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="625" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/astToSQLTests.py">
@@ -595,41 +568,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/parserAST/Parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.8589743" vertical-offset="870" max-vertical-offset="1815">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/parserAST/ADBEntry.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="20" selection-start="20" selection-end="20" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="765">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ASTFactory/ASTBuilderTester.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="51" selection-start="665" selection-end="665" vertical-scroll-proportion="0.0" vertical-offset="143" max-vertical-offset="3360">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TranslationWrapper/translationTests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="0" selection-start="102" selection-end="102" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TranslationWrapper/translateDatalogToSQL.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="209" selection-end="209" vertical-scroll-proportion="0.0" vertical-offset="38" max-vertical-offset="390">
-          <folding>
-            <element signature="e#0#44#0" expanded="true" />
-          </folding>
-        </state>
+        <state line="0" column="20" selection-start="20" selection-end="20" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="765" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ASTFactory/RuleHandler.py">
@@ -639,10 +580,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_execfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="0" selection-start="1164" selection-end="1164" vertical-scroll-proportion="0.0" vertical-offset="361" max-vertical-offset="630">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ASTFactory/ASTBuilderTester.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="51" selection-start="665" selection-end="665" vertical-scroll-proportion="-0.12658228" vertical-offset="315" max-vertical-offset="3360">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ASTFactory/ASTBuilder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="0" selection-start="1135" selection-end="1135" vertical-scroll-proportion="0.33110368" vertical-offset="336" max-vertical-offset="1230">
+        <state line="31" column="0" selection-start="1192" selection-end="1192" vertical-scroll-proportion="0.0" vertical-offset="357" max-vertical-offset="1230">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/parserAST/Parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="1731" max-vertical-offset="2145">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TranslationWrapper/translationTests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="212" selection-end="212" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TranslationWrapper/translateDatalogToSQL.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="24" selection-start="724" selection-end="724" vertical-scroll-proportion="0.8021108" vertical-offset="56" max-vertical-offset="450">
+          <folding>
+            <element signature="e#0#44#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
