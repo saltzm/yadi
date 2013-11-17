@@ -11,4 +11,4 @@ class evaluateQuery():
     def evaluate(self,query_to_evaluate):
         r = engine.execute(query_to_evaluate)
         fetched_results = r.fetchall()
-        print tabulate(fetched_results, tablefmt="grid")
+        print (tabulate(fetched_results, tablefmt="grid"))

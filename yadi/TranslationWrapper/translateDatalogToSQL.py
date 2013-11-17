@@ -1,10 +1,8 @@
-from ASTFactory.ASTBuilder import *
-import sys
-sys.path.append('../')
+from ..ASTFactory.ASTBuilder import *
 
-from ASTFactory.ASTBuilder import ASTBuilder
-from parserAST.Parser import parser,SyntaxException
-from queryExecutor.queryExecutor import QueryExecutor
+from ..ASTFactory.ASTBuilder import ASTBuilder
+from ..parserAST.Parser import parser,SyntaxException
+from ..queryExecutor.queryExecutor import QueryExecutor
 
 __author__ = 'caioseguin'
 

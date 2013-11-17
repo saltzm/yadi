@@ -1,5 +1,5 @@
-from dataStructures.query import *
-from queryExecutor.exceptions import *
+from ..dataStructures.query import *
+from .exceptions import *
 
 class SafetyChecker():
     def check_for_safety(self,query):

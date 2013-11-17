@@ -1,8 +1,8 @@
 import copy
-from dataStructures.query import *
-from dataStructures.relation import *
-from dataStructures.constraint import *
-from queryExecutor.exceptions import *
+from ..dataStructures.query import *
+from ..dataStructures.relation import *
+from ..dataStructures.constraint import *
+from ..queryExecutor.exceptions import *
 
 class QueryPreprocessor():
     def preprocess(self,query):
@@ -90,7 +90,7 @@ class ConjunctiveQueryPreprocessor():
             constants = [x for x in s if x.is_constant()]
             variables = [x for x in s if x.is_variable()]
             vars_in_rels = set([y for x in query.relations for y in x.variables if y in variables])
-            # Need variables in all relations, as well as vars in equality constraints. 
+            # Need variables in all relations, as well as vars in equality constraints.
             # Unioning with get_safe_variables() includes those variables in equality constraints
             variables_occur_relation = list(vars_in_rels | set(self.get_safe_variables(query, query.get_var_dict())))
 

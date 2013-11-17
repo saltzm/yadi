@@ -1,7 +1,7 @@
 
-from translateDatalogToSQL import translateDatalogToSql
+from .translateDatalogToSQL import translateDatalogToSql
 
-from evaluate_query import *
+from ..evaluate_query import *
 
 __author__ = 'caioseguin'
 

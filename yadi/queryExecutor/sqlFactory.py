@@ -1,4 +1,4 @@
-from dataStructures.query import *
+from ..dataStructures.query import *
 
 class SQLGenerator():
     def get_SQL_code(self,query,old_query):

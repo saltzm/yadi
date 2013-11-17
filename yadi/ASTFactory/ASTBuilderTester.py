@@ -1,11 +1,9 @@
-import sys
-sys.path.append('/home/nishara/PycharmProjects/yadi/yadi')
 
-from ASTBuilder import ASTBuilder
-from dataStructures.constraint import Constraint
-from dataStructures.element import Variable, Constant, Wildcard
-from dataStructures.query import ConjunctiveQuery
-from dataStructures.relation import RelationInQuery
+from .ASTBuilder import ASTBuilder
+from ..dataStructures.constraint import Constraint
+from ..dataStructures.element import Variable, Constant, Wildcard
+from ..dataStructures.query import ConjunctiveQuery
+from ..dataStructures.relation import RelationInQuery
 
 __author__ = 'caioseguin'
 
