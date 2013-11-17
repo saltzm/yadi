@@ -1,4 +1,4 @@
-from ASTBuilder.Builder import ASTBuilder
+from ASTFactory.ASTBuilder import ASTBuilder
 from dataStructures.constraint import Constraint
 from dataStructures.element import Variable, Constant, Wildcard
 from dataStructures.query import ConjunctiveQuery
@@ -6,12 +6,12 @@ from dataStructures.relation import RelationInQuery
 
 __author__ = 'caioseguin'
 
-# Function that compares the ASTBuilder output with an expected input.
+# Function that compares the ASTFactory output with an expected input.
 # It compares the two using the str() method.
 # Unfortunately, it does not implement a type matching check.
 
 def hardCodedTest():
-    ast_builder = ASTBuilder(1)
+    ast_builder = ASTBuilder()
 
     input_list = []
     expected_answer_list = []

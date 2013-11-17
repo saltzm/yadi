@@ -131,8 +131,15 @@ queries.append(ConjunctiveQuery([s,t,u,v],[Constraint(Variable('X'),Variable('Y'
 # Q(X):- S(X)
 r = RelationInQuery('S', [Variable('X')])
 q = ConjunctiveQuery([r],[],RelationInQuery('Q', [Variable('X')]))
-
 queries.append(q)
+
+# ------
+# Q(X):- S(X), X = 2
+r = RelationInQuery('S', [Variable('X')])
+head = RelationInQuery('Q', [Variable('X')])
+queries.append(ConjunctiveQuery([r],[Constraint(Variable('X'),Constant('2'),'=')],head))
+
+#queries.append(ConjunctiveQuery([r],[Constraint(Variable(X),Constant(2),'=')],RelationInQuery('Q', [Variable('X')]))
 
 
 test(queries)

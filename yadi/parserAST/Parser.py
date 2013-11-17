@@ -3,8 +3,6 @@ from pyparsing import *
 # TODO: 1. Implement nested joins.
 # TODO: 2. Look at LJ, RJ, FJ grouping. Get to some agreement on this.
 # TODO: 3. Implement Datalog function (top, etc.) checking to be the FIRST thing to be evaluated in rule expression.
-# TODO: 4. Fix conjunctive on-the-fly queries, now allowing them but grouping is not differentiated when a fact and a
-# TODO:    line are together in the same line.
 
 # Notes:
 # - We decided not to implement compound terms for now.
@@ -121,17 +119,19 @@ class parser:
         relation_function = (not_function | join_base).setName("relation_function")
 
         #Rules and facts
-        head = NotAny(reserved_word) + positive.setName("head") + ZeroOrMore(comma + NotAny(reserved_word) + positive)
+        head = NotAny(reserved_word) + positive.setName("head")
         body_part = relation_function | comparison | literal
         body = (body_part + ZeroOrMore(conj_disj_div + body_part)).setName("body")
-        rule = (OneOrMore(Group(((head + separator + body) | head) + dot)) + StringEnd()).setName(
+        temporary_view = body
+        rule = (OneOrMore(Group(((head + separator + body) | temporary_view | head) + dot)) + StringEnd()).setName(
             "expression").setFailAction(self.syntax)
 
         try:
             test = rule.parseString(sentence)
-            print(test)
+            return test
         except ParseException as pe:
             print(pe)
 
     def syntax(self, s, loc, expr, err):
         print("Syntax error on string {0!r}, loc {1!r} of '{2!r}'".format(s, loc, expr))
+        raise Exception

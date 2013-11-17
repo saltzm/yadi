@@ -1,6 +1,6 @@
 __author__ = 'caioseguin'
 
-from ASTBuilder.RuleHandler import RuleHandler
+from ASTFactory.RuleHandler import RuleHandler
 
 # This class acts as the middle man between the Datalog parser and the SQL translator.
 # It transforms the parser's output into a list of conjunctiveQueries and a list of disjunctiveQueries.
@@ -10,7 +10,7 @@ class ASTBuilder:
     # disjunctiveQuery Object, followed by a number of relationInQuery Objects. A new sub-list is appended every time a
     # new line from the parsed datalog program is handled.
     # The program_ast is going to be passed along statement by statement.
-    # The history_ast is the whole history of datalog programs handled by the ASTBuilder.
+    # The history_ast is the whole history of datalog programs handled by the ASTFactory.
 
     # The RuleHandler is responsible of translating every rule into the ast form
 
@@ -18,7 +18,7 @@ class ASTBuilder:
     program_ast = []
     rule_handler = RuleHandler()
 
-    def __init__(self, script_input_flag):
+    def __init__(self, script_input_flag = 1):
         self.script_input_flag = script_input_flag
         history_ast = []
         program_ast = []
