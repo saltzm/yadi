@@ -25,4 +25,4 @@ YADI is a Datalog parsing project for the Advanced Databases course of the DMKM 
 Features
 --------
 
-* TODO
+* Refer to the project wiki at: https://github.com/saltzm/yadi/wiki 
