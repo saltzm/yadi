@@ -1,8 +1,10 @@
-from ASTFactory.ASTBuilder import ASTBuilder
+import sys
+sys.path.append('/home/nishara/PycharmProjects/yadi/yadi/')
+
+from ASTFactory.ASTBuilder import *
 from parserAST.Parser import parser
 from queryExecutor.queryExecutor import QueryExecutor
 
-__author__ = 'caioseguin'
 
 def translateDatalogToSql(datalog_statement):
 

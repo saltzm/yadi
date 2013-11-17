@@ -1,6 +1,6 @@
 __author__ = 'caioseguin'
 
-from ASTFactory.RuleHandler import RuleHandler
+from RuleHandler import RuleHandler
 
 # This class acts as the middle man between the Datalog parser and the SQL translator.
 # It transforms the parser's output into a list of conjunctiveQueries and a list of disjunctiveQueries.

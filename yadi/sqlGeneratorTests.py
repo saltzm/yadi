@@ -1,9 +1,5 @@
-import sys
-import sqlalchemy
 
-sys.path.append('/home/francisco/DMKM/ADB/repo/yadi/yadi')
 
-from evaluate_query import *
 from dataStructures.query import *
 from dataStructures.relation import *
 from dataStructures.element import *
@@ -22,8 +18,7 @@ def test(list_queries):
         print (QueryExecutor().execute_query(list_queries[i]))
         print ('---------------------------------------------------------')
 
-        sqlS = QueryExecutor().execute_query(list_queries[i])
-        evaluateQuery().evaluate(sqlS)
+
 
 queries = []
 
