@@ -95,7 +95,7 @@ class ConjunctiveQueryPreprocessor():
             variables_occur_relation = list(vars_in_rels | set(self.get_safe_variables(query, query.get_var_dict())))
 
             if len(variables_occur_relation)==0 and len(variables)>0 :
-                raise NotInstantiatedException('Equivalence set of ' + str(variables[0]) + ' does not unify with a variable in a positive' )
+                raise NotInstantiatedException('Equivalence set of ' + str(variables[0]) + ' does not unify with a variable in a positive goal' )
 
             # Substitute every variable in the equivalence set b
             if len(constants)>0:
