@@ -27,6 +27,12 @@ setup(
     url='https://github.com/saltzm/yadi',
     packages=[
         'yadi',
+        'yadi.ASTFactory',
+        'yadi.dataStructures',
+        'yadi.TranslationWrapper',
+        'yadi.queryExecutor',
+        'yadi.parserAST',
+        'yadi.interpreter'
     ],
     package_dir={'yadi': 'yadi'},
     include_package_data=True,
