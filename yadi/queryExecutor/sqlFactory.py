@@ -21,8 +21,8 @@ class ConjunctiveQuerySQLGenerator():
         var_dict = query.get_var_dict()
 
         select_clause = self.get_select_columns(query.get_head_relation(), query.get_constraints(), var_dict, old_query.get_head_relation())
-        from_clause = self.get_from_relations(query,aliases)  
-        implicit_constraints = self.get_implicit_constraints(query.get_relations())      
+        from_clause = self.get_from_relations(query,aliases)
+        implicit_constraints = self.get_implicit_constraints(query.get_relations())
         join_constraints = self.get_join_constraints(var_dict)
         explicit_constraints = self.get_explicit_constraints(query.get_constraints(),var_dict)
         negated_queries = self.get_negated_queries(query.get_relations(),var_dict)
@@ -30,7 +30,7 @@ class ConjunctiveQuerySQLGenerator():
         return 'SELECT \n\t' + ', \n\t'.join(select_clause) + \
                ('\nFROM \n\t' if len(from_clause) != 0 else '') + ', \n\t'.join(from_clause) + \
                ('\nWHERE \n\t' if len(where_clause) != '' else '') + where_clause + ';'
-               
+
 
     def create_table_aliases(self,query):
         count = {}
@@ -49,7 +49,7 @@ class ConjunctiveQuerySQLGenerator():
             old_name = relation.get_name()
             relation.set_name(old_name+str(count[relation.get_name()]))
             count[old_name]-=1
-            aliases[relation.get_name()] = old_name + ' as ' + relation.get_name() 
+            aliases[relation.get_name()] = old_name + ' as ' + relation.get_name()
 
         for relation in non_repeated_relations:
             aliases[relation.get_name()] = relation.get_name()
@@ -80,15 +80,15 @@ class ConjunctiveQuerySQLGenerator():
         else:
             if original_head_relation is None:
                 as_names = head_relation.get_ordered_element_list()
-            else: 
+            else:
                 as_names = original_head_relation.get_ordered_element_list()
             for i in range(0,len(element_list)):
                 element = element_list[i]
                 if element.is_variable():
                     if element in var_dict:
-                    # It's in a positive goal. 
+                    # It's in a positive goal.
                         column_list.append(self.mapVariableToRelationDotField(element, var_dict) + ' as ' + str(as_names[i]))
-                    else:# It is a constant (it appears in a constraint). 
+                    else:# It is a constant (it appears in a constraint).
                         const = str([x.get_right_side() for x in constraints if (x.get_left_side() == element and x.is_equality_constraint())][0])
                         column_list.append(const + ' as ' + str(as_names[i]))
                 if element.is_constant():
@@ -109,7 +109,7 @@ class ConjunctiveQuerySQLGenerator():
             for constant in const_dict:
                 for position in const_dict[constant]:
                     constraints.append( \
-                        relation.get_name() + '.' + self.mapPositionToColumnName(relation,position) + '=' + str(constant) \
+                        relation.get_name() + '.' + self.mapPositionToColumnName(relation,position) + ' = ' + str(constant) \
                     )
         return constraints
 
@@ -124,9 +124,9 @@ class ConjunctiveQuerySQLGenerator():
         for constraint in constraints:
             ls = constraint.get_left_side()
             rs = constraint.get_right_side()
-            
+
             if not (ls.is_variable() and constraint.is_equality_constraint()):
-                ''' Every Var = Constant constraint where var is only in head. We don't want this type of constraints. 
+                ''' Every Var = Constant constraint where var is only in head. We don't want this type of constraints.
                     We assume that if there is a Var = Constraint, var occurs in the head. Otherwise it would be unified in the preprocessor.
                 '''
                 if ls.is_variable():
@@ -140,20 +140,20 @@ class ConjunctiveQuerySQLGenerator():
                     right_side = str(rs)
 
                 constraints_strings.append(
-                    str(left_side) + str(constraint.get_operator()) + str(right_side)
+                    str(left_side) + ' ' + str(constraint.get_operator()) + ' ' + str(right_side)
                 )
 
         return constraints_strings
 
     def get_join_constraints(self,var_dict):
         constraints = []
- 
+
         for var in var_dict:
             length = len(var_dict[var])
             for i in range(1,length):
                 constraints.append(
                     self.mapVariableToRelationDotField(var,var_dict,0) +
-                    '=' +
+                    ' = ' +
                     self.mapVariableToRelationDotField(var,var_dict,i)
                 )
         return constraints
@@ -171,14 +171,14 @@ class ConjunctiveQuerySQLGenerator():
 
                 if element.is_variable():
                     where_clauses.append(
-                        var + '=' +
+                        var + ' = ' +
                         self.mapVariableToRelationDotField(element, var_dict)
                     )
                 elif element.is_constant():
-                    where_clauses.append(var + '=' + str(element))
+                    where_clauses.append(var + ' = ' + str(element))
 
             negated_queries_sql.append(
-                'NOT EXISTS (' + 
+                'NOT EXISTS (' +
                     'SELECT * FROM ' + relation.get_name() +
                     ' WHERE ' + ' AND '.join(where_clauses) +
                 ')'
