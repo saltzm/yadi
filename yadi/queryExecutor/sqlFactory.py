@@ -16,7 +16,7 @@ class DisjunctiveQuerySQLGenerator():
 
 class ConjunctiveQuerySQLGenerator():
 
-    def get_SQL_code(self,query,old_query):
+    def get_SQL_code(self,query,old_query,pretty_print=False):
         aliases = self.create_table_aliases(query)
         var_dict = query.get_var_dict()
 
@@ -26,10 +26,19 @@ class ConjunctiveQuerySQLGenerator():
         join_constraints = self.get_join_constraints(var_dict)
         explicit_constraints = self.get_explicit_constraints(query.get_constraints(),var_dict)
         negated_queries = self.get_negated_queries(query.get_relations(),var_dict)
-        where_clause = ' AND \n\t'.join(implicit_constraints + join_constraints + explicit_constraints + negated_queries)
-        return 'SELECT \n\t' + ', \n\t'.join(select_clause) + \
-               ('\nFROM \n\t' if len(from_clause) != 0 else '') + ', \n\t'.join(from_clause) + \
+        where_separator = ' AND \n\t' if pretty_print else ' AND '
+        where_clause = where_separator.join(implicit_constraints + join_constraints + explicit_constraints + negated_queries)
+        if pretty_print:
+            return 'SELECT \n\t' + ', \n\t'.join(select_clause) + \
+               ('\nFROM \n\t' if len(from_clause) != 0 else '') + \
+               ', \n\t'.join(from_clause) + \
                ('\nWHERE \n\t' if len(where_clause) != 0 else '') + where_clause + ';'
+        else:
+            return 'SELECT ' + ', '.join(select_clause) + \
+               (' FROM ' if len(from_clause) != 0 else '') + \
+               ', '.join(from_clause) + \
+               (' WHERE ' if len(where_clause) != 0 else '') + where_clause + ';'
+
 
 
     def create_table_aliases(self,query):
