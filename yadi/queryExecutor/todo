@@ -1,9 +1,13 @@
 1. No head relation.
 2. Not(a;b)
 3. Joins, divisions.
+4. CREATES: same names, different arities.
 
 R(X,Y) :- S(X,Y);T(X,Y,Z) 
 
 R = 2, S(X,Y), T(Y,Z)
 
 S(X,Y);T(A,B) -- NOT SAFE
+
+
+

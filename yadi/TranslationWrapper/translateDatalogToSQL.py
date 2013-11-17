@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../')
+
 from ASTFactory.ASTBuilder import ASTBuilder
 from parserAST.Parser import parser
 from queryExecutor.queryExecutor import QueryExecutor
