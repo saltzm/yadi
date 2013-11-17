@@ -10,15 +10,15 @@ engine = create_engine('postgresql://postgres:123456@localhost:5432/Cinema', ech
 class ReformatQuery():
     def reformat(self,sqlQuery):
         q = []
-        b = inspect(Movie)
-        attributes = b.attrs.keys()
         word = sqlQuery.split()
         letters = set('._')
         for w in word:
                 if letters & set(w):
-                    subList = w.split('_')
+                    subList = w.split('._')
+                    b = inspect(movie)
+                    attributes = b.attrs.keys()
                     i = int (subList[1])
-                    s = subList[0] + attributes[i]
+                    s = subList[0] + '.' + attributes[i]
                     q.append(s)
                 else:
                     q.append(w)
@@ -27,7 +27,7 @@ class ReformatQuery():
         return q
 
 
-class Movie(Base):
+class movie(Base):
     __tablename__ = 'movie'
     title = Column(String, primary_key=True)
     director = Column(String)
@@ -36,7 +36,7 @@ class Movie(Base):
 
 
 
-class Featuring(Base):
+class featuring(Base):
     __tablename__ = 'featuring'
     title = Column(String, primary_key=True)
     actor = Column(String)

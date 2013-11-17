@@ -1,3 +1,4 @@
+from ASTFactory.ASTBuilder import *
 import sys
 sys.path.append('../')
 

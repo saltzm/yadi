@@ -4,7 +4,7 @@ __author__ = 'nishara'
 
 from sqlalchemy import *
 from tabulate import tabulate
-engine = create_engine('postgresql://postgres:123456@localhost:5432/Cinema', echo=True)
+engine = create_engine('postgresql://postgres:123456@localhost:5432/twitter', echo=True)
 
 
 class evaluateQuery():

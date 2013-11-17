@@ -1,4 +1,7 @@
-from ASTFactory.ASTBuilder import ASTBuilder
+import sys
+sys.path.append('/home/nishara/PycharmProjects/yadi/yadi')
+
+from ASTBuilder import ASTBuilder
 from dataStructures.constraint import Constraint
 from dataStructures.element import Variable, Constant, Wildcard
 from dataStructures.query import ConjunctiveQuery

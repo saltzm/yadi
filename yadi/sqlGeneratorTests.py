@@ -22,8 +22,7 @@ def test(list_queries):
         print (QueryExecutor().execute_query(list_queries[i]))
         print ('---------------------------------------------------------')
 
-        sqlS = QueryExecutor().execute_query(list_queries[i])
-        #evaluateQuery().evaluate(sqlS)
+
 
 queries = []
 
