@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import sys
-sys.path.append('/home/nishara/PycharmProjects/yadi/yadi')
+from interpreter.interpreter import *
+
+if __name__ == '__main__':
+    Interpreter().cmdloop()
