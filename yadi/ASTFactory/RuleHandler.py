@@ -21,6 +21,10 @@ class RuleHandler:
     def __init__(self):
         pass
 
+    def handleFact(self, fact):
+        relation_object_list, constraint_object_list = self.handleBody(fact)
+        return ConjunctiveQuery(relation_object_list, constraint_object_list, None)
+
     def handleConjunctiveRule(self, rule):
 
         assert isinstance(rule, list)
