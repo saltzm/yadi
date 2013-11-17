@@ -9,7 +9,7 @@ def translateDatalogToSql(datalog_statement):
     datalog_parser = parser()
     ast_builder = ASTBuilder()
     query_executor = QueryExecutor()
-    query_result_list = []
+    sql_query_list = []
 
     print('Datalog Input:')
     print(datalog_statement)
@@ -19,7 +19,7 @@ def translateDatalogToSql(datalog_statement):
     ast_query_list = ast_builder.buildAST(parsed_statement.asList())
 
     for ast_query in ast_query_list:
-        query_result = QueryExecutor().execute_query(ast_query)
-        query_result_list.append(query_result)
+        sql_query = QueryExecutor().execute_query(ast_query)
+        sql_query_list.append(sql_query)
 
-    return query_result_list
+    return sql_query_list
