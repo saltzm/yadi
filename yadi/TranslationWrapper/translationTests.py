@@ -10,6 +10,8 @@ __author__ = 'caioseguin'
 def main():
     datatog_statements = []
     datatog_statements.append('users(X,Y):- tuser(X,Y).')
+    datatog_statements.append('users(Y,L):-tuser(_,Y,_,L).')
+    datatog_statements.append("users(Y):-tuser(_,Y,_,L), L='Lyon'.")
     #datatog_statements.append('q(X):-not(s(Y)),X=Y,Y=2.')
     #datatog_statements.append('q(X):- s(X), X = 2.')
     #datatog_statements.append('r(X,Y),!s(Z), Y=Z.')
@@ -27,9 +29,11 @@ def main():
     #datatog_statements.append('a(X,Y) :- s(X), sa(Y,T), t(X), u(Y), X>Y.')
     #datatog_statements.append("q(X,Y):- s(X,Y). a(X,Y):- b(X,Y).")
 
+    sql_list=[]
     for d_query in datatog_statements:
         #print(translateDatalogToSql(d_query))
-        sql_list = translateDatalogToSql(d_query)
+        s = translateDatalogToSql(d_query)
+        sql_list.append(s[0])
 
     for sqlS in sql_list:
         evaluateQuery().evaluate(sqlS)
