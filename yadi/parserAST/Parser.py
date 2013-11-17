@@ -132,7 +132,6 @@ class parser:
         except ParseException as pe:
             print(pe)
 
-        return 1
-
     def syntax(self, s, loc, expr, err):
         print("Syntax error on string {0!r}, loc {1!r} of '{2!r}'".format(s, loc, expr))
+        raise Exception
