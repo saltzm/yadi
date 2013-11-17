@@ -20,10 +20,11 @@ def test(list_queries):
 
 queries = []
 
+
 # ------
 # Q(X):-!S(Y),X=Y,Y=2
 r = RelationInQuery('S', [Variable('Y')],True)
-q = ConjunctiveQuery([r],[Constraint(Variable('X'), Variable('Y'), '='),Constraint(Variable('Y'), Constant('2'), '=')],RelationInQuery('Q', [Variable('X')])) 
+q = ConjunctiveQuery([r],[Constraint(Variable('X'), Variable('Y'), '='),Constraint(Variable('Y'), Constant('2'), '=')],RelationInQuery('Q', [Variable('X')]))
 
 queries.append(q)
 
@@ -31,7 +32,7 @@ queries.append(q)
 
 s = RelationInQuery('S', [Variable('X'),Variable('Y')])
 t = RelationInQuery('T', [Variable('X')], True)
-queries.append(ConjunctiveQuery([s,t],[Constraint(Variable('Y'), Variable('Z'), '=')],RelationInQuery('Q',[Variable('X'),Variable('Z')]))) 
+queries.append(ConjunctiveQuery([s,t],[Constraint(Variable('Y'), Variable('Z'), '=')],RelationInQuery('Q',[Variable('X'),Variable('Z')])))
 
 
 # ------
@@ -65,7 +66,7 @@ head = RelationInQuery('answer',[Variable('X'),Constant('2')])
 queries.append(ConjunctiveQuery([s,t],[],head))
 
 
-# r(_,2) 
+# r(_,2)
 
 r = RelationInQuery('answer',[Wildcard(),Constant('2')])
 queries.append(ConjunctiveQuery([r],[]))
@@ -124,6 +125,16 @@ u = RelationInQuery('T', [Variable('X')])
 v = RelationInQuery('V', [Variable('Y')])
 head = RelationInQuery('answer',[Variable('X'),Variable('Y')])
 queries.append(ConjunctiveQuery([s,t,u,v],[Constraint(Variable('X'),Variable('Y'),'>')],head))
+
+
+# ------
+# Q(X):- S(X)
+r = RelationInQuery('S', [Variable('X')])
+q = ConjunctiveQuery([r],[],RelationInQuery('Q', [Variable('X')]))
+
+queries.append(q)
+
+
 test(queries)
 
 

@@ -29,7 +29,7 @@ class ConjunctiveQuerySQLGenerator():
         where_clause = ' AND \n\t'.join(implicit_constraints + join_constraints + explicit_constraints + negated_queries)
         return 'SELECT \n\t' + ', \n\t'.join(select_clause) + \
                ('\nFROM \n\t' if len(from_clause) != 0 else '') + ', \n\t'.join(from_clause) + \
-               ('\nWHERE \n\t' if len(where_clause) != '' else '') + where_clause + ';'
+               ('\nWHERE \n\t' if len(where_clause) != 0 else '') + where_clause + ';'
 
 
     def create_table_aliases(self,query):
