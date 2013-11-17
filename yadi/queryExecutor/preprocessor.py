@@ -2,7 +2,7 @@ import copy
 from dataStructures.query import *
 from dataStructures.relation import *
 from dataStructures.constraint import *
-from exceptions import *
+from queryExecutor.exceptions import *
 
 class QueryPreprocessor():
     def preprocess(self,query):

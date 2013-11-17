@@ -60,7 +60,7 @@ class ASTBuilder:
             if self.rule_handler.isRule(statement):
                 statement_ast = self.handleRule(statement)
             else:
-                raise Exception("?.handleFact(statement) not implemented yet")
+                statement_ast = self.handleFact(statement)
 
         else:
             raise Exception("?.handleQuery(statement) not implemented yet")
@@ -75,3 +75,7 @@ class ASTBuilder:
             raise Exception("self.ruleHandler.handleDisjunctiveRule(statement) not implemented yet")
         else:
             return self.rule_handler.handleConjunctiveRule(statement)
+
+    def handleFact(self, statement):
+        assert isinstance(statement, list)
+        return self.rule_handler.handleFact(statement)
