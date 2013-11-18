@@ -146,10 +146,12 @@ INSERT INTO movie VALUES ('Life Is Beautiful', 'Roberto Benigni', 116, 1997);
 INSERT INTO movie VALUES ('Casino', 'Martin Scorsese', 178, 1995);
 INSERT INTO movie VALUES ('Toy Story', 'John Lasseter', 81, 1995);
 INSERT INTO movie VALUES ('No Country for Old Men', 'Ethan Coen', 122, 2007);
-
+INSERT INTO movie VALUES ('No Country for Old Men', 'Ethan Coen', 122, 2007);
+INSERT INTO movie VALUES ('Run', 'Francisco Rodriguez', 200, 2013);
 
 INSERT INTO featuring VALUES ('Home Alone', 'Macaulay Culkin', 'Kevin');
 INSERT INTO featuring VALUES ('Life Is Beautiful', 'Roberto Benigni', 'Guido');
 INSERT INTO featuring VALUES ('Casino', 'Robert De Niro', 'Sam');
 INSERT INTO featuring VALUES ('Toy Story', 'Hom Hanks', 'Woody');
 INSERT INTO featuring VALUES ('No Country for Old Men', 'Tommy Lee Jones', 'Ed Tom Bell');
+INSERT INTO featuring VALUES ('Run', 'Francisco Rodriguez', 'Runner');
