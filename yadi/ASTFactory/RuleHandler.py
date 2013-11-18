@@ -73,6 +73,9 @@ class RuleHandler:
             is_negated = False
 
         relation_symbol = relation[0]
+        # TODO
+#        if len(relation) == 1:
+#            raise Exception("Atoms not yet supported")
 
         if not isinstance(relation[1], list):
             raise Exception("list of terms expected")
