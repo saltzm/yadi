@@ -1,4 +1,9 @@
-from .interpreter.interpreter import *
+from .TranslationWrapper.translateDatalogToSQL import translateDatalogToSql
+from .evaluate_query import *
 
-if __name__ == '__main__':
-    Interpreter().cmdloop()
+def start():
+    while True:
+        line = input ('yadi> ')
+        s = translateDatalogToSql(line)
+        evaluateQuery().evaluate(s[0])
+start()

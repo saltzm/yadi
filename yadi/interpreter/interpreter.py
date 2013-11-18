@@ -14,9 +14,9 @@ class Interpreter(cmd.Cmd):
     user = ""
     host = ""
     port  = ""
-        
+
     def emptyline(self):
-        return 
+        return
 
     def parseline(self, line):
         """Parse the line into a command name and a string containing
@@ -45,7 +45,7 @@ class Interpreter(cmd.Cmd):
             print("YADI was not able to create a database connection")
             super().do_help("open_db")
             return
-            
+
         username = args[0]
         password = args[1]
         database = args[2]
@@ -110,9 +110,9 @@ class Interpreter(cmd.Cmd):
         print('Thank you for using YADI')
         self.close()
         return True
-    
+
     def default(self, line):
-        
+
         if(not(self.engine)):
             print("YADI is not connected to a database. Please use /open_db command")
             super().do_help("open_db")
