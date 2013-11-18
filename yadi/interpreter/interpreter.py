@@ -1,8 +1,9 @@
 import cmd, sys
+from yadi import *
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
-from ..TranslationWrapper import translateDatalogToSQL
 from tabulate import tabulate
+from ..TranslationWrapper import translateDatalogToSQL
 
 
 class Interpreter(cmd.Cmd):
@@ -13,9 +14,9 @@ class Interpreter(cmd.Cmd):
     user = ""
     host = ""
     port  = ""
-
+        
     def emptyline(self):
-        return
+        return 
 
     def parseline(self, line):
         """Parse the line into a command name and a string containing
@@ -28,7 +29,7 @@ class Interpreter(cmd.Cmd):
             return None, None, line
         elif line[0] == '?':
             line = 'help ' + line[1:]
-            return super().parseline(line[1:])
+            return super().parseline(line)
         elif line[0] == '/':
             return super().parseline(line[1:])
         else:
@@ -44,7 +45,7 @@ class Interpreter(cmd.Cmd):
             print("YADI was not able to create a database connection")
             super().do_help("open_db")
             return
-
+            
         username = args[0]
         password = args[1]
         database = args[2]
@@ -98,7 +99,10 @@ class Interpreter(cmd.Cmd):
 
     def do_current_db(self, line):
         "Information about the current database"
-        print("Current database: " + self.db+"     User: " + self.user +"\nHost: " + self.host+"     Port: " + self.port)
+        if(not(self.engine)):
+            print("Not connected to any database.")
+        else:
+            print("Current database: " + self.db+"     User: " + self.user +"\nHost: " + self.host+"     Port: " + self.port)
         return
 
     def do_quit(self, arg):
@@ -106,12 +110,9 @@ class Interpreter(cmd.Cmd):
         print('Thank you for using YADI')
         self.close()
         return True
-
+    
     def default(self, line):
-
-        self.stdout.write('*** Unknown syntax: %s\n'%line)
-        return
-
+        
         if(not(self.engine)):
             print("YADI is not connected to a database. Please use /open_db command")
             super().do_help("open_db")
