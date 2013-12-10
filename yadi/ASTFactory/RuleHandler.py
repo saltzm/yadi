@@ -142,10 +142,10 @@ class RuleHandler:
                                            ( body_part[1] == equalOperator ))
 
     def isVariable(self, term):
-        return term.isupper()
+        return term[0].isupper()
 
     def isConstant(self, term):
-        return term.islower() or term.isdigit() or (term[0] == "'" and term[len(term)-1] == "'")
+        return term[0].islower() or term.isdigit() or (term[0] == "'" and term[len(term)-1] == "'")
 
     def isWildcard(self, term):
         return term == '_'
