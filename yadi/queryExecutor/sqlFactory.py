@@ -12,8 +12,12 @@ class DisjunctiveQuerySQLGenerator():
 
     def get_SQL_code(self,query,old_query):
         sql_gen = SQLGenerator()
-        ' UNION '.join([sql_gen.get_SQL_code(q) for q in query.get_queries()])
+        old_queries = old_query.get_queries()
+        new_queries = query.get_queries()
+        old_new_pairs = [(new_queries[aux], old_queries[aux]) for aux in range(0,len(new_queries))]
+        return ' UNION '.join(['(' + sql_gen.get_SQL_code(q, old_q)[:-1] + ')' for (q, old_q) in old_new_pairs]) +';'
 
+            
 class ConjunctiveQuerySQLGenerator():
 
     def get_SQL_code(self,query,old_query,pretty_print=False):

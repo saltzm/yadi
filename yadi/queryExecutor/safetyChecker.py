@@ -9,6 +9,11 @@ class SafetyChecker():
             sq = DisjunctiveQuerySafetyChecker()
         return sq.check_for_safety(query)
 
+class DisjunctiveQuerySafetyChecker():
+    def check_for_safety(self,query):
+        safetyQueries = [SafetyChecker().check_for_safety(q) for q in query.get_queries()]
+        return False not in safetyQueries
+
 class ConjunctiveQuerySafetyChecker():
 
     def check_for_safety(self,query):

@@ -12,6 +12,11 @@ class QueryPreprocessor():
             pp = DisjunctiveQueryPreprocessor()
         return pp.preprocess(query)
 
+class DisjunctiveQueryPreprocessor():
+    def preprocess(self,query):
+        newQueryList = [QueryPreprocessor().preprocess(q) for q in query.get_queries()]
+        return DisjunctiveQuery(newQueryList)
+    
 class ConjunctiveQueryPreprocessor():
     default_head_relation_name = 'answer'
 

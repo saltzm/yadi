@@ -12,6 +12,8 @@ class DisjunctiveQuery(Query):
     def get_relations(self):
         return [x.get_relations for x in self.get_queries()]
 
+    def __repr__(self):
+        return ' ; '.join(['(' + str(q) + ')' for q in self.get_queries()])         
 
 class ConjunctiveQuery(Query):
     def __init__(self, relations = [], constraints = [], head_relation = None):
@@ -34,7 +36,6 @@ class ConjunctiveQuery(Query):
         return self.constraints
 
     def __repr__(self):
-
         return str(self.head_relation) + ':-' + \
                ','.join([str(x) for x in self.relations]) + \
                (',' if len(self.constraints)>0 else '') + \

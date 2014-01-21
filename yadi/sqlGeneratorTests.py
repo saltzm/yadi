@@ -1,13 +1,11 @@
-import sqlalchemy
-
 
 #from evaluate_query import *
-from .dataStructures.query import *
-from .dataStructures.relation import *
-from .dataStructures.element import *
-from .dataStructures.constraint import *
-from .queryExecutor.queryExecutor import *
-from .queryExecutor.sqlFactory import *
+from yadi.dataStructures.query import *
+from yadi.dataStructures.relation import *
+from yadi.dataStructures.element import *
+from yadi.dataStructures.constraint import *
+from yadi.queryExecutor.queryExecutor import *
+from yadi.queryExecutor.sqlFactory import *
 
 
 def test(list_queries):
