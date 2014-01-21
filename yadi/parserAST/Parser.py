@@ -37,8 +37,10 @@ from pyparsing import *
 #                   division.
 # Rule:             head :- body, or just head (called a fact).
 
+
 class SyntaxException(Exception):
     pass
+
 
 class parser:
     def __init__(self):
@@ -84,9 +86,9 @@ class parser:
                     QuotedString("'", unquoteResults=False)).setName("constant")
 
         #Variable
-        variable = (Combine(Optional("_") + Word(srange('[A-Z]')) + Optional(Word(alphanums))) |
-                    Combine(Literal("_") + Word(srange('[a-z]'))) |
-                    underscore).setName("variable")
+        variable = Combine((Optional(Word("_")) + Word(srange('[A-Z]')) + Optional(Word(alphanums + '_'))) |
+                           (Word("_") + Word(alphanums) + Optional(Word(alphanums + '_'))) |
+                           underscore).setName("variable")
 
         #Unknown
         unknown = (Literal("null") | Combine((Literal("'$NULL'(") + Word(nums) + Literal(")")))).setName("unknown")
@@ -100,7 +102,7 @@ class parser:
                                    (OneOrMore(Literal('_')) + Word(alphanums, min=1) + Optional(
                                        Word(alphanums + '_')))).setName("predicate_symbol")
 
-        atom = ((predicate_symbol + Literal("(").suppress() + Group(term + Optional(OneOrMore(comma | term))) +
+        atom = ((predicate_symbol + Literal("(").suppress() + Group(term + Optional(OneOrMore(comma + term))) +
                  Literal(")").suppress()) | predicate_symbol).setName("atom")
 
         #Comparison and conditions

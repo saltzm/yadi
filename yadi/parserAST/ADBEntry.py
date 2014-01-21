@@ -1,4 +1,4 @@
-from .Parser import parser
+from Parser import parser
 
 p = parser()
 
@@ -50,7 +50,7 @@ print(p.parsesentence("q(X,Y):- s(X).\nq(X,Y):- s(X).\nq(X,Y):- s(X)."))
 print(p.parsesentence("q(X,3) :- s(X)."))
 
 #Incorporation of all elements
-print(p.parsesentence("_a45(x,Y,_343,'a') :- __x_43A(k,3.5E+3,x), A>=4; t=5, a(q,x);r(x,Y), a division y. q(x,y)."))
+print(p.parsesentence("a45(x,Y,_343,a) :- x43A(k,5,x), A>=4; t=5, a(q,x);r(x,Y), a division y. q(x,y)."))
 
 #Rules (that actually make sense)
 print(p.parsesentence("q(X,Y):- s(X)."))
@@ -76,3 +76,10 @@ print(p.parsesentence("r(Y) :- s(X), Y=X, X=2, Y =4."))
 print(p.parsesentence("r(X,Y,Z,_,2) :- s(X), Y=X, X=2."))
 print(p.parsesentence("q(X,Y) :- s(_,Y), t(X,_), u(_), v(_,_)."))
 print(p.parsesentence("q(x,y)."))
+print(p.parsesentence("q(X,Y) :- s(_,Y),        t(X,_), u(_), v(_,_)."))
+
+#Errors
+#print(p.parsesentence("q(x,y,,)."))
+#print(p.parsesentence("r(Title1,Title2,Release_date):-movie(Title1,,,Release_date),movie(Title2,,,Release_date)."))
+#print(p.parsesentence("r(x):-q(x),s(x,,,,,)."))
+#print(p.parsesentence("q(x,)."))

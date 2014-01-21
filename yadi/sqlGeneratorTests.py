@@ -17,7 +17,10 @@ def test(list_queries):
         print ('Original:')
         print (str(list_queries[i]))
         print ('Result:')
-        print (QueryExecutor().execute_query(list_queries[i]))
+        try:
+            print (QueryExecutor().execute_query(list_queries[i]))
+        except Exception as e:
+            print(e)
         print ('---------------------------------------------------------')
 
 

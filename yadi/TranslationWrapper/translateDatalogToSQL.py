@@ -3,6 +3,7 @@ from ..ASTFactory.ASTBuilder import *
 from ..ASTFactory.ASTBuilder import ASTBuilder
 from ..parserAST.Parser import parser,SyntaxException
 from ..queryExecutor.queryExecutor import QueryExecutor
+from ..queryExecutor.exceptions import *
 
 __author__ = 'caioseguin'
 
@@ -24,15 +25,17 @@ def translateDatalogToSql(datalog_statement):
 #        print('Read as :')
 
         for ast_query in ast_query_list:
-            print(str(ast_query))
             sql_query = QueryExecutor().execute_query(ast_query)
             sql_query_list.append(sql_query)
 #            print('Generated SQL:')
 #            print (sql_query)
     except SyntaxException as e:
-        print (e)
+        print ('SyntaxException: ' + str(e))
     except SafetyException as e:
-        print (e)
+        print ('SafetyException: ' + str(e))
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
 
 
     return sql_query_list
