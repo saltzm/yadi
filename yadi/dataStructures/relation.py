@@ -45,9 +45,10 @@ class RelationInQuery:
         for position in self.wildcards:
             list_of_columns[position] = '_'
 
-        neg_str = '!' if self.negated else ''
+        neg_str_begin = 'not(' if self.negated else ''
+        neg_str_end = ')' if self.negated else ''
 
-        return neg_str + self.name + '('+','.join(list_of_columns)+')'
+        return neg_str_begin + self.name + '('+','.join(list_of_columns)+')' + neg_str_end
 
     def get_name(self):
         return self.name
