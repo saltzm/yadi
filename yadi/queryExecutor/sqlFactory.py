@@ -89,7 +89,7 @@ class ConjunctiveQuerySQLGenerator():
         element_list = head_relation.get_ordered_element_list()
 
         if len(element_list) == 0:
-            column_list = ["'TRUE'"]
+            column_list = ["CASE COUNT(*) WHEN 0 THEN 'FALSE' ELSE 'TRUE' END"]
         else:
             if original_head_relation is None:
                 as_names = head_relation.get_ordered_element_list()
