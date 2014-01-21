@@ -19,11 +19,19 @@ class Variable(Element):
 
 class Constant(Element):
     def __init__(self,value = ''):
+
+        # Check if it is quoted.
+
+        if isinstance(value,str):        
+            if len(value) > 0:
+                if value[0] != '\'':
+                    value = '\'' + value + '\''        
+
         self.value = value
     def __hash__(self):
         return hash(self.value)
     def __repr__(self):
-        return self.value
+        return str(self.value)
 
 class Wildcard(Element):
     def __hash__(self):
