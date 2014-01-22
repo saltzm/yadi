@@ -46,7 +46,7 @@ def loadscript(path):
         with open(np, 'r') as f:
             for data_line in f:
                 str_concat += data_line
-            print("Datalog program read:\n"+SyntaxHighlight().highlight(str_concat)+"\n")
+            print("Datalog program read:\n"+SyntaxHighlight().highlight(str_concat))
             execute_translation(str_concat)
     except Exception as e:
         print(Fore.RED+str(e)+Fore.RESET)
@@ -54,7 +54,6 @@ def loadscript(path):
 
 def execute_translation(input_line):
     sql_queries = translateDatalogToSql(input_line)
-    print(sql_queries)
     for s in sql_queries:
         try:
             evaluateQuery().evaluate(s)
@@ -82,11 +81,11 @@ To begin, type a Datalog query. For a list of commands, type /help
     print(Fore.YELLOW+introString+Fore.RESET)
 
     while True:
-        print("")
-        read_line = input('yadi> ').strip()
+        print(Fore.YELLOW+'\nyadi> '+Fore.RESET, end="")
+        read_line = input().strip()
 
         if read_line == "":
-            print(Fore.RED+"Interpreter error: Empty is not a valid input."+Fore.RESET)
+            print(Fore.RED+"Interpreter error: Empty is not a valid input. For help, type /help"+Fore.RESET)
             continue
 
         int_parser = IntParse()

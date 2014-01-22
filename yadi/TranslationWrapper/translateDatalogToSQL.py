@@ -4,6 +4,7 @@ from ..ASTFactory.ASTBuilder import ASTBuilder
 from ..parserAST.Parser import parser,SyntaxException
 from ..queryExecutor.queryExecutor import QueryExecutor
 from ..queryExecutor.exceptions import *
+from colorama import *
 
 __author__ = 'caioseguin'
 
@@ -30,9 +31,9 @@ def translateDatalogToSql(datalog_statement):
 #            print('Generated SQL:')
 #            print (sql_query)
     except SyntaxException as e:
-        print ('SyntaxException: ' + str(e))
+        print (Fore.RED+'SyntaxException: ' + str(e)+Fore.RESET)
     except SafetyException as e:
-        print ('SafetyException: ' + str(e))
+        print (Fore.RED+'SafetyException: ' + str(e)+Fore.RESET)
     except Exception as e:
         import traceback
         traceback.print_exc()

@@ -9,10 +9,10 @@ class IntParse:
 
         assert_dl = Literal("/assert ") + Word(printables)
         loadfile = Literal("/script ") + dblQuotedString + StringEnd()
-        quit = Literal("/quit")
-        help = Literal("/help")
-        clrscr = Literal("/clrscr")
-        dbs = Literal("/dbschema")
+        quit = Literal("/quit") + StringEnd()
+        help = Literal("/help") + StringEnd()
+        clrscr = Literal("/clrscr") + StringEnd()
+        dbs = Literal("/dbschema") + StringEnd()
 
         rule = (assert_dl | loadfile | help | quit | clrscr | dbs).setFailAction(self.syntax)
         expression = rule.parseString(cmd_str)
