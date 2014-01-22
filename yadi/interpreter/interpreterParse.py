@@ -11,8 +11,10 @@ class IntParse:
         loadfile = Literal("/script ") + dblQuotedString + StringEnd()
         quit = Literal("/quit")
         help = Literal("/help")
+        clrscr = Literal("/clrscr")
+        dbs = Literal("/dbschema")
 
-        rule = (assert_dl | loadfile | help | quit).setFailAction(self.syntax)
+        rule = (assert_dl | loadfile | help | quit | clrscr | dbs).setFailAction(self.syntax)
         expression = rule.parseString(cmd_str)
         return expression
 

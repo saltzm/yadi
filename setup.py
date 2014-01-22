@@ -40,8 +40,9 @@ setup(
         'pyparsing',
         'SQLAlchemy',
         'tabulate',
-        'psycopg2'
-        'colorama'
+        'psycopg2',
+        'colorama',
+        'pygments'
     ],
     license="BSD",
     zip_safe=False,

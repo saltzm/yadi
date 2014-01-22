@@ -2,21 +2,29 @@ from .TranslationWrapper.translateDatalogToSQL import translateDatalogToSql
 from .evaluate_query import *
 from colorama import *
 from .interpreter.interpreterParse import *
+from .interpreter.syntaxHighlighter import SyntaxHighlight
 import sys
-
+import os
 
 def help():
+    print("========HELP========")
     print("\nThe following commands are supported by YADI:")
     print("/assert - Used to interactively add new rules to the database. Usage example: /assert a(a4)\n")
+    print("/clrscr - Clears the terminal.\n")
+    print("/dbschema - Lists the database schema.\n")
     print("/help - Prints a list of available commands with their descriptions.\n")
     print("/script \"path\" - Loads a Datalog program from a file in the specified path."
           " Usage example: /script \"C:/file.txt\" \n")
     print("/quit - Quits YADI.\n")
+    print("====================")
 
 
 def quit_yadi():
     sys.exit(0)
 
+
+def clrscr():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def do_assert():
     pass
@@ -31,7 +39,7 @@ def loadscript(path):
         with open(np, 'r') as f:
             for data_line in f:
                 str_concat += data_line
-            print("Datalog program read:\n"+str_concat+"\n")
+            print("Datalog program read:\n"+SyntaxHighlight().highlight(str_concat)+"\n")
             execute_translation(str_concat)
     except Exception as e:
         print(Fore.RED+str(e)+Fore.RESET)
@@ -88,6 +96,8 @@ To begin, type a Datalog query. For a list of commands, type /help
                     do_assert()
                 elif parsed_statement[0] == "/script ":
                     loadscript(parsed_statement[1])
+                elif parsed_statement[0] == "/clrscr":
+                    clrscr()
 
             except InterpreterException as e:
                 print(Fore.RED+"Interpreter error: "+str(e)+Fore.RESET)
