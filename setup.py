@@ -41,6 +41,7 @@ setup(
         'SQLAlchemy',
         'tabulate',
         'psycopg2'
+        'colorama'
     ],
     license="BSD",
     zip_safe=False,
