@@ -7,7 +7,7 @@ class InterpreterException(Exception):
 class IntParse:
     def parse_command(self, cmd_str):
 
-        assert_dl = Literal("/assert ") + dblQuotedString
+        assert_dl = Literal("/assert ") + Word(printables)
         loadfile = Literal("/script ") + dblQuotedString + StringEnd()
         quit = Literal("/quit")
         help = Literal("/help")

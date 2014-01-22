@@ -6,6 +6,7 @@ from .interpreter.syntaxHighlighter import SyntaxHighlight
 import sys
 import os
 
+
 def help():
     print("========HELP========")
     print("\nThe following commands are supported by YADI:")
@@ -23,10 +24,16 @@ def quit_yadi():
     sys.exit(0)
 
 
+def dbschema():
+    pass
+
+
 def clrscr():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def do_assert():
+
+def do_assert(statement):
+    print("Do the assert here for "+statement)
     pass
 
 
@@ -92,8 +99,8 @@ To begin, type a Datalog query. For a list of commands, type /help
                     quit_yadi()
                 elif parsed_statement[0] == "/help":
                     help()
-                elif parsed_statement[0] == "/assert":
-                    do_assert()
+                elif parsed_statement[0] == "/assert ":
+                    do_assert(parsed_statement[1])
                 elif parsed_statement[0] == "/script ":
                     loadscript(parsed_statement[1])
                 elif parsed_statement[0] == "/clrscr":
