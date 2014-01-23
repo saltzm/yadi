@@ -31,7 +31,7 @@ setup(
         'yadi.query_data_structures',
         'yadi.datalog2sql',
         'yadi.ast2sql',
-        'yadi.parser_ast',
+        'yadi.parse2tokens',
         'yadi.interpreter'
     ],
     package_dir={'yadi': 'yadi'},

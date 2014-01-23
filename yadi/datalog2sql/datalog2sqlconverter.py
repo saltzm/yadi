@@ -1,5 +1,5 @@
 from ..tokens2ast.ast_builder import *
-from ..parser_ast.Parser import Parser, SyntaxException
+from ..parse2tokens.parser import Parser, SyntaxException
 from ..ast2sql.ast2sqlconverter import Ast2SqlConverter
 from ..ast2sql.exceptions import *
 from colorama import *
