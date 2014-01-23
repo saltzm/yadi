@@ -1,1 +1,1 @@
-postgresql://saltzm@localhost:5432/twitter
+postgresql://yadi_user:test@localhost:5432/cinema
