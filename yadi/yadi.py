@@ -24,7 +24,7 @@ def help():
 
 
 def dbschema():
-    pass
+    evaluateQuery().get_schema()
 
 
 def set_db():
@@ -153,6 +153,8 @@ To begin, type a Datalog query. For a list of commands, type /help"""
                     set_db()
                 elif parsed_statement[0] == "/curdb":
                     get_db_url()
+                elif parsed_statement[0] == "/dbschema":
+                    dbschema()
             except InterpreterException as e:
                 print(Fore.RED+"Interpreter error: "+str(e)+Fore.RESET)
         else:
