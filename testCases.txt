@@ -1,0 +1,55 @@
+Database schema
+---------------
+movie(title,director,length,release_date)
+featuring(title,actor,a_role)
+tlocation(theater,address,phone_number)
+schedule(theater,title,showtime)
+
+(01). select * from movie
+
+	M(a,b,c,d) :- movie(a,b,c,d).
+
+
+(02). select title, director from movie where length>=100
+
+	R(a,b) :- movie(a,b_,l),l>=100
+
+
+(03). select m.theater from movie m, schedule s 
+	where m.director = 'Chabrol' and s.title=movie.title
+
+	R(m) :- movie(m,'Chabrol',_,_).
+	S(t) :- schedule(t,m,_), R(m).
+
+
+(04). select * from movie where length>=100 or release_data>1995
+
+	S(t,d,l,r) :- movie(t,d,l,r), l>=100.
+	S(t,d,l,r) :- movie(t,d,l,r), r>1995.
+
+
+(05). S(m) :- movie(m,d,l,_), featuring(m.d,_).
+
+
+(06). S(m,d,l,_) :- movie(m,_,_,_), not featuring(m,d,_).
+
+
+(07). select * from movie left outer join featuring on movie.title=featuring.title
+
+	J(t,d,l,r,a,c) :- movie(t,d,l,r), featuring(t,a,c).
+
+
+(08). M(m) :- not schedule(t,m,_).
+
+
+(09). M(m) :- movie(m,_,_,l),l>=100,l>=120.
+
+
+(10). M(m) :- movie(m,'Chabrol',_,d), d=y,y=z,z=2000.
+
+
+
+
+
+
+

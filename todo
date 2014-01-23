@@ -1,0 +1,19 @@
+
+1) multiple line programs 
+2) 
+
+queries we want to be able to do:
+X one relation (Type 1)
+X conjunction of + relations (Type 2)
+X conjunction of mixed + and - relations  (Type 3)
+~ disjunction of Types 1-3 (Type 4)
+- negation of Type 3 (Type 5)
+- negation of Type 4 (Type 6)
+
+Recursive versions of all of these
+
+
+
+
+
+3)
