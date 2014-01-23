@@ -2,7 +2,7 @@ import copy
 from ..query_data_structures.query import *
 from ..query_data_structures.relation import *
 from ..query_data_structures.constraint import *
-from ..ast2sql.exceptions import *
+from .exceptions import *
 
 class QueryPreprocessor():
     def preprocess(self,query):

@@ -1,5 +1,5 @@
-from ..ast_factory.ASTBuilder import *
-from ..parser_ast.Parser import parser,SyntaxException
+from ..tokens2ast.ast_builder import *
+from ..parser_ast.Parser import Parser, SyntaxException
 from ..ast2sql.ast2sqlconverter import Ast2SqlConverter
 from ..ast2sql.exceptions import *
 from colorama import *
@@ -11,7 +11,7 @@ class Datalog2SqlConverter:
         sql_query_list = []
 
         try:
-            parsed_statement = parser().parsesentence(datalog_statement)
+            parsed_statement = Parser().parsesentence(datalog_statement)
             ast_query_list = ASTBuilder().buildAST(parsed_statement.asList())
 
             for ast_query in ast_query_list:

@@ -42,11 +42,11 @@ class SyntaxException(Exception):
     pass
 
 
-class parser:
+class Tokenizer:
     def __init__(self):
         pass
 
-    def parsesentence(self, sentence):
+    def tokenizesentence(self, sentence):
         #Reserved words
         reserved_null = Literal("is_null") | Literal("is_not_null")
         reserved_is = Literal("is")
