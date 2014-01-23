@@ -1,9 +1,11 @@
 __author__ = 'nishara','Manuel'
 
 from sqlalchemy import *
+from sqlalchemy.engine import reflection
 from tabulate import tabulate
 from colorama import *
 import os
+import logging
 
 class evaluateQuery():
     # The typical usage of create_engine() is once per particular database URL, held globally for the
@@ -16,14 +18,16 @@ class evaluateQuery():
 
     def initialize_db(self):
         x = ""
+        logging.basicConfig()
+        logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
         try:
             with open(os.path.join(os.path.dirname(__file__), 'dbconf.txt'), 'r') as f:
                 x = f.readline()
-                self.engine_list.append(create_engine(x, echo=True))
+                self.engine_list.append(create_engine(x, echo=False))
             return True
         except Exception as e:
             print(Fore.RED+"Cannot read dbconf.txt file, please set a DB configuration using /setdb"+Fore.RESET)
-            self.engine_list.append(create_engine("postgresql://empty:empty@empty:0000/db", echo=True))
+            self.engine_list.append(create_engine("postgresql://empty:empty@empty:0000/db", echo=False))
             return False
 
     def dispose_last(self):
@@ -34,6 +38,31 @@ class evaluateQuery():
         #the connection in that scenario.
         if self.connection is not None:
             self.connection.close()
+
+    def get_schema(self):
+        logging.getLogger('sqlalchemy.engine').setLevel(logging.WARN)
+        try:
+            inspector = reflection.Inspector.from_engine(self.engine_list[-1])
+            table_names = inspector.get_table_names()
+            column_names = []
+
+            for i in range(0, len(table_names)):
+                column_names.append(inspector.get_columns(table_names[i]))
+
+            print(Fore.GREEN+'Relation information:')
+            for i in range(0, len(table_names)):
+                print(table_names[i]+'(', end="")
+                for j in range(0, len(column_names[i])):
+                    print(column_names[i][j].get('name')+':'+str(column_names[i][j].get('type')), end="")
+                    if j is not len(column_names[i])-1:
+                        print(", ", end="")
+                print(")\n")
+            print(Fore.RESET)
+            logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+        except Exception as e:
+            logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+            print(Fore.RED+"Error while retrieving schema: "+str(e)+Fore.RESET)
+
 
     def saveconf(self):
         try:
@@ -53,11 +82,11 @@ class evaluateQuery():
 
         try:
             print("Verifying validity of: "+urlstring)
-            test_engine = create_engine(urlstring, echo=True)
+            test_engine = create_engine(urlstring, echo=False)
             test_connection = test_engine.connect()
             test_connection.close()
             test_engine.dispose()
-            self.engine_list.append(create_engine(urlstring, echo=True))
+            self.engine_list.append(create_engine(urlstring, echo=False))
             print(Fore.GREEN+"Settings saved."+Fore.RESET)
         except Exception as e:
             print(Fore.RED+"Unsuccessful connection: "+str(e)+Fore.RESET)
