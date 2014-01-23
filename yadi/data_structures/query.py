@@ -13,7 +13,7 @@ class DisjunctiveQuery(Query):
         return [x.get_relations for x in self.get_queries()]
 
     def __repr__(self):
-        return ' ; '.join(['(' + str(q) + ')' for q in self.get_queries()])         
+        return ' ; '.join(['(' + str(q) + ')' for q in self.get_queries()])
 
 class ConjunctiveQuery(Query):
     def __init__(self, relations = [], constraints = [], head_relation = None):
@@ -44,7 +44,8 @@ class ConjunctiveQuery(Query):
     # var_dict is a Variable -> [(Relation, field)] which is usefuld for several purposes.
     # It does not map occurences of variables in negated goals.
     def get_var_dict(self):
-        variables_in_positive_goals = [y for x in self.relations for y in x.variables if not x.is_negated()]
+        variables_in_positive_goals = \
+            [y for x in self.relations for y in x.variables if not x.is_negated()]
         var_dict = {}
 
         for relation in [x for x in self.relations if not x.is_negated()]:
