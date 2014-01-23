@@ -4,9 +4,10 @@ from .sqlFactory import *
 from ..interpreter.syntaxHighlighter import SyntaxHighlight
 
 
-class QueryExecutor():
-    def execute_query(self, query):
-        print('Original query before processing: ' + SyntaxHighlight().highlight(str(query)), end="")
+class Ast2SqlConverter():
+    def convertAst2Sql(self, query):
+        print('Original query before processing: ' + \
+               SyntaxHighlight().highlight(str(query)), end="")
         new_query = QueryPreprocessor().preprocess(query)
         print('Query transformed into: ' + SyntaxHighlight().highlight(str(new_query)))
         SafetyChecker().check_for_safety(new_query)
