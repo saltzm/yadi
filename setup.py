@@ -28,7 +28,7 @@ setup(
     packages=[
         'yadi',
         'yadi.ast_factory',
-        'yadi.data_structures',
+        'yadi.query',
         'yadi.translation_wrapper',
         'yadi.query_executor',
         'yadi.parser_ast',

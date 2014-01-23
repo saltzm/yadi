@@ -1,4 +1,4 @@
-from .translation_wrapper.translateDatalogToSQL import translateDatalogToSql
+from .translation_wrapper. import convertDatalogToSql
 from .evaluate_query import *
 from colorama import *
 from .interpreter.interpreterParse import *
