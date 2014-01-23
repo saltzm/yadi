@@ -13,8 +13,10 @@ class IntParse:
         help = Literal("/help") + StringEnd()
         clrscr = Literal("/clrscr") + StringEnd()
         dbs = Literal("/dbschema") + StringEnd()
+        setdb = Literal("/setdb") + StringEnd()
+        curdb = Literal("/curdb") + StringEnd()
 
-        rule = (assert_dl | loadfile | help | quit | clrscr | dbs).setFailAction(self.syntax)
+        rule = (assert_dl | loadfile | help | quit | clrscr | dbs | setdb | curdb).setFailAction(self.syntax)
         expression = rule.parseString(cmd_str)
         return expression
 
