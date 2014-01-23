@@ -1,8 +1,8 @@
 from .datalog2sql.datalog2sqlconverter import Datalog2SqlConverter
 from .evaluate_query import *
 from colorama import *
-from .interpreter.interpreterParse import *
-from .interpreter.syntaxHighlighter import SyntaxHighlight
+from .interpreter.interpreter_parse import *
+from .interpreter.syntax_highlighter import SyntaxHighlight
 import sys
 import os
 

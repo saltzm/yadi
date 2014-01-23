@@ -1,7 +1,7 @@
 from .safety_checker import *
 from .preprocessor import *
 from .sql_generator import *
-from ..interpreter.syntaxHighlighter import SyntaxHighlight
+from ..interpreter.syntax_highlighter import SyntaxHighlight
 
 
 class Ast2SqlConverter():
