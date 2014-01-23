@@ -1,7 +1,7 @@
-from ..data_structures.query import *
+from ..query.query import *
 from .exceptions import *
 
-class SafetyCheckerFactory():
+class SafetyChecker():
     def check_for_safety(self,query):
         if isinstance(query, ConjunctiveQuery):
             sq = ConjunctiveQuerySafetyChecker()
@@ -11,7 +11,7 @@ class SafetyCheckerFactory():
 
 class DisjunctiveQuerySafetyChecker():
     def check_for_safety(self,query):
-        safetyQueries = [SafetyCheckerFactory().check_for_safety(q) for q in query.get_queries()]
+        safetyQueries = [SafetyChecker().check_for_safety(q) for q in query.get_queries()]
         return False not in safetyQueries
 
 class ConjunctiveQuerySafetyChecker():

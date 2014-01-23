@@ -1,10 +1,10 @@
 import copy
-from ..data_structures.query import *
-from ..data_structures.relation import *
-from ..data_structures.constraint import *
+from ..query_data_structures.query import *
+from ..query_data_structures.relation import *
+from ..query_data_structures.constraint import *
 from ..query_executor.exceptions import *
 
-class QueryPreprocessorFactory():
+class QueryPreprocessor():
     def preprocess(self,query):
         if isinstance(query, ConjunctiveQuery):
             pp = ConjunctiveQueryPreprocessor()
@@ -15,7 +15,7 @@ class QueryPreprocessorFactory():
 class DisjunctiveQueryPreprocessor():
     def preprocess(self,query):
         newQueryList = \
-            [QueryPreprocessorFactory().preprocess(q) for q in query.get_queries()]
+            [QueryPreprocessor().preprocess(q) for q in query.get_queries()]
         return DisjunctiveQuery(newQueryList)
 
 class ConjunctiveQueryPreprocessor():

@@ -1,6 +1,6 @@
-from ..data_structures.query import *
+from ..query_data_structures.query import *
 
-class SQLGeneratorFactory():
+class SQLGenerator():
     def get_SQL_code(self,query,old_query):
         if isinstance(query, ConjunctiveQuery):
             sql_gen = ConjunctiveQuerySQLGenerator()
