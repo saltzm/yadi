@@ -1,9 +1,9 @@
 
-from .ASTBuilder import ASTBuilder
-from ..dataStructures.constraint import Constraint
-from ..dataStructures.element import Variable, Constant, Wildcard
-from ..dataStructures.query import ConjunctiveQuery
-from ..dataStructures.relation import RelationInQuery
+from .ast_builder import ast_builder
+from ..query_data_structures.constraint import Constraint
+from ..query_data_structures.element import Variable, Constant, Wildcard
+from ..query_data_structures.query import ConjunctiveQuery
+from ..query_data_structures.relation import RelationInQuery
 
 __author__ = 'caioseguin'
 

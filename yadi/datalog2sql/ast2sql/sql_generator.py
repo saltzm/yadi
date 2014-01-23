@@ -1,4 +1,4 @@
-from ..data_structures.query import *
+from ..query_data_structures.query import *
 
 class SQLGenerator():
     def get_SQL_code(self,query,old_query):
@@ -9,9 +9,8 @@ class SQLGenerator():
         return sql_gen.get_SQL_code(query,old_query)
 
 class DisjunctiveQuerySQLGenerator():
-
     def get_SQL_code(self,query,old_query):
-        sql_gen = SQLGenerator()
+        sql_gen = SQLGeneratorFactory()
         old_queries = old_query.get_queries()
         new_queries = query.get_queries()
         old_new_pairs = [(new_queries[aux], old_queries[aux]) for aux in range(0,len(new_queries))]
@@ -19,7 +18,6 @@ class DisjunctiveQuerySQLGenerator():
 
 
 class ConjunctiveQuerySQLGenerator():
-
     def get_SQL_code(self,query,old_query,pretty_print=False):
         aliases = self.create_table_aliases(query)
         var_dict = query.get_var_dict()

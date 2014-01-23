@@ -1,6 +1,7 @@
 class RelationInQuery:
 
-    def __init__(self, name='', variables={},constants = {},wildcards = [], negated = False):
+    def __init__(self, name='', variables={}, \
+                 constants = {},wildcards = [], negated = False):
         self.name = name # The name of the relation
         self.variables = variables # {Variable -> [Position]}
         self.constants = constants # {Constant -> [Position]}
@@ -32,9 +33,10 @@ class RelationInQuery:
                 self.wildcards.append(i)
 
     def __repr__(self):
-        list_of_columns = list(range(0,len([y for x in self.variables.values() for y in x]) + \
-                                  len([y for x in self.constants.values() for y in x]) + \
-                                  len(self.wildcards)))
+        list_of_columns = \
+            list(range(0, len([y for x in self.variables.values() for y in x]) + \
+                          len([y for x in self.constants.values() for y in x]) + \
+                          len(self.wildcards)))
 
         for variable in self.variables:
             for position in self.variables[variable]:
@@ -48,7 +50,10 @@ class RelationInQuery:
         neg_str_begin = 'not(' if self.negated else ''
         neg_str_end = ')' if self.negated else ''
 
-        return neg_str_begin + self.name + '('+','.join(list_of_columns)+')' + neg_str_end
+        return neg_str_begin + \
+               self.name + \
+               '('+','.join(list_of_columns)+')' + \
+               neg_str_end
 
     def get_name(self):
         return self.name
@@ -69,7 +74,6 @@ class RelationInQuery:
         return self.negated
 
     def get_ordered_element_list(self):
-
         order_dict = {}
 
         variables = self.get_variables()

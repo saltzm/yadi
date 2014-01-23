@@ -1,6 +1,6 @@
-from .Parser import parser
+from .Parser import Parser
 
-p = parser()
+p = Parser()
 
 #Tests to check syntax
 print(p.parsesentence("q."))                                    # Atom, zero arity

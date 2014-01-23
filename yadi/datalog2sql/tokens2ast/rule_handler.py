@@ -1,10 +1,9 @@
 __author__ = 'caioseguin'
 
-
-from ..data_structures.constraint import Constraint
-from ..data_structures.element import Variable, Constant, Wildcard
-from ..data_structures.query import ConjunctiveQuery
-from ..data_structures.relation import RelationInQuery
+from ..query_data_structures.constraint import Constraint
+from ..query_data_structures.element import Variable, Constant, Wildcard
+from ..query_data_structures.query import ConjunctiveQuery
+from ..query_data_structures.relation import RelationInQuery
 
 # Operators used in this module
 

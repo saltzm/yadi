@@ -42,7 +42,7 @@ class SyntaxException(Exception):
     pass
 
 
-class parser:
+class Parser:
     def __init__(self):
         pass
 
