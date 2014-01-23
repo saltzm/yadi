@@ -1,7 +1,7 @@
-from ..tokens2ast.ast_builder import *
-from ..parse2tokens.parser import Parser, SyntaxException
-from ..ast2sql.ast2sqlconverter import Ast2SqlConverter
-from ..ast2sql.exceptions import *
+from .tokens2ast.ast_builder import *
+from .parse2tokens.parser import Parser, SyntaxException
+from .ast2sql.ast2sqlconverter import Ast2SqlConverter
+from .ast2sql.exceptions import *
 from colorama import *
 
 __author__ = 'caioseguin'
