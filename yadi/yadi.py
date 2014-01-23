@@ -1,4 +1,4 @@
-from .translation_wrapper. import convertDatalogToSql
+from .datalog2sql.datalog2sqlconverter import Datalog2SqlConverter
 from .evaluate_query import *
 from colorama import *
 from .interpreter.interpreterParse import *
@@ -85,7 +85,7 @@ def loadscript(path):
 
 
 def execute_translation(input_line):
-    sql_queries = translateDatalogToSql(input_line)
+    sql_queries = Datalog2SqlConverter().convertDatalog2Sql(input_line)
     for s in sql_queries:
         try:
             evaluateQuery().evaluate(s)

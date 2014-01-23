@@ -1,4 +1,4 @@
-from ..query.query import *
+from ..query_data_structures.query import *
 from .exceptions import *
 
 class SafetyChecker():

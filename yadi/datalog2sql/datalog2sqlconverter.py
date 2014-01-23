@@ -7,7 +7,7 @@ from colorama import *
 __author__ = 'caioseguin'
 
 class Datalog2SqlConverter:
-    def convertDatalogToSql(datalog_statement):
+    def convertDatalog2Sql(self, datalog_statement):
         sql_query_list = []
 
         try:
