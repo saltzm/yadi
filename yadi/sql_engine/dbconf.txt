@@ -1,1 +1,1 @@
-postgresql://empty:***@empty:0/db
+postgresql://saltzm@localhost:5432/twitter
