@@ -7,7 +7,7 @@ from colorama import *
 import os
 import logging
 
-class evaluateQuery():
+class QueryEvaluator:
     # The typical usage of create_engine() is once per particular database URL, held globally for the
     # lifetime of a single application process. A single Engine manages many individual DBAPI connections on behalf
     # of the process and is intended to be called upon in a concurrent fashion. In other words, the object shouldn't
