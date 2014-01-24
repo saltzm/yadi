@@ -17,4 +17,6 @@ In order to have recursion, need views
 
 View creation algorithm:
 
-/assert r(X) :- s(X), t(X), not(v(X)).
+/assert r(X) :- s(X), t(X), not(v(X)). 
+-> parser -> assert() ->
+ast

@@ -7,7 +7,14 @@ class SafetyChecker():
             sq = ConjunctiveQuerySafetyChecker()
         if isinstance(query, DisjunctiveQuery):
             sq = DisjunctiveQuerySafetyChecker()
+        if isinstance(query, AssertedQuery):
+            sq = AssertedQuerySafetyChecker()
+
         return sq.check_for_safety(query)
+
+class AssertedQuerySafetyChecker():
+    def check_for_safety(self, query):
+        return SafetyChecker().check_for_safety(query.get_query())
 
 class DisjunctiveQuerySafetyChecker():
     def check_for_safety(self,query):

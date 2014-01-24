@@ -2,9 +2,24 @@ class Query():
     def get_relations(self):
         pass
 
+class AssertedQuery(Query):
+    def __init__(self, query):
+        self.query = query
+
+    def get_query(self):
+        return self.query
+
+    def __repr__(self):
+        return 'Assert: ' +self.query.__repr__()
+
 class DisjunctiveQuery(Query):
     def __init__(self, queries = []):
         self.queries = queries
+
+    # TODO: makes some assumptions...
+    def get_head_relation():
+        if len(self.queries > 0):
+            return queries[0].get_head_relation()
 
     def get_queries(self):
         return self.queries
@@ -38,7 +53,7 @@ class ConjunctiveQuery(Query):
     def __repr__(self):
         return str(self.head_relation) + ':-' + \
                ','.join([str(x) for x in self.relations]) + \
-               (',' if len(self.constraints)>0 else '') + \
+               (',' if len(self.constraints) > 0 else '') + \
                ','.join([str(x) for x in self.constraints])
 
     # var_dict is a Variable -> [(Relation, field)] which is usefuld for several purposes.

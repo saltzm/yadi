@@ -6,11 +6,28 @@ class SQLGenerator():
             sql_gen = ConjunctiveQuerySQLGenerator()
         if isinstance(query, DisjunctiveQuery):
             sql_gen = DisjunctiveQuerySQLGenerator()
-        return sql_gen.get_SQL_code(query,old_query)
+        if isinstance(query, AssertedQuery):
+            sql_gen = AssertedQuerySQLGenerator()
+
+        return sql_gen.get_SQL_code(query, old_query)
+
+class AssertedQuerySQLGenerator():
+    def get_SQL_code(self, query, old_query):
+        query_sql = SQLGenerator().get_SQL_code(query.get_query(),
+                old_query.get_query())
+        head_relation = query.get_query().get_head_relation()
+        view_name = head_relation.get_name()
+        head_vars = head_relation.get_variables()
+        i = 0
+        for var in head_vars:
+            query_sql = query_sql.replace(' AS ' + str(var), ' AS ' + '_' + str(i))
+            i = i + 1
+        return 'CREATE VIEW ' + view_name + ' AS ' + query_sql + \
+               'SELECT * FROM ' + view_name + ';'
 
 class DisjunctiveQuerySQLGenerator():
     def get_SQL_code(self,query,old_query):
-        sql_gen = SQLGeneratorFactory()
+        sql_gen = SQLGenerator()
         old_queries = old_query.get_queries()
         new_queries = query.get_queries()
         old_new_pairs = [(new_queries[aux], old_queries[aux]) for aux in range(0,len(new_queries))]
@@ -22,14 +39,24 @@ class ConjunctiveQuerySQLGenerator():
         aliases = self.create_table_aliases(query)
         var_dict = query.get_var_dict()
 
-        select_clause = self.get_select_columns(query.get_head_relation(), query.get_constraints(), var_dict, old_query.get_head_relation())
+        select_clause = self.get_select_columns(query.get_head_relation(),
+                                                query.get_constraints(),
+                                                var_dict,
+                                                old_query.get_head_relation())
         from_clause = self.get_from_relations(query,aliases)
         implicit_constraints = self.get_implicit_constraints(query.get_relations())
         join_constraints = self.get_join_constraints(var_dict)
-        explicit_constraints = self.get_explicit_constraints(query.get_constraints(),var_dict)
-        negated_queries = self.get_negated_queries(query.get_relations(),var_dict)
+        explicit_constraints = self.get_explicit_constraints(
+                                    query.get_constraints(),
+                                    var_dict)
+        negated_queries = self.get_negated_queries(query.get_relations(), var_dict)
         where_separator = ' AND \n\t' if pretty_print else ' AND '
-        where_clause = where_separator.join(implicit_constraints + join_constraints + explicit_constraints + negated_queries)
+        where_clause = where_separator.join(
+            implicit_constraints +
+            join_constraints +
+            explicit_constraints +
+            negated_queries
+        )
         if pretty_print:
             return 'SELECT \n\t' + ', \n\t'.join(select_clause) + \
                ('\nFROM \n\t' if len(from_clause) != 0 else '') + \
@@ -60,7 +87,7 @@ class ConjunctiveQuerySQLGenerator():
             old_name = relation.get_name()
             relation.set_name(old_name+str(count[relation.get_name()]))
             count[old_name]-=1
-            aliases[relation.get_name()] = old_name + ' as ' + relation.get_name()
+            aliases[relation.get_name()] = old_name + ' AS ' + relation.get_name()
 
         for relation in non_repeated_relations:
             aliases[relation.get_name()] = relation.get_name()
@@ -98,10 +125,11 @@ class ConjunctiveQuerySQLGenerator():
                 if element.is_variable():
                     if element in var_dict:
                     # It's in a positive goal.
-                        column_list.append(self.mapVariableToRelationDotField(element, var_dict) + ' as ' + str(as_names[i]))
+                        column_list.append(self.mapVariableToRelationDotField(element,
+                            var_dict) + ' AS ' + str(as_names[i]))
                     else:# It is a constant (it appears in a constraint).
                         const = str([x.get_right_side() for x in constraints if (x.get_left_side() == element and x.is_equality_constraint())][0])
-                        column_list.append(const + ' as ' + str(as_names[i]))
+                        column_list.append(const + ' AS ' + str(as_names[i]))
                 if element.is_constant():
                     column_list.append(str(element))
                 if element.is_wildcard():

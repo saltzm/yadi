@@ -65,9 +65,9 @@ def clrscr():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def do_assert(statement):
-    print("Do the assert here for "+statement)
-    pass
+def do_assert(input_line):
+    line_to_trans = input_line[len('/assert'):]
+    execute_translation(line_to_trans, True)
 
 
 def loadscript(path):
@@ -78,15 +78,18 @@ def loadscript(path):
     try:
         with open(np, 'r') as f:
             for data_line in f:
+                interpret_line(data_line)
                 str_concat += data_line
             print("Datalog program read:\n"+SyntaxHighlight().highlight(str_concat))
-            execute_translation(str_concat)
     except Exception as e:
         print(Fore.RED+str(e)+Fore.RESET)
 
 
-def execute_translation(input_line):
-    sql_queries = Datalog2SqlConverter().convertDatalog2Sql(input_line)
+def execute_translation(input_line, is_assertion = False):
+    sql_queries = Datalog2SqlConverter().convertDatalog2Sql(
+                    input_line,
+                    is_assertion
+                  )
     for s in sql_queries:
         try:
             qe.evaluate(s)
@@ -129,37 +132,38 @@ To begin, type a Datalog query. For a list of commands, type /help"""
     while True:
         print(Fore.YELLOW+'\nyadi> '+Fore.RESET, end="")
         read_line = input().strip()
+        interpret_line(read_line)
 
-        if read_line == "":
-            print(Fore.RED+"Interpreter error: Empty is not a valid input. For help, type /help"+Fore.RESET)
-            continue
+def interpret_line(read_line):
+    if read_line == "":
+        return
 
-        int_parser = IntParse()
+    int_parser = IntParse()
 
-        if read_line[0] == "/":
-            try:
-                parsed_statement = int_parser.parse_command(read_line)
+    if read_line[0] == "/":
+        try:
+            parsed_statement = int_parser.parse_command(read_line)
 
-                if parsed_statement[0] == "/quit":
-                    quit_yadi()
-                elif parsed_statement[0] == "/help":
-                    help()
-                elif parsed_statement[0] == "/assert ":
-                    do_assert(parsed_statement[1])
-                elif parsed_statement[0] == "/script ":
-                    loadscript(parsed_statement[1])
-                elif parsed_statement[0] == "/clrscr":
-                    clrscr()
-                elif parsed_statement[0] == "/setdb":
-                    set_db()
-                elif parsed_statement[0] == "/curdb":
-                    get_db_url()
-                elif parsed_statement[0] == "/dbschema":
-                    dbschema()
-            except InterpreterException as e:
-                print(Fore.RED+"Interpreter error: "+str(e)+Fore.RESET)
-        else:
-            execute_translation(read_line)
+            if parsed_statement[0] == "/quit":
+                quit_yadi()
+            elif parsed_statement[0] == "/help":
+                help()
+            elif parsed_statement[0] == "/assert ":
+                do_assert(read_line)
+            elif parsed_statement[0] == "/script ":
+                loadscript(parsed_statement[1])
+            elif parsed_statement[0] == "/clrscr":
+                clrscr()
+            elif parsed_statement[0] == "/setdb":
+                set_db()
+            elif parsed_statement[0] == "/curdb":
+                get_db_url()
+            elif parsed_statement[0] == "/dbschema":
+                dbschema()
+        except InterpreterException as e:
+            print(Fore.RED+"Interpreter error: "+str(e)+Fore.RESET)
+    else:
+        execute_translation(read_line)
 
 init()
 start()

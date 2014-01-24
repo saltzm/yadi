@@ -1,6 +1,7 @@
 __author__ = 'caioseguin'
 
 from .rule_handler import RuleHandler
+from ..query_data_structures.query import *
 
 # This class acts as the middle man between the Datalog parser and the SQL translator.
 # It transforms the parser's output into a list of conjunctiveQueries and a list of disjunctiveQueries.
@@ -25,42 +26,51 @@ class ASTBuilder:
         rule_handler = RuleHandler()
 
 
-    def buildAST(self, parsed_datalog_program):
+    def buildAST(self, parsed_datalog_program, is_assertion):
 
         assert isinstance(parsed_datalog_program, list)
 
         self.program_ast = []
 
         for code_line in parsed_datalog_program:
-            x = self.handleStatement(code_line)
+            x = self.handleStatement(code_line, is_assertion)
             self.program_ast.append(x)
 
         self.history_ast.append(self.program_ast)
 
         return self.program_ast
 
-    def handleCodeLine(self, code_line):
+# TODO: Caio, this isn't used anywhere.  Can we remove it?
+#    def handleCodeLine(self, code_line):
 
-        assert isinstance(code_line, list)
+        #assert isinstance(code_line, list)
 
-        code_line_ast = []
+        #code_line_ast = []
 
-        for statement in code_line:
-            statement_ast = self.handleStatement(statement)
-            code_line_ast.append(statement_ast)
+        #for statement in code_line:
+            #statement_ast = self.handleStatement(statement)
+            #code_line_ast.append(statement_ast)
 
-        return code_line_ast
+        #return code_line_ast
 
-    def handleStatement(self, statement):
+    def handleStatement(self, statement, is_assertion):
 
         assert isinstance(statement, list)
 
         if self.script_input_flag:
-
-            if self.rule_handler.isRule(statement):
-                statement_ast = self.handleRule(statement)
+            if is_assertion:
+                if self.rule_handler.isRule(statement):
+                    rule_to_assert = statement[len('/assert '):]
+                    statement_ast = AssertedQuery(self.handleRule(statement))
+                else:
+                    raise Exception(
+                        "ast_builder.py: assertion of facts not implemented yet"
+                    )
             else:
-                statement_ast = self.handleFact(statement)
+                if self.rule_handler.isRule(statement):
+                    statement_ast = self.handleRule(statement)
+                else:
+                    statement_ast = self.handleFact(statement)
 
         else:
             raise Exception("?.handleQuery(statement) not implemented yet")
@@ -72,7 +82,9 @@ class ASTBuilder:
         assert isinstance(statement, list)
 
         if self.rule_handler.isDisjunctiveRule(statement):
-            raise Exception("self.ruleHandler.handleDisjunctiveRule(statement) not implemented yet")
+            raise Exception(
+                "self.ruleHandler.handleDisjunctiveRule(statement) not implemented yet"
+            )
         else:
             return self.rule_handler.handleConjunctiveRule(statement)
 

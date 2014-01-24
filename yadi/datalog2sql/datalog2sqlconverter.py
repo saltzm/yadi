@@ -7,12 +7,15 @@ from colorama import *
 __author__ = 'caioseguin', 'saltzm'
 
 class Datalog2SqlConverter:
-    def convertDatalog2Sql(self, datalog_statement):
+    def convertDatalog2Sql(self, datalog_statement, is_assertion = False):
         sql_query_list = []
 
         try:
-            parsed_statement = Parser().parsesentence(datalog_statement)
-            ast_query_list = ASTBuilder().buildAST(parsed_statement.asList())
+            parsed_statement = Parser().parsesentence(datalog_statement).asList()
+            ast_query_list = ASTBuilder().buildAST(
+                                parsed_statement,
+                                is_assertion
+                             )
 
             for ast_query in ast_query_list:
                 sql_query = Ast2SqlConverter().convertAst2Sql(ast_query)
@@ -26,3 +29,5 @@ class Datalog2SqlConverter:
             traceback.print_exc()
 
         return sql_query_list
+    def trim_assert(self, statement):
+        return statement[len('/assert '):]

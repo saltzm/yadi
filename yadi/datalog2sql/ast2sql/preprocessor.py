@@ -10,7 +10,14 @@ class QueryPreprocessor():
             pp = ConjunctiveQueryPreprocessor()
         if isinstance(query, DisjunctiveQuery):
             pp = DisjunctiveQueryPreprocessor()
+        if isinstance(query, AssertedQuery):
+            pp = AssertedQueryPreprocessor()
         return pp.preprocess(query)
+
+class AssertedQueryPreprocessor():
+    def preprocess(self, query):
+        new_query = QueryPreprocessor().preprocess(query.get_query())
+        return AssertedQuery(new_query)
 
 class DisjunctiveQueryPreprocessor():
     def preprocess(self,query):
@@ -30,7 +37,7 @@ class ConjunctiveQueryPreprocessor():
 
     def create_head_variable_if_none_exists(self,query,var_dict):
         if query.get_head_relation() is None:
-            safe_variables = self.get_safe_variables(query,var_dict)
+            safe_variables = self.get_safe_variables(query, var_dict)
             query.set_head_relation(RelationInQuery(self.default_head_relation_name,safe_variables))
         return query
 

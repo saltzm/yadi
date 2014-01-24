@@ -2,7 +2,7 @@ __author__ = 'caioseguin'
 
 from ..query_data_structures.constraint import Constraint
 from ..query_data_structures.element import Variable, Constant, Wildcard
-from ..query_data_structures.query import ConjunctiveQuery
+from ..query_data_structures.query import *
 from ..query_data_structures.relation import RelationInQuery
 
 # Operators used in this module
@@ -16,6 +16,7 @@ lessEqualOperator = '<='
 equalOperator = '='
 negationOperator = 'not'
 forbiddenSymbol = '$'
+assertCommand = '/assert '
 
 class RuleHandler:
     def __init__(self):
@@ -129,6 +130,9 @@ class RuleHandler:
 
     def isDisjunctiveRule(self, statement):
         return disjunctionOperator in statement[0]
+
+    def isAssertion(self, statement):
+        return statement[0] == assertCommand
 
     def isNegatedRelation(self, relation):
         return relation[0] == negationOperator

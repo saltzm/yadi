@@ -99,4 +99,5 @@ class QueryEvaluator:
         self.connection = self.engine_list[-1].connect()
         r = self.connection.execute(query_to_evaluate)
         fetched_results = r.fetchall()
-        print(tabulate(fetched_results, tablefmt="grid"))
+        grid_string = tabulate(fetched_results, tablefmt="grid")
+        print(grid_string)
