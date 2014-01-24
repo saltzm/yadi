@@ -12,8 +12,9 @@ X conjunction of mixed + and - relations  (Type 3)
 
 Recursive versions of all of these
 
+TODAY:
+In order to have recursion, need views
 
+View creation algorithm:
 
-
-
-3)
+/assert r(X) :- s(X), t(X), not(v(X)).

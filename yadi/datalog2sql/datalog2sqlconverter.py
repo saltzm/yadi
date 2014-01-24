@@ -4,7 +4,7 @@ from .ast2sql.ast2sqlconverter import Ast2SqlConverter
 from .ast2sql.exceptions import *
 from colorama import *
 
-__author__ = 'caioseguin'
+__author__ = 'caioseguin', 'saltzm'
 
 class Datalog2SqlConverter:
     def convertDatalog2Sql(self, datalog_statement):

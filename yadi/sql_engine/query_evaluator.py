@@ -21,7 +21,8 @@ class QueryEvaluator:
         logging.basicConfig()
         logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
         try:
-            with open(os.path.join(os.path.dirname(__file__), 'dbconf.txt'), 'r') as f:
+            with open(os.path.join(os.path.dirname(__file__),
+                'dbconf.txt'), 'r') as f:
                 x = f.readline()
                 self.engine_list.append(create_engine(x, echo=False))
             return True

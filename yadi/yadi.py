@@ -1,11 +1,12 @@
 from .datalog2sql.datalog2sqlconverter import Datalog2SqlConverter
-from .sql_engine import QueryEvaluator
+from .sql_engine.query_evaluator import QueryEvaluator
 from colorama import *
 from .interpreter.interpreter_parse import *
 from .interpreter.syntax_highlighter import SyntaxHighlight
 import sys
 import os
 
+qe = QueryEvaluator()
 
 def help():
     print("========HELP========")
@@ -24,7 +25,7 @@ def help():
 
 
 def dbschema():
-    QueryEvaluator().get_schema()
+    qe.get_schema()
 
 
 def set_db():
@@ -57,7 +58,7 @@ def set_db():
         str_engine += ':' + args[1][1]
 
     str_engine += '@' + args[1][2] + ':' + args[1][3] + '/' + args[1][4]
-    QueryEvaluator().set_engine(str_engine)
+    qe.set_engine(str_engine)
 
 
 def clrscr():
@@ -88,20 +89,20 @@ def execute_translation(input_line):
     sql_queries = Datalog2SqlConverter().convertDatalog2Sql(input_line)
     for s in sql_queries:
         try:
-            QueryEvaluator().evaluate(s)
+            qe.evaluate(s)
         except Exception as e:
             print(Fore.RED+'Query evaluation error: '+str(e)+Fore.RESET)
 
 
 def get_db_url():
     print(Fore.YELLOW+"Current configuration:")
-    QueryEvaluator().print_engine_url()
+    qe.print_engine_url()
     print(Fore.RESET)
 
 
 def quit_yadi():
-    QueryEvaluator().dispose_last()
-    QueryEvaluator().saveconf()
+    qe.dispose_last()
+    qe.saveconf()
     sys.exit(0)
 
 
@@ -122,7 +123,7 @@ def start():
 
 To begin, type a Datalog query. For a list of commands, type /help"""
     print(Fore.YELLOW+introString+Fore.RESET)
-    if QueryEvaluator().initialize_db():
+    if qe.initialize_db():
         get_db_url()
 
     while True:
