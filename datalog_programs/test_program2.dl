@@ -1,0 +1,3 @@
+% Run with: /script "datalog_programs/test_program.dl"
+/assert tweets_by_jorge(T) :- tuser(UID, 'jorge'), tweet(_, T, _, UID).
+tweets_by_jorge(A).
