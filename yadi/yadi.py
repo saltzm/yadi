@@ -78,7 +78,8 @@ def loadscript(path):
     try:
         with open(np, 'r') as f:
             for data_line in f:
-                interpret_line(data_line)
+                if not data_line.startswith('%'):
+                    interpret_line(data_line)
                 str_concat += data_line
             print("Datalog program read:\n"+SyntaxHighlight().highlight(str_concat))
     except Exception as e:

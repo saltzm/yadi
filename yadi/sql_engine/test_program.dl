@@ -1,3 +1,3 @@
-
+% Run with: /script "yadi/sql_engine/test_program.dl"
 /assert tweets_by_nishara(T) :- tuser(UID, 'nishara'), tweet(_, T, _, UID).
 tweets_by_nishara(A).
