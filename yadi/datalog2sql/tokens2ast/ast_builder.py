@@ -83,13 +83,7 @@ class ASTBuilder:
         assert isinstance(statement, list)
 
         if self.rule_handler.isDisjunctiveRule(statement):
-
-            print('Debugging:')
-            print(statement)
-
-            raise Exception(
-                "self.ruleHandler.handleDisjunctiveRule(statement) not implemented yet"
-            )
+            return self.rule_handler.handleDisjunctiveRule(statement)
         else:
             return self.rule_handler.handleConjunctiveRule(statement)
 
