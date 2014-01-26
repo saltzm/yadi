@@ -49,7 +49,8 @@ class ConjunctiveQuerySQLGenerator():
         explicit_constraints = self.get_explicit_constraints(
                                     query.get_constraints(),
                                     var_dict)
-        negated_queries = self.get_negated_queries(query.get_relations(), var_dict)
+        negated_queries = self.get_negated_queries(query.get_relations(),
+                var_dict, aliases)
         where_separator = ' AND \n\t' if pretty_print else ' AND '
         where_clause = where_separator.join(
             implicit_constraints +
@@ -76,7 +77,7 @@ class ConjunctiveQuerySQLGenerator():
             if not (relation.get_name() in count):
                 count[relation.get_name()] = 0
             else:
-                count[relation.get_name()]+=1
+                count[relation.get_name()] += 1
 
         aliases = {}
 
@@ -197,7 +198,7 @@ class ConjunctiveQuerySQLGenerator():
                 )
         return constraints
 
-    def get_negated_queries(self,relations,var_dict):
+    def get_negated_queries(self, relations, var_dict, aliases):
         negated_queries_sql = []
         for relation in [r for r in relations if r.is_negated()]:
             where_clauses = []
@@ -218,7 +219,7 @@ class ConjunctiveQuerySQLGenerator():
 
             negated_queries_sql.append(
                 'NOT EXISTS (' +
-                    'SELECT * FROM ' + relation.get_name() +
+                    'SELECT * FROM ' + aliases[relation.get_name()] +
                     ' WHERE ' + ' AND '.join(where_clauses) +
                 ')'
             )
