@@ -30,17 +30,21 @@ class RuleHandler:
 
         assert isinstance(rule, list)
 
-        query_object_list = [];
-
+        query_object_list = []
         head = self.extractHead(rule)
         body = self.extractBody(rule)
 
-        conjunctive_body_list = self.breakDisjunctiveRule(rule)
+        conjunctive_body_list = self.splitDisjunctiveRule(body)
 
         for conjunctive_body in conjunctive_body_list:
-            query_object_list.append(self.handleConjunctiveRule(head + conjunctive_body))
+            conjunctive_rule = []
+            conjunctive_rule.append(head)
+            conjunctive_rule.append(ruleOperator)
+            conjunctive_rule.append(conjunctive_body)
 
-        return 0
+            query_object_list.append(self.handleConjunctiveRule(conjunctive_rule))
+
+        return DisjunctiveQuery(query_object_list)
 
 
     def handleConjunctiveRule(self, rule):
@@ -142,6 +146,25 @@ class RuleHandler:
         if not len(rule) >= 3:
             raise Exception("list with three or more elements expected for a body")
         return rule[2:len(rule)]
+
+    def splitDisjunctiveRule(self, disjunctive_query):
+
+        conjunctive_query_list = []
+        conjunctive_query = []
+
+        for element in disjunctive_query:
+
+
+            if element == disjunctionOperator:
+                conjunctive_query_list.append(conjunctive_query)
+                conjunctive_query = []
+            else:
+                conjunctive_query.extend(element)
+
+        conjunctive_query_list.append(conjunctive_query)
+
+        return conjunctive_query_list
+
 
     def isRule(self, statement):
         return ruleOperator in statement
