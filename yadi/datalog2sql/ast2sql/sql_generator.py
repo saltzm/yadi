@@ -1,40 +1,101 @@
 from ..query_data_structures.query import *
+from ...sql_engine.db_state_tracker import DBStateTracker
 
-class SQLGenerator():
+class SQLGenerator:
+    def __init__(self, db_state_tracker):
+        self.db_state_tracker = db_state_tracker
+
     def get_SQL_code(self,query,old_query):
         if isinstance(query, ConjunctiveQuery):
-            sql_gen = ConjunctiveQuerySQLGenerator()
+            sql_gen = ConjunctiveQuerySQLGenerator(self.db_state_tracker)
         if isinstance(query, DisjunctiveQuery):
-            sql_gen = DisjunctiveQuerySQLGenerator()
+            sql_gen = DisjunctiveQuerySQLGenerator(self.db_state_tracker)
         if isinstance(query, AssertedQuery):
-            sql_gen = AssertedQuerySQLGenerator()
+            sql_gen = AssertedQuerySQLGenerator(self.db_state_tracker)
 
         return sql_gen.get_SQL_code(query, old_query)
 
-class AssertedQuerySQLGenerator():
+class AssertedQuerySQLGenerator:
+    def __init__(self, db_state_tracker):
+        self.db_state_tracker = db_state_tracker
+
     def get_SQL_code(self, query, old_query):
-        query_sql = SQLGenerator().get_SQL_code(query.get_query(),
+        if old_query.is_fact:
+            return self.get_fact_code(query)
+        else:
+            return self.get_rule_code(query, old_query)
+
+    def get_fact_code(self, query):
+        assert len(query.get_query().get_relations()) == 1
+        rel = query.get_query().get_relations()[0]
+        assert len(rel.get_variables()) == 0
+        rel_name = rel.get_name()
+        column_list = '(' + ', '.join(['_' + str(i) + ' VARCHAR(500) '
+                            for i in range(0, len(rel.get_constants()))]) + ')'
+        constants = rel.get_constants()
+        list_of_columns = \
+            list(range(0, len([y for x in constants.values() for y in x])))
+
+        for constant in constants:
+            for position in constants[constant]:
+                 list_of_columns[position] = str(constant)
+
+        values = '(' + ', '.join([str(x) for x in list_of_columns]) + ');'
+
+        return 'CREATE TABLE IF NOT EXISTS ' + rel_name + ' ' + column_list + '; ' + \
+               'INSERT INTO ' + rel_name + ' VALUES ' + values
+
+    def get_rule_code(self, query, old_query):
+        sql_gen = SQLGenerator(self.db_state_tracker)
+        query_sql = sql_gen.get_SQL_code(query.get_query(),
                 old_query.get_query())
         head_relation = query.get_query().get_head_relation()
         view_name = head_relation.get_name()
         head_vars = head_relation.get_variables()
+        drop_sql = ''
+
+        # Check if this view already exists in the db_state_tracker
+        if self.db_state_tracker.contains_assertion(view_name):
+            # Retrieve existing_assertion
+            existing_assertions = self.db_state_tracker.get_assertions(view_name)
+            for a in existing_assertions:
+                # Get sql code from existing_assertion's inner query
+                existing_query_sql = \
+                    SQLGenerator(self.db_state_tracker).get_SQL_code(a.get_query(),
+                            a.get_query())
+                query_sql = query_sql[:-1] + ' UNION ' + existing_query_sql
+            # Create rollback code
+            drop_sql = self.get_rollback_code(query) + ' '
+
+        # Add new query to db_state_tracker
+        self.db_state_tracker.add_assertion(query)
+
         i = 0
         for var in head_vars:
             query_sql = query_sql.replace(' AS ' + str(var), ' AS ' + '_' + str(i))
             i = i + 1
-        return 'CREATE VIEW ' + view_name + ' AS ' + query_sql + \
-               'SELECT * FROM ' + view_name + ';'
 
-class DisjunctiveQuerySQLGenerator():
+        return drop_sql + 'CREATE VIEW ' + view_name + ' AS ' + query_sql + ';'
+
+    def get_rollback_code(self, query):
+        return 'DROP VIEW ' + query.get_query().head_relation.get_name() + ';'
+
+class DisjunctiveQuerySQLGenerator:
+    def __init__(self, db_state_tracker):
+        self.db_state_tracker = db_state_tracker
+
     def get_SQL_code(self,query,old_query):
-        sql_gen = SQLGenerator()
+        sql_gen = SQLGenerator(self.db_state_tracker)
         old_queries = old_query.get_queries()
         new_queries = query.get_queries()
         old_new_pairs = [(new_queries[aux], old_queries[aux]) for aux in range(0,len(new_queries))]
         return ' UNION '.join(['(' + sql_gen.get_SQL_code(q, old_q)[:-1] + ')' for (q, old_q) in old_new_pairs]) +';'
 
 
-class ConjunctiveQuerySQLGenerator():
+class ConjunctiveQuerySQLGenerator:
+    def __init__(self, db_state_tracker):
+        self.db_state_tracker = db_state_tracker
+
     def get_SQL_code(self,query,old_query,pretty_print=False):
         aliases = self.create_table_aliases(query)
         var_dict = query.get_var_dict()

@@ -45,11 +45,9 @@ class ASTBuilder:
 
         if is_assertion:
             if self.rule_handler.isRule(statement):
-                rule_to_assert = statement[len('/assert '):]
-                statement_ast = AssertedQuery(self.handleRule(rule_to_assert))
+                statement_ast = AssertedQuery(self.handleRule(statement))
             else:
-                fact_to_assert = statement[len('/assert '):]
-                statement_ast = AssertedQuery(self.handleFact(fact_to_assert), True)
+                statement_ast = AssertedQuery(self.handleFact(statement), True)
         else:
             if self.rule_handler.isRule(statement):
                 statement_ast = self.handleRule(statement)

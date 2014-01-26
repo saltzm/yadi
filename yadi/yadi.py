@@ -1,5 +1,6 @@
 from .datalog2sql.datalog2sqlconverter import Datalog2SqlConverter
 from .sql_engine.query_evaluator import QueryEvaluator
+from .sql_engine.db_state_tracker import DBStateTracker
 from colorama import *
 from .interpreter.interpreter_parse import *
 from .interpreter.syntax_highlighter import SyntaxHighlight
@@ -7,6 +8,8 @@ import sys
 import os
 
 qe = QueryEvaluator()
+db_state_tracker = DBStateTracker(qe)
+converter = Datalog2SqlConverter(db_state_tracker)
 
 def help():
     print("========HELP========")
@@ -15,6 +18,9 @@ def help():
     print("/clrscr - Clears the terminal.\n")
     print("/curdb - Shows the current database path.\n")
     print("/dbschema - Lists the database schema.\n")
+    print("/dropview <view name> - Drops the view from the database.\n")
+    print("/droptable <table name> - Drops the table from the database. \
+            (WARNING: Drop cascades to dependent views.)\n")
     print("/help - Prints a list of available commands with their descriptions.\n")
     print("/script \"path\" - Loads a Datalog program from a file in the specified path."
           " Usage example: /script \"C:/file.txt\" \n")
@@ -87,7 +93,7 @@ def loadscript(path):
 
 
 def execute_translation(input_line, is_assertion = False):
-    sql_queries = Datalog2SqlConverter().convertDatalog2Sql(
+    sql_queries = converter.convertDatalog2Sql(
                     input_line,
                     is_assertion
                   )
@@ -95,7 +101,8 @@ def execute_translation(input_line, is_assertion = False):
         try:
             qe.evaluate(s)
         except Exception as e:
-            print(Fore.RED+'Query evaluation error: '+str(e)+Fore.RESET)
+            if not 'not return rows' in str(e):
+                print(Fore.RED+'Query evaluation error: '+str(e)+Fore.RESET)
 
 
 def get_db_url():
@@ -103,10 +110,17 @@ def get_db_url():
     qe.print_engine_url()
     print(Fore.RESET)
 
+def drop_view(relation_name):
+    qe.execute('DROP VIEW ' + relation_name[:-1] + ';')
 
+def drop_relation(relation_name):
+    qe.execute('DROP TABLE ' + relation_name[:-1] + ' CASCADE;')
+
+# TODO: ensure called on ctrl-C
 def quit_yadi():
     qe.dispose_last()
     qe.saveconf()
+#    del db_state_tracker
     sys.exit(0)
 
 
@@ -161,6 +175,11 @@ def interpret_line(read_line):
                 get_db_url()
             elif parsed_statement[0] == "/dbschema":
                 dbschema()
+            elif parsed_statement[0] == "/dropview":
+                drop_view(parsed_statement[1])
+            elif parsed_statement[0] == "/droptable":
+                drop_relation(parsed_statement[1])
+
         except InterpreterException as e:
             print(Fore.RED+"Interpreter error: "+str(e)+Fore.RESET)
     else:

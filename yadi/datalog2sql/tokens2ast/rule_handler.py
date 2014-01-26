@@ -55,7 +55,6 @@ class RuleHandler:
         #    raise Exception("list with exactly one element expected")
         #else:
         #    rule = rule[0] # Peal list
-
         head = self.extractHead(rule)
         body = self.extractBody(rule)
 

@@ -18,9 +18,9 @@ class DisjunctiveQuery(Query):
         self.queries = queries
 
     # TODO: makes some assumptions...
-    def get_head_relation():
-        if len(self.queries > 0):
-            return queries[0].get_head_relation()
+    def get_head_relation(self):
+        if len(self.queries) > 0:
+            return self.queries[0].get_head_relation()
 
     def get_queries(self):
         return self.queries

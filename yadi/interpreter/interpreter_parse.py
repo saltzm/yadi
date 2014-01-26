@@ -15,8 +15,11 @@ class IntParse:
         dbs = Literal("/dbschema") + StringEnd()
         setdb = Literal("/setdb") + StringEnd()
         curdb = Literal("/curdb") + StringEnd()
+        drop = Literal("/dropview") + Word(printables)
+        drop_t = Literal("/droptable") + Word(printables)
 
-        rule = (assert_dl | loadfile | help | quit | clrscr | dbs | setdb | curdb).setFailAction(self.syntax)
+        rule = (assert_dl | loadfile | help | quit | clrscr | dbs | setdb |
+                curdb | drop | drop_t).setFailAction(self.syntax)
         expression = rule.parseString(cmd_str)
         return expression
 

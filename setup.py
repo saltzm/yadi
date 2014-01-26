@@ -27,11 +27,11 @@ setup(
     url='https://github.com/saltzm/yadi',
     packages=[
         'yadi',
-        'yadi.tokens2ast',
-        'yadi.query_data_structures',
         'yadi.datalog2sql',
-        'yadi.ast2sql',
-        'yadi.parse2tokens',
+        'yadi.datalog2sql.tokens2ast',
+        'yadi.datalog2sql.query_data_structures',
+        'yadi.datalog2sql.ast2sql',
+        'yadi.datalog2sql.parse2tokens',
         'yadi.interpreter',
         'yadi.sql_engine'
     ],
