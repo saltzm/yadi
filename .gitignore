@@ -51,3 +51,7 @@ docs/_build
 *.xml
 
 *.xml
+
+yadi/sql_engine/dbconf.txt
+
+yadi/.idea/workspace.xml

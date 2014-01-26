@@ -111,15 +111,15 @@ class ConjunctiveQuerySQLGenerator():
     def get_select_columns(self,head_relation,constraints,var_dict, original_head_relation):
         column_list = []
 
-        element_list = head_relation.get_ordered_element_list()
+        element_list = head_relation.get_ordered_element_list
 
         if len(element_list) == 0:
             column_list = ["CASE COUNT(*) WHEN 0 THEN 'FALSE' ELSE 'TRUE' END"]
         else:
             if original_head_relation is None:
-                as_names = head_relation.get_ordered_element_list()
+                as_names = head_relation.get_ordered_element_list
             else:
-                as_names = original_head_relation.get_ordered_element_list()
+                as_names = original_head_relation.get_ordered_element_list
             for i in range(0,len(element_list)):
                 element = element_list[i]
                 if element.is_variable():
@@ -201,7 +201,7 @@ class ConjunctiveQuerySQLGenerator():
         negated_queries_sql = []
         for relation in [r for r in relations if r.is_negated()]:
             where_clauses = []
-            elements = relation.get_ordered_element_list()
+            elements = relation.get_ordered_element_list
 
             for position in range(0,len(elements)):
                 element = elements[position]
@@ -224,4 +224,3 @@ class ConjunctiveQuerySQLGenerator():
             )
 
         return negated_queries_sql
-

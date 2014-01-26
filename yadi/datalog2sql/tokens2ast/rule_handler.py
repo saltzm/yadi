@@ -26,6 +26,23 @@ class RuleHandler:
         relation_object_list, constraint_object_list = self.handleBody(fact)
         return ConjunctiveQuery(relation_object_list, constraint_object_list, None)
 
+    def handleDisjunctiveRule(self, rule):
+
+        assert isinstance(rule, list)
+
+        query_object_list = [];
+
+        head = self.extractHead(rule)
+        body = self.extractBody(rule)
+
+        conjunctive_body_list = self.breakDisjunctiveRule(rule)
+
+        for conjunctive_body in conjunctive_body_list:
+            query_object_list.append(self.handleConjunctiveRule(head + conjunctive_body))
+
+        return 0
+
+
     def handleConjunctiveRule(self, rule):
 
         assert isinstance(rule, list)
@@ -84,6 +101,7 @@ class RuleHandler:
 
         ast_term_list = self.handleTermList(term_list)
         new_relation_in_query = RelationInQuery(relation_symbol, ast_term_list, is_negated)
+
         return new_relation_in_query
 
 
@@ -129,7 +147,7 @@ class RuleHandler:
         return ruleOperator in statement
 
     def isDisjunctiveRule(self, statement):
-        return disjunctionOperator in statement[0]
+        return disjunctionOperator in statement
 
     def isAssertion(self, statement):
         return statement[0] == assertCommand

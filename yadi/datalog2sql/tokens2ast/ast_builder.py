@@ -70,6 +70,7 @@ class ASTBuilder:
                 if self.rule_handler.isRule(statement):
                     statement_ast = self.handleRule(statement)
                 else:
+                    #raise Exception("atom handling not implemented yet")
                     statement_ast = self.handleFact(statement)
 
         else:
@@ -82,6 +83,10 @@ class ASTBuilder:
         assert isinstance(statement, list)
 
         if self.rule_handler.isDisjunctiveRule(statement):
+
+            print('Debugging:')
+            print(statement)
+
             raise Exception(
                 "self.ruleHandler.handleDisjunctiveRule(statement) not implemented yet"
             )

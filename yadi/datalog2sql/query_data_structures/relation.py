@@ -1,3 +1,6 @@
+from ..query_data_structures.element import Wildcard
+
+
 class RelationInQuery:
 
     def __init__(self, name='', variables={}, \
@@ -73,6 +76,7 @@ class RelationInQuery:
     def is_negated(self):
         return self.negated
 
+    @property
     def get_ordered_element_list(self):
         order_dict = {}
 
@@ -88,6 +92,6 @@ class RelationInQuery:
 
 
         for pos in self.get_wildcards():
-            order_dict[pos] = '_'
+            order_dict[pos] = Wildcard()
 
         return [order_dict[index] for index in range(0,len(order_dict))]
