@@ -4,8 +4,8 @@
     <list default="true" id="3e204b20-5f8d-4126-b029-75fab0c346d2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/datalog2sql/tokens2ast/ast_builder.py" afterPath="$PROJECT_DIR$/datalog2sql/tokens2ast/ast_builder.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql_engine/dbconf.txt" afterPath="$PROJECT_DIR$/sql_engine/dbconf.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/datalog2sql/query_data_structures/query.py" afterPath="$PROJECT_DIR$/datalog2sql/query_data_structures/query.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/datalog2sql/tokens2ast/rule_handler.py" afterPath="$PROJECT_DIR$/datalog2sql/tokens2ast/rule_handler.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="yadi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,11 +28,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ast_builder.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ast_builder.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/datalog2sql/tokens2ast/ast_builder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="24" selection-start="1056" selection-end="1056" vertical-scroll-proportion="0.528" vertical-offset="0" max-vertical-offset="1455">
+            <state line="46" column="51" selection-start="1610" selection-end="1610" vertical-scroll-proportion="0.0" vertical-offset="440" max-vertical-offset="1155">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="datalog2sqlconverter.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/datalog2sql/datalog2sqlconverter.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="585">
+              <folding>
+                <element signature="e#0#37#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -40,7 +51,16 @@
       <file leaf-file-name="rule_handler.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/datalog2sql/tokens2ast/rule_handler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="0" selection-start="865" selection-end="865" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3045">
+            <state line="86" column="0" selection-start="2600" selection-end="2600" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3045">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="query.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/datalog2sql/query_data_structures/query.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="0" selection-start="318" selection-end="318" vertical-scroll-proportion="0.336" vertical-offset="0" max-vertical-offset="1215">
               <folding />
             </state>
           </provider>
@@ -64,7 +84,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/ASTBuilder/ASTBuilder.py" />
         <option value="$PROJECT_DIR$/parserAST/ADBEntry.py" />
         <option value="$PROJECT_DIR$/ASTBuilder/Builder.py" />
         <option value="$PROJECT_DIR$/ASTBuilder/ASTBuilderTester.py" />
@@ -79,6 +98,7 @@
         <option value="$PROJECT_DIR$/TranslationWrapper/translationTests.py" />
         <option value="$PROJECT_DIR$/ASTFactory/RuleHandler.py" />
         <option value="$PROJECT_DIR$/datalog2sql/tokens2ast/rule_handler.py" />
+        <option value="$PROJECT_DIR$/datalog2sql/query_data_structures/query.py" />
         <option value="$PROJECT_DIR$/datalog2sql/tokens2ast/ast_builder.py" />
       </list>
     </option>
@@ -163,6 +183,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="tokens2ast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="yadi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="yadi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="datalog2sql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="query_data_structures" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -505,16 +543,32 @@
         <state line="36" column="0" selection-start="1164" selection-end="1164" vertical-scroll-proportion="0.0" vertical-offset="361" max-vertical-offset="630" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/datalog2sql/tokens2ast/rule_handler.py">
+    <entry file="file://$PROJECT_DIR$/datalog2sql/tokens2ast/ast_builder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="0" selection-start="865" selection-end="865" vertical-scroll-proportion="0.0" vertical-offset="285" max-vertical-offset="3045">
+        <state line="46" column="51" selection-start="1610" selection-end="1610" vertical-scroll-proportion="0.0" vertical-offset="440" max-vertical-offset="1155">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/datalog2sql/tokens2ast/ast_builder.py">
+    <entry file="file://$PROJECT_DIR$/datalog2sql/datalog2sqlconverter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="24" selection-start="1056" selection-end="1056" vertical-scroll-proportion="0.528" vertical-offset="0" max-vertical-offset="1455">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="625">
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/datalog2sql/tokens2ast/rule_handler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="86" column="0" selection-start="2600" selection-end="2600" vertical-scroll-proportion="0.0" vertical-offset="290" max-vertical-offset="3045">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/datalog2sql/query_data_structures/query.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="0" selection-start="318" selection-end="318" vertical-scroll-proportion="0.336" vertical-offset="0" max-vertical-offset="1215">
           <folding />
         </state>
       </provider>

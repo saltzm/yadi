@@ -19,8 +19,7 @@ class ASTBuilder:
     program_ast = []
     rule_handler = RuleHandler()
 
-    def __init__(self, script_input_flag = 1):
-        self.script_input_flag = script_input_flag
+    def __init__(self):
         history_ast = []
         program_ast = []
         rule_handler = RuleHandler()
@@ -40,41 +39,22 @@ class ASTBuilder:
 
         return self.program_ast
 
-# TODO: Caio, this isn't used anywhere.  Can we remove it?
-#    def handleCodeLine(self, code_line):
-
-        #assert isinstance(code_line, list)
-
-        #code_line_ast = []
-
-        #for statement in code_line:
-            #statement_ast = self.handleStatement(statement)
-            #code_line_ast.append(statement_ast)
-
-        #return code_line_ast
-
     def handleStatement(self, statement, is_assertion):
 
         assert isinstance(statement, list)
 
-        if self.script_input_flag:
-            if is_assertion:
-                if self.rule_handler.isRule(statement):
-                    rule_to_assert = statement[len('/assert '):]
-                    statement_ast = AssertedQuery(self.handleRule(statement))
-                else:
-                    raise Exception(
-                        "ast_builder.py: assertion of facts not implemented yet"
-                    )
+        if is_assertion:
+            if self.rule_handler.isRule(statement):
+                rule_to_assert = statement[len('/assert '):]
+                statement_ast = AssertedQuery(self.handleRule(rule_to_assert))
             else:
-                if self.rule_handler.isRule(statement):
-                    statement_ast = self.handleRule(statement)
-                else:
-                    #raise Exception("atom handling not implemented yet")
-                    statement_ast = self.handleFact(statement)
-
+                fact_to_assert = statement[len('/assert '):]
+                statement_ast = AssertedQuery(self.handleFact(fact_to_assert), True)
         else:
-            raise Exception("?.handleQuery(statement) not implemented yet")
+            if self.rule_handler.isRule(statement):
+                statement_ast = self.handleRule(statement)
+            else:
+                statement_ast = self.handleFact(statement)
 
         return statement_ast
 

@@ -3,8 +3,9 @@ class Query():
         pass
 
 class AssertedQuery(Query):
-    def __init__(self, query):
+    def __init__(self, query, is_fact = False):
         self.query = query
+        self.is_fact = is_fact
 
     def get_query(self):
         return self.query
