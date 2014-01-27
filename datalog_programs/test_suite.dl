@@ -27,6 +27,8 @@
 
 /assert cross_product(R, S1, S2, T1, T2, T3) :- r(R), s(S1, S2), t(T1, T2, T3).
 /assert conj_of_pos_relations(X) :- r(X), s(Y, _), t(X, _, Y).
+% Demonstrating view modification - works likes disjunction
+/assert conj_of_pos_relations(X) :- s(_, X).
 /assert conj_of_pos_and_neg_relations(X) :- r(X), not(s(X, _)).
 /assert disj_of_pos_and_neg_relations(X) :- conj_of_pos_relations(X); conj_of_pos_and_neg_relations(X).
 

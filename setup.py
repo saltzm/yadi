@@ -18,7 +18,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='yadi',
-    version='0.1.0',
+    version='1.0.0',
     description='YADI is a Datalog parsing project for the Advanced Databases course \
                  of the DMKM Erasmus Mundus Master''s program.',
     long_description=readme + '\n\n' + history,
