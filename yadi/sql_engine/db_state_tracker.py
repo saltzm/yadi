@@ -36,4 +36,4 @@ class DBStateTracker:
 
     def perform_rollbacks(self):
         for a in self.asserted_queries:
-            self.query_evaluator.execute('DROP VIEW IF EXISTS ' + a + ';')
+            self.query_evaluator.execute('DROP VIEW IF EXISTS ' + a + ' CASCADE;')

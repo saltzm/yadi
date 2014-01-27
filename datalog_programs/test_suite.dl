@@ -1,3 +1,15 @@
+/droptable r
+/droptable s
+/droptable t
+/dropview cross_product
+/dropview conj_of_pos_relations
+/dropview conj_of_pos_and_neg_relations
+/dropview disj_of_pos_and_neg_relations
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Relation/Fact assertions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 /assert r(1).
 /assert r(2).
@@ -6,6 +18,39 @@
 /assert s(5, 6).
 
 /assert t(7, 8, 9).
-/assert t(1, 2, 3)
+/assert t(1, 2, 3).
 
-boolean_test
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% View assertions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+/assert cross_product(R, S1, S2, T1, T2, T3) :- r(R), s(S1, S2), t(T1, T2, T3).
+/assert conj_of_pos_relations(X) :- r(X), s(Y, _), t(X, _, Y).
+/assert conj_of_pos_and_neg_relations(X) :- r(X), not(s(X, _)).
+/assert disj_of_pos_and_neg_relations(X) :- conj_of_pos_relations(X); conj_of_pos_and_neg_relations(X).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Boolean queries
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% should return true
+r(1). 
+% should return false
+r(5).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Headless simple queries on relations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+r(X).
+s(X, Y).
+t(X, Y, Z).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Complex queries on views 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+cp(R, S1, S2, T1, T2, T3) :- cross_product(R, S1, S2, T1, T2, T3).
+cpr(X) :- conj_of_pos_relations(X).
+cpnr(X) :- conj_of_pos_and_neg_relations(X).
+dpnr(X) :- disj_of_pos_and_neg_relations(X).
+

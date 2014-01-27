@@ -50,8 +50,8 @@ class AssertedQuerySQLGenerator:
         query_sql = sql_gen.get_SQL_code(query.get_query(),
                 old_query.get_query())
         head_relation = query.get_query().get_head_relation()
-        view_name = head_relation.get_name()
-        head_vars = head_relation.get_variables()
+        view_name = query.get_query().get_head_relation().get_name()
+        head_vars = query.get_query().get_head_relation().get_variables()
         drop_sql = ''
 
         i = 0
@@ -85,8 +85,14 @@ class AssertedQuerySQLGenerator:
         # Add new query to db_state_tracker
         self.db_state_tracker.add_assertion(query)
 
+        head_vals = head_vars.values()
+        head_arity = sum([len(x) for x in head_vals])
+        columns = ' (' + ', '.join(['_' + str(i) for i in range(0, head_arity)]) + ') '
 
         return drop_sql + 'CREATE VIEW ' + view_name + ' AS ' + query_sql + ';'
+#        return drop_sql + 'CREATE RECURSIVE VIEW ' + view_name + columns + \
+#                ' AS ' + query_sql + ';'
+#            ' AS WITH RECURSIVE ' + view_name + columns + ' AS ' + query_sql + ';'
 
     def get_rollback_code(self, query):
         return 'DROP VIEW IF EXISTS ' + query.get_query().head_relation.get_name() + ';'

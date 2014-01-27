@@ -112,13 +112,13 @@ def get_db_url():
 
 def drop_view(relation_name):
     try:
-        qe.execute('DROP VIEW ' + relation_name + ';')
+        qe.execute('DROP VIEW IF EXISTS ' + relation_name + ';')
     except Exception as e:
         print(Fore.RED+'Query evaluation error: '+str(e)+Fore.RESET)
 
 def drop_relation(relation_name):
     try:
-        qe.execute('DROP TABLE ' + relation_name + ' CASCADE;')
+        qe.execute('DROP TABLE IF EXISTS ' + relation_name + ' CASCADE;')
     except Exception as e:
         print(Fore.RED+'Query evaluation error: '+str(e)+Fore.RESET)
 
@@ -156,6 +156,7 @@ To begin, type a Datalog query. For a list of commands, type /help"""
         interpret_line(read_line)
 
 def interpret_line(read_line):
+    read_line = read_line.strip()
     if read_line == "":
         return
 
