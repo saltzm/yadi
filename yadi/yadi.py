@@ -111,10 +111,16 @@ def get_db_url():
     print(Fore.RESET)
 
 def drop_view(relation_name):
-    qe.execute('DROP VIEW ' + relation_name[:-1] + ';')
+    try:
+        qe.execute('DROP VIEW ' + relation_name + ';')
+    except Exception as e:
+        print(Fore.RED+'Query evaluation error: '+str(e)+Fore.RESET)
 
 def drop_relation(relation_name):
-    qe.execute('DROP TABLE ' + relation_name[:-1] + ' CASCADE;')
+    try:
+        qe.execute('DROP TABLE ' + relation_name + ' CASCADE;')
+    except Exception as e:
+        print(Fore.RED+'Query evaluation error: '+str(e)+Fore.RESET)
 
 # TODO: ensure called on ctrl-C
 def quit_yadi():

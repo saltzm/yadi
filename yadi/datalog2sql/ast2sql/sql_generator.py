@@ -54,6 +54,13 @@ class AssertedQuerySQLGenerator:
         head_vars = head_relation.get_variables()
         drop_sql = ''
 
+        i = 0
+        for var in head_vars:
+            for col in range(0, len(head_vars[var])):
+                query_sql = query_sql.replace(' AS ' + str(var), ' AS ' + '_' +
+                        str(i), 1)
+                i = i + 1
+
         # Check if this view already exists in the db_state_tracker
         if self.db_state_tracker.contains_assertion(view_name):
             # Retrieve existing_assertion
@@ -63,6 +70,14 @@ class AssertedQuerySQLGenerator:
                 existing_query_sql = \
                     SQLGenerator(self.db_state_tracker).get_SQL_code(a.get_query(),
                             a.get_query())
+                i = 0
+                existing_head_vars = a.get_query().get_head_relation().get_variables()
+                for var in existing_head_vars:
+                    for col in range(0, len(existing_head_vars[var])):
+                        existing_query_sql = existing_query_sql.replace(' AS ' +
+                                str(var), ' AS ' + '_' + str(i), 1)
+                        i = i + 1
+
                 query_sql = query_sql[:-1] + ' UNION ' + existing_query_sql
             # Create rollback code
             drop_sql = self.get_rollback_code(query) + ' '
@@ -70,15 +85,11 @@ class AssertedQuerySQLGenerator:
         # Add new query to db_state_tracker
         self.db_state_tracker.add_assertion(query)
 
-        i = 0
-        for var in head_vars:
-            query_sql = query_sql.replace(' AS ' + str(var), ' AS ' + '_' + str(i))
-            i = i + 1
 
         return drop_sql + 'CREATE VIEW ' + view_name + ' AS ' + query_sql + ';'
 
     def get_rollback_code(self, query):
-        return 'DROP VIEW ' + query.get_query().head_relation.get_name() + ';'
+        return 'DROP VIEW IF EXISTS ' + query.get_query().head_relation.get_name() + ';'
 
 class DisjunctiveQuerySQLGenerator:
     def __init__(self, db_state_tracker):
